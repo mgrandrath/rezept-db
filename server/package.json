@@ -1,0 +1,12 @@
+{
+  "name": "rezept-db-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mgrandrath/rezept-db",
+  "author": "Martin Grandrath <mail@grandrath-net.de>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
