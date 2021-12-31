@@ -15,4 +15,4 @@ RUN yarn install --offline --frozen-lockfile --production
 
 EXPOSE 9000
 
-CMD ["/app/server/src/index.js"]
+CMD ["/app/server/src/main.js"]

@@ -1,0 +1,41 @@
+openapi: '3.0.2'
+
+info:
+  title: rezept-db backend API
+  version: '1.0'
+
+servers:
+  - url: http://localhost:9000/api
+    description: |
+      Local development server.
+  - url: http://aragorn.shire.grandrath-net.de/api
+    description: |
+      Production server.
+
+paths:
+  /health:
+    get:
+      description: |
+        Reports system health.
+      operationId: health.show
+      responses:
+        '200':
+          $ref: '#/components/responses/HealthSuccessResponse'
+
+components:
+  responses:
+    HealthSuccessResponse:
+      description: |
+        The system is up and running.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: |
+                  "OK" if system is healthy, an error message otherwise.
+                example: OK
+            required:
+              - status
