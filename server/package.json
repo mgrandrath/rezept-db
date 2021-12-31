@@ -13,12 +13,16 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "express-openapi-validator": "^4.13.5",
+    "js-yaml": "^4.1.0",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "eslint": "^8.5.0",
     "jest": "^27.4.5",
+    "node-fetch": "^2.6.6",
     "prettier": "^2.5.1"
   }
 }
