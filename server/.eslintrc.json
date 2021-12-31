@@ -1,0 +1,14 @@
+{
+  "extends": "eslint:recommended",
+
+  "env": {
+    "node": true,
+    "es2020": true,
+    "jest": true
+  },
+
+  "rules": {
+    "strict": ["error", "global"],
+    "no-unused-vars": ["warn", { "args": "none", "ignoreRestSiblings": true }]
+  }
+}

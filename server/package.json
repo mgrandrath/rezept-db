@@ -6,6 +6,9 @@
   "author": "Martin Grandrath <mail@grandrath-net.de>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
   "dependencies": {
     "eslint": "^8.5.0",
     "express": "^4.17.2"
