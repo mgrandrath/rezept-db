@@ -8,6 +8,15 @@ const swaggerUi = require("swagger-ui-express");
 const { middleware: openApiValidator } = require("express-openapi-validator");
 const { load: parseYaml } = require("js-yaml");
 
+const CLIENT_DIRECTORY = path.join(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "client",
+  "build"
+);
+
 const loadRequestHandler = (requestHandlerDirectory, route, apiSpec) => {
   const { method, basePath, openApiRoute } = route;
   const apiPath = openApiRoute.substring(basePath.length);
@@ -88,11 +97,10 @@ module.exports = class Server {
           },
         })
       );
-      expressServer.use(
-        express.static(
-          path.join(__dirname, "..", "..", "..", "client", "build")
-        )
-      );
+      expressServer.use(express.static(CLIENT_DIRECTORY));
+      expressServer.use((httpRequest, httpResponse) => {
+        httpResponse.sendFile(path.join(CLIENT_DIRECTORY, "index.html"));
+      });
 
       this._httpServer = http.createServer(expressServer);
       this._httpServer.listen(port, resolve);
