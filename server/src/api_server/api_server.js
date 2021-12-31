@@ -88,6 +88,11 @@ module.exports = class Server {
           },
         })
       );
+      expressServer.use(
+        express.static(
+          path.join(__dirname, "..", "..", "..", "client", "build")
+        )
+      );
 
       this._httpServer = http.createServer(expressServer);
       this._httpServer.listen(port, resolve);
