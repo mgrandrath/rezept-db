@@ -58,6 +58,7 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
           description: |
             Descriptive title.
           example: Grilled cheese
