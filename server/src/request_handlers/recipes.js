@@ -1,6 +1,14 @@
 "use strict";
 
-exports.create = async () => {
+exports.create = async (services, request) => {
+  const recipeId = services.uuid.uuidV4();
+  const recipe = {
+    ...request.data,
+    id: recipeId,
+  };
+
+  await services.recipeRepository.store(recipe);
+
   return {
     status: 201,
     headers: {

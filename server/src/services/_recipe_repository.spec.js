@@ -9,7 +9,7 @@ jest.mock("./db_client.js", () => ({
   },
 }));
 
-const newRecipeInput = () => ({
+const newRecipe = () => ({
   id: "recipe-111",
   title: "Grilled cheese",
   notes: "American cheese melts best",
@@ -20,16 +20,16 @@ describe("RecipeRepository", () => {
     it("should store a recipe in the database", async () => {
       dbClient.recipe.create.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
-      const recipeInput = newRecipeInput({
+      const recipe = newRecipe({
         id: "recipe-111",
         title: "Grilled cheese",
         notes: "American cheese melts best",
       });
 
-      await recipeRepository.store(recipeInput);
+      await recipeRepository.store(recipe);
 
       expect(dbClient.recipe.create).toHaveBeenCalledWith({
-        data: recipeInput,
+        data: recipe,
       });
     });
 
@@ -37,7 +37,7 @@ describe("RecipeRepository", () => {
       it("should not interact with the database", async () => {
         const recipeRepository = RecipeRepository.createNull();
 
-        await recipeRepository.store(newRecipeInput());
+        await recipeRepository.store(newRecipe());
 
         expect(dbClient.recipe.create).not.toHaveBeenCalled();
       });
@@ -45,11 +45,11 @@ describe("RecipeRepository", () => {
       it("should track calls", async () => {
         const recipeRepository = RecipeRepository.createNull();
         const storeCalls = recipeRepository.trackCalls("store");
-        const recipeInput = newRecipeInput();
+        const recipe = newRecipe();
 
-        await recipeRepository.store(recipeInput);
+        await recipeRepository.store(recipe);
 
-        expect(storeCalls).toEqual([recipeInput]);
+        expect(storeCalls).toEqual([recipe]);
       });
     });
   });
