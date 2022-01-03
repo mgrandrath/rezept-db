@@ -24,6 +24,7 @@
     "eslint": "^8.5.0",
     "jest": "^27.4.5",
     "node-fetch": "^2.6.6",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "prisma": "^3.7.0"
   }
 }
