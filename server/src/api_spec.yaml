@@ -20,22 +20,62 @@ paths:
       operationId: health.show
       responses:
         '200':
-          $ref: '#/components/responses/HealthSuccessResponse'
+          description: |
+            The system is up and running.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
+
+  /recipes:
+    post:
+      description: |
+        Create a new recipe entry.
+      operationId: recipes.create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeInput'
+      responses:
+        '201':
+          description: |
+            The recipe has been created.
+          headers:
+            Location:
+              description: |
+                The recipe's URL.
+              schema:
+                type: string
+                format: uri
+                example: https://example.com/recipes/recipe-123
 
 components:
-  responses:
-    HealthSuccessResponse:
-      description: |
-        The system is up and running.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: |
-                  "OK" if system is healthy, an error message otherwise.
-                example: OK
-            required:
-              - status
+  schemas:
+    RecipeInput:
+      type: object
+      properties:
+        title:
+          type: string
+          description: |
+            Descriptive title.
+          example: Grilled cheese
+        notes:
+          type: string
+          description: |
+            Arbitrary notes.
+          example: American cheese melts best
+      required:
+        - title
+
+    SystemStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          description: |
+            "OK" if system is healthy, an error message otherwise.
+          example: OK
+      required:
+        - status
