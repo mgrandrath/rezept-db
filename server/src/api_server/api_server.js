@@ -91,6 +91,7 @@ module.exports = class Server {
         httpRequest.services = this._services;
         next();
       });
+      expressServer.use(express.json());
       expressServer.use("/apidocs", swaggerUi.serve, swaggerUi.setup(apiSpec));
       expressServer.use(
         "/api",
