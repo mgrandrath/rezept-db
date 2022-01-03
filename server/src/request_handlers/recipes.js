@@ -4,7 +4,7 @@ exports.create = async (services, request) => {
   const recipeId = services.uuid.uuidV4();
   const recipe = {
     ...request.data,
-    id: recipeId,
+    recipeId,
   };
 
   await services.recipeRepository.store(recipe);

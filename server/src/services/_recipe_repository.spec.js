@@ -10,7 +10,7 @@ jest.mock("./db_client.js", () => ({
 }));
 
 const newRecipe = () => ({
-  id: "recipe-111",
+  recipeId: "recipe-111",
   title: "Grilled cheese",
   notes: "American cheese melts best",
 });
@@ -21,7 +21,7 @@ describe("RecipeRepository", () => {
       dbClient.recipe.create.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipe = newRecipe({
-        id: "recipe-111",
+        recipeId: "recipe-111",
         title: "Grilled cheese",
         notes: "American cheese melts best",
       });

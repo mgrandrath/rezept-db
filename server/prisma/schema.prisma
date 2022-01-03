@@ -8,7 +8,7 @@ generator client {
 }
 
 model Recipe {
-  id    String  @id @default(uuid())
-  title String
-  notes String?
+  recipeId String  @id @default(uuid())
+  title    String
+  notes    String?
 }

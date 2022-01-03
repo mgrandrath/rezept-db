@@ -18,9 +18,9 @@ module.exports = class RecipeRepository {
     this._emitter = new EventEmitter();
   }
 
-  async store(recipeInput) {
-    this._emitter.emit("store", recipeInput);
-    await this._dbClient.recipe.create({ data: recipeInput });
+  async store(recipe) {
+    this._emitter.emit("store", recipe);
+    await this._dbClient.recipe.create({ data: recipe });
   }
 
   trackCalls(methodName) {

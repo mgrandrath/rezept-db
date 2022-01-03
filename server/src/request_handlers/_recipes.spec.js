@@ -37,7 +37,7 @@ describe("recipes", () => {
 
       expect(storeCalls).toEqual([
         {
-          id: recipeId,
+          recipeId,
           title: "Grilled cheese",
           notes: "American cheese melts best",
         },
