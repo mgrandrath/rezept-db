@@ -69,7 +69,7 @@ const resolveOperationHandler = (requestHandlerDirectory, route, apiSpec) => {
 };
 
 module.exports = class Server {
-  constructor(options, services = {} /* TODO */) {
+  constructor(options, services) {
     this._apiSpecFilename = options.apiSpecFilename;
     this._requestHandlerDirectory = options.requestHandlerDirectory;
     this._services = services;
