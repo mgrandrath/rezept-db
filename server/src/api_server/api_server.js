@@ -35,21 +35,28 @@ const loadRequestHandler = (requestHandlerDirectory, route, apiSpec) => {
   return handleRequest;
 };
 
-const expressHandler =
-  (handleRequest) => async (httpRequest, httpResponse, next) => {
-    const request = {
-      query: httpRequest.query,
-      data: httpRequest.body,
-      params: httpRequest.params,
-    };
-    const response = await handleRequest(httpRequest.services, request);
-
-    if (response.data) {
-      httpResponse.json(response.data);
-    } else {
-      httpResponse.end();
-    }
+const expressHandler = (handleRequest) => async (httpRequest, httpResponse) => {
+  const request = {
+    query: httpRequest.query,
+    data: httpRequest.body,
+    params: httpRequest.params,
   };
+  const response = await handleRequest(httpRequest.services, request);
+
+  if (response?.status) {
+    httpResponse.status(response.status);
+  }
+
+  if (response?.headers) {
+    httpResponse.header(response.headers);
+  }
+
+  if (response?.data) {
+    httpResponse.json(response.data);
+  } else {
+    httpResponse.end();
+  }
+};
 
 const resolveOperationHandler = (requestHandlerDirectory, route, apiSpec) => {
   const handleRequest = loadRequestHandler(
