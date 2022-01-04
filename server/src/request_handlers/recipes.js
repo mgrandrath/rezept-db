@@ -1,5 +1,13 @@
 "use strict";
 
+exports.index = async () => {
+  return {
+    data: {
+      recipes: [],
+    },
+  };
+};
+
 exports.create = async (services, request) => {
   const recipeId = services.uuid.uuidV4();
   const recipe = {

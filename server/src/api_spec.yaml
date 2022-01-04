@@ -28,6 +28,26 @@ paths:
                 $ref: '#/components/schemas/SystemStatus'
 
   /recipes:
+    get:
+      description: |
+        Get a list of all recipes.
+      operationId: recipes.index
+      responses:
+        '200':
+          description: |
+            OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recipes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recipe'
+                required:
+                  - recipes
+
     post:
       description: |
         Create a new recipe entry.
@@ -57,18 +77,43 @@ components:
       type: object
       properties:
         title:
-          type: string
-          minLength: 1
-          description: |
-            Descriptive title.
-          example: Grilled cheese
+          $ref: '#/components/schemas/RecipeTitle'
         notes:
-          type: string
-          description: |
-            Arbitrary notes.
-          example: American cheese melts best
+          $ref: '#/components/schemas/RecipeNotes'
       required:
         - title
+
+    Recipe:
+      type: object
+      properties:
+        recipeId:
+          $ref: '#/components/schemas/RecipeId'
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        notes:
+          $ref: '#/components/schemas/RecipeNotes'
+      required:
+        - recipeId
+
+    RecipeId:
+      type: string
+      description: |
+        The recipe's unique id.
+      example: 257066a2-a1d7-4bed-a4f8-97b54bc88efb
+
+    RecipeTitle:
+      type: string
+      minLength: 1
+      description: |
+        Descriptive title.
+      example: Grilled cheese
+
+    RecipeNotes:
+      type: string
+      nullable: true
+      description: |
+        Arbitrary notes.
+      example: American cheese melts best
 
     SystemStatus:
       type: object
