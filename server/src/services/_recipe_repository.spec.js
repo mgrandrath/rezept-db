@@ -2,6 +2,7 @@
 
 const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
+const { newRecipe } = require("../spec_helper/fixtures.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
@@ -9,13 +10,6 @@ jest.mock("./db_client.js", () => ({
     findMany: jest.fn(),
   },
 }));
-
-const newRecipe = (overrides) => ({
-  recipeId: "recipe-111",
-  title: "Grilled cheese",
-  notes: "American cheese melts best",
-  ...overrides,
-});
 
 describe("RecipeRepository", () => {
   describe("store", () => {

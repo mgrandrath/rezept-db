@@ -4,26 +4,11 @@ const RecipeRepository = require("../services/recipe_repository.js");
 const Services = require("../services/services.js");
 const Uuid = require("../services/uuid.js");
 const recipes = require("./recipes.js");
-
-const newRequest = (overrides) => ({
-  params: {},
-  query: {},
-  data: null,
-  ...overrides,
-});
-
-const newRecipeInput = (overrides) => ({
-  title: "Grilles chees",
-  notes: "",
-  ...overrides,
-});
-
-const newRecipe = (overrides) => ({
-  recipeId: "recipe-111",
-  title: "Grilled cheese",
-  notes: "American cheese melts best",
-  ...overrides,
-});
+const {
+  newRecipe,
+  newRecipeInput,
+  newRequest,
+} = require("../spec_helper/fixtures.js");
 
 describe("recipes", () => {
   describe("index", () => {
