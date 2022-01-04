@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node src/main.js",
+    "start": "npx nodemon --ext js,json,yaml src/main.js",
     "test": "jest",
     "test:watch": "jest --watch=true",
     "lint": "eslint .",
@@ -27,6 +27,7 @@
     "eslint": "^8.5.0",
     "jest": "^27.4.5",
     "node-fetch": "^2.6.6",
+    "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "prisma": "^3.7.0"
   }
