@@ -1,5 +1,6 @@
 "use strict";
 
+const RecipeRepository = require("../services/recipe_repository.js");
 const Services = require("../services/services.js");
 const Uuid = require("../services/uuid.js");
 const recipes = require("./recipes.js");
@@ -17,7 +18,40 @@ const newRecipeInput = (overrides) => ({
   ...overrides,
 });
 
+const newRecipe = (overrides) => ({
+  recipeId: "recipe-111",
+  title: "Grilled cheese",
+  notes: "American cheese melts best",
+  ...overrides,
+});
+
 describe("recipes", () => {
+  describe("index", () => {
+    it("should return all recipes", async () => {
+      const services = Services.createNull({
+        recipeRepository: RecipeRepository.createNull({
+          findAll: [
+            {
+              response: [
+                newRecipe({ recipeId: "recipe-111" }),
+                newRecipe({ recipeId: "recipe-222" }),
+              ],
+            },
+          ],
+        }),
+      });
+      const request = newRequest();
+
+      const response = await recipes.index(services, request);
+
+      expect(response).toMatchObject({
+        data: {
+          recipes: [{ recipeId: "recipe-111" }, { recipeId: "recipe-222" }],
+        },
+      });
+    });
+  });
+
   describe("create", () => {
     it("should store the given recipe with a generated id", async () => {
       const recipeId = "recipe-111";
