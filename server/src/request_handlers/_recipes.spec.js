@@ -43,5 +43,23 @@ describe("recipes", () => {
         },
       ]);
     });
+
+    it("should return the recipe's location", async () => {
+      const services = Services.createNull({
+        uuid: Uuid.createNull("12345"),
+      });
+      const request = newRequest({
+        data: newRecipeInput(),
+      });
+
+      const response = await recipes.create(services, request);
+
+      expect(response).toEqual({
+        status: 201,
+        headers: {
+          Location: "/api/recipes/12345",
+        },
+      });
+    });
   });
 });

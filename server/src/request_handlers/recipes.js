@@ -12,7 +12,7 @@ exports.create = async (services, request) => {
   return {
     status: 201,
     headers: {
-      Location: "http://example.com/recipe-123",
+      Location: `/api/recipes/${recipeId}`,
     },
   };
 };
