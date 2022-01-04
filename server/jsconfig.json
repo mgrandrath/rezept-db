@@ -1,5 +1,10 @@
 {
   "typeAcquisition": {
-    "exclude": ["agent-base", "https-proxy-agent", "source-map"]
+    "exclude": [
+      "agent-base",
+      "https-proxy-agent",
+      "source-map",
+      "defer-to-connect"
+    ]
   }
 }
