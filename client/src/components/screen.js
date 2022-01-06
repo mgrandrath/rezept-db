@@ -1,6 +1,9 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import { Link, useLocation, useResolvedPath } from "react-router-dom";
-import { Search, PlusCircle } from "bootstrap-icons-react";
+import {
+  Search as FindIcon,
+  PlusCircle as AddIcon,
+} from "bootstrap-icons-react";
 
 const NavLink = (props) => {
   const { to, end, ...linkProps } = props;
@@ -21,22 +24,22 @@ const NavLink = (props) => {
 
 export const AppHeader = () => {
   return (
-    <Navbar bg="dark" variant="dark" className="px-5 py-3">
-      <Navbar.Brand>Rezept-DB</Navbar.Brand>
+    <Navbar bg="dark" variant="dark" className="px-4">
+      <Navbar.Brand>
+        <Link to="/" className="text-reset text-decoration-none">
+          Rezept-DB
+        </Link>
+      </Navbar.Brand>
       <Nav className="ms-auto">
         <Nav.Item className="ms-4">
           <NavLink to="/recipes">
-            <Search className="d-block mx-auto mb-1" width={24} height={24} />
+            <FindIcon className="d-block mx-auto mb-1" width={18} height={18} />
             Find recipe
           </NavLink>
         </Nav.Item>
         <Nav.Item className="ms-4">
           <NavLink to="/add-recipe">
-            <PlusCircle
-              className="d-block mx-auto mb-1"
-              width={24}
-              height={24}
-            />
+            <AddIcon className="d-block mx-auto mb-1" width={18} height={18} />
             Add recipe
           </NavLink>
         </Nav.Item>
