@@ -1,1 +1,5 @@
-{}
+{
+  "typeAcquisition": {
+    "exclude": ["agent-base"]
+  }
+}
