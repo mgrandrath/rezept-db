@@ -8,8 +8,7 @@ export const App = () => {
   return (
     <div>
       <AppHeader />
-      <Container>
-        <h1>Rezept-DB</h1>
+      <Container className="mt-5">
         <Outlet />
       </Container>
     </div>

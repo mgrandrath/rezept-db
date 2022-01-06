@@ -1,5 +1,6 @@
-import { Nav } from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link, useLocation, useResolvedPath } from "react-router-dom";
+import { Search, PlusCircle } from "bootstrap-icons-react";
 
 const NavLink = (props) => {
   const { to, end, ...linkProps } = props;
@@ -20,15 +21,26 @@ const NavLink = (props) => {
 
 export const AppHeader = () => {
   return (
-    <header>
-      <Nav variant="pills">
-        <Nav.Item>
-          <NavLink to="/recipes">Find recipe</NavLink>
+    <Navbar bg="dark" variant="dark" className="px-5 py-3">
+      <Navbar.Brand>Rezept-DB</Navbar.Brand>
+      <Nav className="ms-auto">
+        <Nav.Item className="ms-4">
+          <NavLink to="/recipes">
+            <Search className="d-block mx-auto mb-1" width={24} height={24} />
+            Find recipe
+          </NavLink>
         </Nav.Item>
-        <Nav.Item>
-          <NavLink to="/add-recipe">Add recipe</NavLink>
+        <Nav.Item className="ms-4">
+          <NavLink to="/add-recipe">
+            <PlusCircle
+              className="d-block mx-auto mb-1"
+              width={24}
+              height={24}
+            />
+            Add recipe
+          </NavLink>
         </Nav.Item>
       </Nav>
-    </header>
+    </Navbar>
   );
 };
