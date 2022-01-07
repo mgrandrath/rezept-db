@@ -6,6 +6,7 @@ const {
 } = require("@testing-library/react");
 const nock = require("nock");
 const { QueryClientProvider, QueryClient } = require("react-query");
+const { ToastContextProvider } = require("../toast.js");
 const { default: AddRecipe } = require("./add_recipe.js");
 
 const enterValue = (input, value) => {
@@ -25,7 +26,9 @@ describe("AddRecipe", () => {
 
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <AddRecipe />
+        <ToastContextProvider>
+          <AddRecipe />
+        </ToastContextProvider>
       </QueryClientProvider>
     );
 
