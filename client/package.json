@@ -24,6 +24,7 @@
     "bootstrap-icons-react": "^1.0.0",
     "deepmerge": "^4.2.2",
     "eslint": "^8.5.0",
+    "formik": "^2.2.9",
     "nock": "^13.2.1",
     "prettier": "^2.5.1",
     "react": "^17.0.2",

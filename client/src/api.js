@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 export const useRecipes = () => {
   return useQuery("recipes", async () => {
@@ -9,5 +9,15 @@ export const useRecipes = () => {
     });
 
     return response.data.recipes;
+  });
+};
+
+export const useAddRecipe = () => {
+  return useMutation(async (recipeInput) => {
+    await axios({
+      method: "post",
+      url: "/api/recipes",
+      data: recipeInput,
+    });
   });
 };
