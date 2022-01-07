@@ -1,4 +1,4 @@
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Formik } from "formik";
 import { useAddRecipe } from "../api.js";
 
@@ -44,27 +44,42 @@ const AddRecipeForm = () => {
             onSubmit={formik.handleSubmit}
             disabled={formik.isSubmitting}
           >
-            <Form.Group controlId="title">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                size="lg"
-                {...getFieldProps(formik, "title")}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.title}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <Row lg={2} xxl={3} className="mb-3">
+              <Form.Group as={Col} controlId="title">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  size="lg"
+                  {...getFieldProps(formik, "title")}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.title}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
 
-            <Form.Group controlId="notes">
-              <Form.Label>Notes</Form.Label>
-              <Form.Control as="textarea" {...getFieldProps(formik, "notes")} />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.notes}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <Row lg={2} xxl={3} className="mb-4">
+              <Form.Group as={Col} controlId="notes">
+                <Form.Label>Notes</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  {...getFieldProps(formik, "notes")}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.notes}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
 
-            <Button type="submit">Save</Button>
+            <Row lg={2} xxl={3}>
+              <Col>
+                <Stack direction="horizontal">
+                  <Button type="submit" className="ms-auto">
+                    Save
+                  </Button>
+                </Stack>
+              </Col>
+            </Row>
           </Form>
         )}
       </Formik>
@@ -75,7 +90,7 @@ const AddRecipeForm = () => {
 const AddRecipe = () => {
   return (
     <div>
-      <h1>Add recipe</h1>
+      <h1 className="mb-5">Add recipe</h1>
       <AddRecipeForm />
     </div>
   );
