@@ -39,6 +39,7 @@ paths:
             type: string
             example: pizza
           required: false
+          allowEmptyValue: true
           description: |
             If present only recipes that contain the given string in their
             `title` will be returned.

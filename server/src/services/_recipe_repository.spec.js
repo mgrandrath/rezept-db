@@ -83,6 +83,17 @@ describe("RecipeRepository", () => {
       });
     });
 
+    it("should not pass in a title filter string when it's blank", async () => {
+      dbClient.recipe.findMany.mockResolvedValue([]);
+      const recipeRepository = RecipeRepository.create();
+
+      await recipeRepository.find({ title: "" });
+
+      expect(
+        dbClient.recipe.findMany.mock.calls[0][0]?.where?.title?.contains
+      ).toEqual(undefined);
+    });
+
     describe("null instance", () => {
       it("should return a default response", async () => {
         const recipeRepository = RecipeRepository.createNull();

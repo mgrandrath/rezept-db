@@ -30,9 +30,9 @@ module.exports = class RecipeRepository {
     await this._dbClient.recipe.create({ data: recipe });
   }
 
-  async find({ title } = {}) {
+  async find(filter = {}) {
     const recipes = await this._dbClient.recipe.findMany({
-      where: { title: { contains: title } },
+      where: { title: { contains: filter.title || undefined } },
     });
     return {
       data: recipes,
