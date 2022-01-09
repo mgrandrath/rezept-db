@@ -2,6 +2,38 @@
 
 const object = require("./object.js");
 
+describe("equals", () => {
+  it("should return true when two objects are equal", () => {
+    const a = {
+      prop: "some-value",
+    };
+    const b = {
+      prop: "some-value",
+    };
+    expect(object.equals(a, b)).toEqual(true);
+  });
+
+  it("should return false when two objects are not equal", () => {
+    const a = {
+      prop: "some-value",
+    };
+    const b = {
+      prop: "other-value",
+    };
+    expect(object.equals(a, b)).toEqual(false);
+  });
+
+  it("should compare properties w/o coercions", () => {
+    const a = {
+      prop: "4",
+    };
+    const b = {
+      prop: 4,
+    };
+    expect(object.equals(a, b)).toEqual(false);
+  });
+});
+
 describe("deepmerge", () => {
   it("should return an object when called without arguments", () => {
     expect(object.deepmerge()).toEqual({});

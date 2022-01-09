@@ -51,7 +51,7 @@ describe("RecipeRepository", () => {
   });
 
   describe("find", () => {
-    it("should return all recipes", async () => {
+    it("should return all recipes when no filter is given", async () => {
       dbClient.recipe.findMany.mockResolvedValue([
         newRecipe({ recipeId: "recipe-111" }),
         newRecipe({ recipeId: "recipe-222" }),
@@ -69,6 +69,20 @@ describe("RecipeRepository", () => {
       });
     });
 
+    it("should filter by title", async () => {
+      dbClient.recipe.findMany.mockResolvedValue([
+        newRecipe({ recipeId: "recipe-111" }),
+      ]);
+      const recipeRepository = RecipeRepository.create();
+
+      const result = await recipeRepository.find({ title: "pizza" });
+
+      expect(result.data).toHaveLength(1);
+      expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
+        where: { title: { contains: "pizza" } },
+      });
+    });
+
     describe("null instance", () => {
       it("should return a default response", async () => {
         const recipeRepository = RecipeRepository.createNull();
@@ -82,20 +96,31 @@ describe("RecipeRepository", () => {
         const recipeRepository = RecipeRepository.createNull({
           find: [
             {
-              response: [
-                newRecipe({ recipeId: "recipe-111" }),
-                newRecipe({ recipeId: "recipe-222" }),
-              ],
+              params: {},
+              response: {
+                data: [
+                  newRecipe({ recipeId: "recipe-111" }),
+                  newRecipe({ recipeId: "recipe-222" }),
+                ],
+              },
+            },
+            {
+              params: { title: "pizza" },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-333" })],
+              },
             },
           ],
         });
 
-        const result = await recipeRepository.find();
-
-        expect(result.data).toMatchObject([
+        const result1 = await recipeRepository.find();
+        expect(result1.data).toMatchObject([
           { recipeId: "recipe-111" },
           { recipeId: "recipe-222" },
         ]);
+
+        const result2 = await recipeRepository.find({ title: "pizza" });
+        expect(result2.data).toMatchObject([{ recipeId: "recipe-333" }]);
       });
     });
   });

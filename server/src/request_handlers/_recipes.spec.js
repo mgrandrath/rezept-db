@@ -17,10 +17,12 @@ describe("recipes", () => {
         recipeRepository: RecipeRepository.createNull({
           find: [
             {
-              response: [
-                newRecipe({ recipeId: "recipe-111" }),
-                newRecipe({ recipeId: "recipe-222" }),
-              ],
+              response: {
+                data: [
+                  newRecipe({ recipeId: "recipe-111" }),
+                  newRecipe({ recipeId: "recipe-222" }),
+                ],
+              },
             },
           ],
         }),

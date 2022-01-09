@@ -1,6 +1,7 @@
 "use strict";
 
 const EventEmitter = require("node:events");
+const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
 
@@ -9,8 +10,14 @@ module.exports = class RecipeRepository {
     return new RecipeRepository(realDbClient);
   }
 
-  static createNull(options) {
-    return new RecipeRepository(newNullDbClient(options));
+  static createNull(options = {}) {
+    const clientOptions = {
+      findMany: (options.find ?? []).map(({ params, response }) => ({
+        params: { where: { title: { contains: params?.title } } },
+        response: response.data,
+      })),
+    };
+    return new RecipeRepository(newNullDbClient(clientOptions));
   }
 
   constructor(dbClient) {
@@ -23,8 +30,10 @@ module.exports = class RecipeRepository {
     await this._dbClient.recipe.create({ data: recipe });
   }
 
-  async find() {
-    const recipes = await this._dbClient.recipe.findMany();
+  async find({ title } = {}) {
+    const recipes = await this._dbClient.recipe.findMany({
+      where: { title: { contains: title } },
+    });
     return {
       data: recipes,
     };
@@ -35,12 +44,16 @@ module.exports = class RecipeRepository {
   }
 };
 
-const newNullDbClient = (options = {}) => ({
+const newNullDbClient = (options) => ({
   recipe: {
     create: () => Promise.resolve(),
-    findMany: () => {
-      const responses = options.find ?? [];
-      const match = responses[0] ?? { response: [] };
+    findMany: (params) => {
+      const responses = options.findMany;
+      const match = responses.find((response) =>
+        equals(response.params, params)
+      ) ?? {
+        response: [],
+      };
 
       return Promise.resolve(match.response);
     },
