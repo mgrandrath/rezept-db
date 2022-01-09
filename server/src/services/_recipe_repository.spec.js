@@ -50,7 +50,7 @@ describe("RecipeRepository", () => {
     });
   });
 
-  describe("findAll", () => {
+  describe("find", () => {
     it("should return all recipes", async () => {
       dbClient.recipe.findMany.mockResolvedValue([
         newRecipe({ recipeId: "recipe-111" }),
@@ -58,7 +58,7 @@ describe("RecipeRepository", () => {
       ]);
       const recipeRepository = RecipeRepository.create();
 
-      const result = await recipeRepository.findAll();
+      const result = await recipeRepository.find();
 
       expect(result.data).toHaveLength(2);
       expect(result.data).toContainMatchingObject({
@@ -73,14 +73,14 @@ describe("RecipeRepository", () => {
       it("should return a default response", async () => {
         const recipeRepository = RecipeRepository.createNull();
 
-        const result = await recipeRepository.findAll();
+        const result = await recipeRepository.find();
 
         expect(result.data).toEqual([]);
       });
 
       it("should return a configurable response", async () => {
         const recipeRepository = RecipeRepository.createNull({
-          findAll: [
+          find: [
             {
               response: [
                 newRecipe({ recipeId: "recipe-111" }),
@@ -90,7 +90,7 @@ describe("RecipeRepository", () => {
           ],
         });
 
-        const result = await recipeRepository.findAll();
+        const result = await recipeRepository.find();
 
         expect(result.data).toMatchObject([
           { recipeId: "recipe-111" },

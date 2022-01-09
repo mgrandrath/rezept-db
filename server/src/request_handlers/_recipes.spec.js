@@ -15,7 +15,7 @@ describe("recipes", () => {
     it("should return all recipes", async () => {
       const services = Services.createNull({
         recipeRepository: RecipeRepository.createNull({
-          findAll: [
+          find: [
             {
               response: [
                 newRecipe({ recipeId: "recipe-111" }),

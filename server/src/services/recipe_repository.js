@@ -23,7 +23,7 @@ module.exports = class RecipeRepository {
     await this._dbClient.recipe.create({ data: recipe });
   }
 
-  async findAll() {
+  async find() {
     const recipes = await this._dbClient.recipe.findMany();
     return {
       data: recipes,
@@ -39,7 +39,7 @@ const newNullDbClient = (options = {}) => ({
   recipe: {
     create: () => Promise.resolve(),
     findMany: () => {
-      const responses = options.findAll ?? [];
+      const responses = options.find ?? [];
       const match = responses[0] ?? { response: [] };
 
       return Promise.resolve(match.response);

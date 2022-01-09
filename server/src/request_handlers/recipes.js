@@ -1,7 +1,7 @@
 "use strict";
 
 exports.index = async (services, request) => {
-  const recipes = await services.recipeRepository.findAll();
+  const recipes = await services.recipeRepository.find();
   return {
     data: {
       recipes: recipes.data,
