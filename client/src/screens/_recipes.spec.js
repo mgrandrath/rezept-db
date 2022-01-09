@@ -6,6 +6,7 @@ import {
 } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter } from "react-router-dom";
 import { newRecipe } from "../spec_helper/fixtures.js";
 import Recipes from "./recipes.js";
 
@@ -28,7 +29,9 @@ describe("Recipes", () => {
 
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <Recipes />
+        <MemoryRouter>
+          <Recipes />
+        </MemoryRouter>
       </QueryClientProvider>
     );
 
@@ -62,7 +65,9 @@ describe("Recipes", () => {
 
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <Recipes />
+        <MemoryRouter>
+          <Recipes />
+        </MemoryRouter>
       </QueryClientProvider>
     );
 

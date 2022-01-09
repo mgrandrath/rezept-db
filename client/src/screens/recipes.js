@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Formik } from "formik";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,16 +7,18 @@ import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
 import { useRecipes } from "../api.js";
 
-const RecipesFilter = (props) => {
-  const { initialValues, onSubmit } = props;
+const searchParamsToObject = (urlSearchParams) =>
+  Object.fromEntries(urlSearchParams.entries());
 
-  const handleReset = (formik) => () => {
-    formik.resetForm();
-    formik.submitForm();
-  };
+const RecipesFilter = (props) => {
+  const { initialValues, onSubmit, onReset } = props;
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+    >
       {(formik) => (
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group className="mb-4" controlId="title">
@@ -28,7 +30,7 @@ const RecipesFilter = (props) => {
               className="ms-auto"
               type="button"
               variant="outline-secondary"
-              onClick={handleReset(formik)}
+              onClick={onReset}
             >
               Reset all filters
             </Button>
@@ -62,14 +64,22 @@ const RecipesList = (props) => {
 };
 
 const Recipes = () => {
-  const [filter, setFilter] = useState({ title: "" });
+  const defaultValues = { title: "" };
+  const [filterParams, setFilterParams] = useSearchParams(defaultValues);
+  const filter = searchParamsToObject(filterParams);
+  const setFilter = (filter) => setFilterParams(filter, { replace: true });
+  const resetFilter = () => setFilter(defaultValues);
 
   return (
     <div>
       <h1 className="mb-5">Find recipe</h1>
-      <Row>
-        <Col xs={12} md={5} lg={4} className="mb-3">
-          <RecipesFilter initialValues={filter} onSubmit={setFilter} />
+      <Row className="g-5">
+        <Col xs={12} md={5} lg={4}>
+          <RecipesFilter
+            initialValues={filter}
+            onSubmit={setFilter}
+            onReset={resetFilter}
+          />
         </Col>
         <Col md={{ offset: 1 }}>
           <RecipesList filter={filter} />
