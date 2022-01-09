@@ -30,8 +30,18 @@ paths:
   /recipes:
     get:
       description: |
-        Get a list of all recipes.
+        Get a list of recipes.
       operationId: recipes.index
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            example: pizza
+          required: false
+          description: |
+            If present only recipes that contain the given string in their
+            `title` will be returned.
       responses:
         '200':
           description: |
