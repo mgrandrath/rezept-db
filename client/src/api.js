@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
-export const useRecipes = () => {
-  return useQuery("recipes", async () => {
+export const useRecipes = (filter = {}) => {
+  const params = {
+    title: filter.title,
+  };
+  return useQuery(["recipes", params], async () => {
     const response = await axios({
       method: "get",
       url: "/api/recipes",
+      params,
     });
 
     return response.data.recipes;
