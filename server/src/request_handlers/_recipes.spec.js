@@ -37,6 +37,32 @@ describe("recipes", () => {
         },
       });
     });
+
+    it("should filter recipes by title", async () => {
+      const services = Services.createNull({
+        recipeRepository: RecipeRepository.createNull({
+          find: [
+            {
+              params: { title: "pizza" },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-111" })],
+              },
+            },
+          ],
+        }),
+      });
+      const request = newRequest({
+        query: { title: "pizza" },
+      });
+
+      const response = await recipes.index(services, request);
+
+      expect(response).toMatchObject({
+        data: {
+          recipes: [{ recipeId: "recipe-111" }],
+        },
+      });
+    });
   });
 
   describe("create", () => {
