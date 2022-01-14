@@ -1,10 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Formik } from "formik";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Stack from "react-bootstrap/Stack";
+import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { useRecipes } from "../api.js";
 
 const searchParamsToObject = (urlSearchParams) =>

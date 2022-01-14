@@ -1,5 +1,4 @@
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { Nav, Navbar } from "react-bootstrap";
 import { Link, useLocation, useResolvedPath } from "react-router-dom";
 import {
   Search as FindIcon,

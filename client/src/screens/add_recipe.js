@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { Formik } from "formik";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Stack from "react-bootstrap/Stack";
-import Alert from "react-bootstrap/Alert";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { useToast } from "../toast.js";
 

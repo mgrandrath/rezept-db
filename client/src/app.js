@@ -1,7 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Toast from "react-bootstrap/Toast";
-import ToastContainer from "react-bootstrap/ToastContainer";
+import { Container, Toast, ToastContainer } from "react-bootstrap";
 import { useToast } from "./toast.js";
 import { AppHeader } from "./components/screen.js";
 
