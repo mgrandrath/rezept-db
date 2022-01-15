@@ -1,6 +1,14 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { Formik } from "formik";
-import { Button, Col, Form, ListGroup, Row, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Form,
+  ListGroup,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import { useRecipes } from "../api.js";
 
 const searchParamsToObject = (urlSearchParams) =>
@@ -40,19 +48,19 @@ const RecipesFilter = (props) => {
 
 const RecipesList = (props) => {
   const { filter } = props;
-  const recipes = useRecipes(filter);
+  const recipesQuery = useRecipes(filter);
 
-  if (recipes.isLoading) {
+  if (recipesQuery.isLoading) {
     return <div>Loading…</div>;
   }
 
-  if (recipes.isError) {
-    return <div>Error: {recipes.error.message}</div>;
+  if (recipesQuery.isError) {
+    return <Alert variant="danger">Error: {recipesQuery.error.message}</Alert>;
   }
 
   return (
     <ListGroup variant="flush">
-      {recipes.data.map((recipe) => (
+      {recipesQuery.data.map((recipe) => (
         <ListGroup.Item
           key={recipe.recipeId}
           className="p-3"

@@ -14,7 +14,7 @@ const enterValue = (input, value) => {
   fireEvent.change(input, { target: { value } });
 };
 
-describe("Recipes", () => {
+describe("<Recipes>", () => {
   it("should list recipe names", async () => {
     nock("http://localhost")
       .get("/api/recipes")

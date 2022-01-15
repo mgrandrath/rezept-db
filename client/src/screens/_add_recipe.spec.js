@@ -13,7 +13,7 @@ const enterValue = (input, value) => {
   fireEvent.change(input, { target: { value } });
 };
 
-describe("AddRecipe", () => {
+describe("<AddRecipe>", () => {
   it("should save a new recipe", async () => {
     const recipeInput = {
       name: "Eggs Benedict",

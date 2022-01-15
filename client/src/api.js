@@ -16,6 +16,17 @@ export const useRecipes = (filter = {}) => {
   });
 };
 
+export const useRecipe = (recipeId) => {
+  return useQuery(["recipe", recipeId], async () => {
+    const response = await axios({
+      method: "get",
+      url: `/api/recipes/${recipeId}`,
+    });
+
+    return response.data;
+  });
+};
+
 export const useAddRecipe = () => {
   return useMutation(async (recipeInput) => {
     await axios({
