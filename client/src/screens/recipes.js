@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Formik } from "formik";
-import { Button, Col, Form, Row, Stack } from "react-bootstrap";
+import { Button, Col, Form, ListGroup, Row, Stack } from "react-bootstrap";
 import { useRecipes } from "../api.js";
 
 const searchParamsToObject = (urlSearchParams) =>
@@ -51,11 +51,13 @@ const RecipesList = (props) => {
   }
 
   return (
-    <ul>
+    <ListGroup variant="flush">
       {recipes.data.map((recipe) => (
-        <li key={recipe.recipeId}>{recipe.name}</li>
+        <ListGroup.Item key={recipe.recipeId} className="p-3">
+          <div className="fs-5">{recipe.name}</div>
+        </ListGroup.Item>
       ))}
-    </ul>
+    </ListGroup>
   );
 };
 
