@@ -5,6 +5,8 @@ const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
 
+const selectRecipeProps = { recipeId: true, name: true, notes: true };
+
 module.exports = class RecipeRepository {
   static create() {
     return new RecipeRepository(realDbClient);
@@ -13,7 +15,10 @@ module.exports = class RecipeRepository {
   static createNull(options = {}) {
     const clientOptions = {
       findMany: (options.find ?? []).map(({ params, response }) => ({
-        params: { where: { name: { contains: params?.name } } },
+        params: {
+          select: selectRecipeProps,
+          where: { name: { contains: params?.name } },
+        },
         response: response.data,
       })),
     };
@@ -32,6 +37,7 @@ module.exports = class RecipeRepository {
 
   async find(filter = {}) {
     const recipes = await this._dbClient.recipe.findMany({
+      select: selectRecipeProps,
       where: { name: { contains: filter.name || undefined } },
     });
     return {

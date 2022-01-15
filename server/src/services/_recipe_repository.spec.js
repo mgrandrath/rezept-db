@@ -67,6 +67,11 @@ describe("RecipeRepository", () => {
       expect(result.data).toContainMatchingObject({
         recipeId: "recipe-222",
       });
+      expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          select: { recipeId: true, name: true, notes: true },
+        })
+      );
     });
 
     it("should filter by name", async () => {
@@ -79,6 +84,7 @@ describe("RecipeRepository", () => {
 
       expect(result.data).toHaveLength(1);
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
+        select: { recipeId: true, name: true, notes: true },
         where: { name: { contains: "pizza" } },
       });
     });
