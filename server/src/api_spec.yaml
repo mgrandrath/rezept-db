@@ -107,6 +107,7 @@ components:
           $ref: '#/components/schemas/RecipeNotes'
       required:
         - recipeId
+        - name
 
     RecipeId:
       type: string
