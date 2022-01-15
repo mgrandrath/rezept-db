@@ -4,6 +4,7 @@ exports.index = async (services, request) => {
   const recipes = await services.recipeRepository.find({
     name: request.query.name,
   });
+
   return {
     data: {
       recipes: recipes.data,
@@ -11,13 +12,22 @@ exports.index = async (services, request) => {
   };
 };
 
-exports.show = async () => {
-  return {
-    status: 501,
-    data: {
-      message: "Not implemented",
-    },
-  };
+exports.show = async (services, request) => {
+  const {
+    params: { recipeId },
+  } = request;
+  const recipe = await services.recipeRepository.findById(recipeId);
+
+  return recipe
+    ? {
+        data: recipe,
+      }
+    : {
+        status: 404,
+        data: {
+          message: `The given recipeId '${recipeId}' does not exist.`,
+        },
+      };
 };
 
 exports.create = async (services, request) => {

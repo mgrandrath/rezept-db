@@ -65,6 +65,44 @@ describe("recipes", () => {
     });
   });
 
+  describe("show", () => {
+    it("should return the recipe with the given id", async () => {
+      const recipeId = "recipe-123";
+      const recipe = newRecipe({ recipeId });
+
+      const services = Services.createNull({
+        recipeRepository: RecipeRepository.createNull({
+          findById: [
+            {
+              params: recipeId,
+              response: recipe,
+            },
+          ],
+        }),
+      });
+      const request = newRequest({ params: { recipeId } });
+
+      const response = await recipes.show(services, request);
+
+      expect(response.status ?? 200).toEqual(200);
+      expect(response.data).toEqual(recipe);
+    });
+
+    it("should return a 404 error when recipeId does not exist", async () => {
+      const recipeId = "recipe-123";
+
+      const services = Services.createNull();
+      const request = newRequest({ params: { recipeId } });
+
+      const response = await recipes.show(services, request);
+
+      expect(response.status).toEqual(404);
+      expect(response.data).toEqual({
+        message: "The given recipeId 'recipe-123' does not exist.",
+      });
+    });
+  });
+
   describe("create", () => {
     it("should store the given recipe with a generated id", async () => {
       const recipeId = "recipe-111";
