@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
+import { urlPath } from "./util/url.js";
 
 export const useRecipes = (filter = {}) => {
   const params = {
@@ -20,7 +21,7 @@ export const useRecipe = (recipeId) => {
   return useQuery(["recipe", recipeId], async () => {
     const response = await axios({
       method: "get",
-      url: `/api/recipes/${recipeId}`,
+      url: urlPath`/api/recipes/${recipeId}`,
     });
 
     return response.data;
