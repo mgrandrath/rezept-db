@@ -14,6 +14,11 @@ module.exports = class RecipeRepository {
 
   static createNull(options = {}) {
     const clientOptions = {
+      findUnique: (options.findById ?? []).map(({ params, response }) => ({
+        params: { select: selectRecipeProps, where: { recipeId: params } },
+        response,
+      })),
+
       findMany: (options.find ?? []).map(({ params, response }) => ({
         params: {
           select: selectRecipeProps,
@@ -36,6 +41,13 @@ module.exports = class RecipeRepository {
     await this._dbClient.recipe.create({ data: recipe });
   }
 
+  findById(recipeId) {
+    return this._dbClient.recipe.findUnique({
+      select: selectRecipeProps,
+      where: { recipeId },
+    });
+  }
+
   async find(filter = {}) {
     const recipes = await this._dbClient.recipe.findMany({
       select: selectRecipeProps,
@@ -55,6 +67,16 @@ module.exports = class RecipeRepository {
 const newNullDbClient = (options) => ({
   recipe: {
     create: () => Promise.resolve(),
+
+    findUnique: (params) => {
+      const responses = options.findUnique;
+      const match = responses.find((response) =>
+        equals(response.params, params)
+      ) ?? { response: null };
+
+      return Promise.resolve(match.response);
+    },
+
     findMany: (params) => {
       const responses = options.findMany;
       const match = responses.find((response) =>

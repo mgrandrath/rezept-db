@@ -7,6 +7,7 @@ const { newRecipe } = require("../spec_helper/fixtures.js");
 jest.mock("./db_client.js", () => ({
   recipe: {
     create: jest.fn(),
+    findUnique: jest.fn(),
     findMany: jest.fn(),
   },
 }));
@@ -46,6 +47,55 @@ describe("RecipeRepository", () => {
         await recipeRepository.store(recipe);
 
         expect(storeCalls).toEqual([recipe]);
+      });
+    });
+  });
+
+  describe("findById", () => {
+    it("should return a single recipe by its id", async () => {
+      const recipeId = "recipe-123";
+      const recipe = newRecipe({ recipeId });
+
+      dbClient.recipe.findUnique.mockResolvedValue(recipe);
+      const recipeRepository = RecipeRepository.create();
+
+      const result = await recipeRepository.findById(recipeId);
+
+      expect(result).toEqual(recipe);
+      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+        select: { recipeId: true, name: true, notes: true },
+        where: { recipeId },
+      });
+    });
+
+    describe("null instance", () => {
+      it("should return null by default", async () => {
+        const recipeRepository = RecipeRepository.createNull();
+
+        const result = await recipeRepository.findById("irrelevant-id");
+
+        expect(result).toEqual(null);
+      });
+
+      it("should return a configurable response", async () => {
+        const recipeRepository = RecipeRepository.createNull({
+          findById: [
+            {
+              params: "recipe-111",
+              response: newRecipe({ recipeId: "recipe-111" }),
+            },
+            {
+              params: "recipe-222",
+              response: newRecipe({ recipeId: "recipe-222" }),
+            },
+          ],
+        });
+
+        const result1 = await recipeRepository.findById("recipe-111");
+        expect(result1).toMatchObject({ recipeId: "recipe-111" });
+
+        const result2 = await recipeRepository.findById("recipe-222");
+        expect(result2).toMatchObject({ recipeId: "recipe-222" });
       });
     });
   });
