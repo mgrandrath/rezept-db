@@ -13,7 +13,7 @@ module.exports = class RecipeRepository {
   static createNull(options = {}) {
     const clientOptions = {
       findMany: (options.find ?? []).map(({ params, response }) => ({
-        params: { where: { title: { contains: params?.title } } },
+        params: { where: { name: { contains: params?.name } } },
         response: response.data,
       })),
     };
@@ -32,7 +32,7 @@ module.exports = class RecipeRepository {
 
   async find(filter = {}) {
     const recipes = await this._dbClient.recipe.findMany({
-      where: { title: { contains: filter.title || undefined } },
+      where: { name: { contains: filter.name || undefined } },
     });
     return {
       data: recipes,

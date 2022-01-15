@@ -17,9 +17,9 @@ const RecipesFilter = (props) => {
     >
       {(formik) => (
         <Form onSubmit={formik.handleSubmit}>
-          <Form.Group className="mb-4" controlId="title">
-            <Form.Label>Title</Form.Label>
-            <Form.Control type="text" {...formik.getFieldProps("title")} />
+          <Form.Group className="mb-4" controlId="name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" {...formik.getFieldProps("name")} />
           </Form.Group>
           <Stack direction="horizontal" gap={3}>
             <Button
@@ -53,14 +53,14 @@ const RecipesList = (props) => {
   return (
     <ul>
       {recipes.data.map((recipe) => (
-        <li key={recipe.recipeId}>{recipe.title}</li>
+        <li key={recipe.recipeId}>{recipe.name}</li>
       ))}
     </ul>
   );
 };
 
 const Recipes = () => {
-  const defaultValues = { title: "" };
+  const defaultValues = { name: "" };
   const [filterParams, setFilterParams] = useSearchParams(defaultValues);
   const filter = searchParamsToObject(filterParams);
   const setFilter = (filter) => setFilterParams(filter, { replace: true });

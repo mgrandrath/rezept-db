@@ -14,13 +14,13 @@ exports.newRequest = factory(() => ({
 }));
 
 exports.newRecipeInput = factory(() => ({
-  title: "Default fixture title",
+  name: "Default fixture name",
   notes: "Default fixture notes",
 }));
 
 let nextRecipeId = 1000000;
 exports.newRecipe = factory(() => ({
   recipeId: `recipe-${nextRecipeId++}`,
-  title: "Default fixture title",
+  name: "Default fixture name",
   notes: "Default fixture notes",
 }));

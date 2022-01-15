@@ -15,14 +15,14 @@ const enterValue = (input, value) => {
 };
 
 describe("Recipes", () => {
-  it("should list recipe titles", async () => {
+  it("should list recipe names", async () => {
     nock("http://localhost")
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
         recipes: [
           newRecipe({
-            title: "Eggs Benedict",
+            name: "Eggs Benedict",
           }),
         ],
       });
@@ -38,27 +38,27 @@ describe("Recipes", () => {
     await screen.findByText("Eggs Benedict");
   });
 
-  it("should filter recipes by title", async () => {
+  it("should filter recipes by name", async () => {
     nock("http://localhost")
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
         recipes: [
           newRecipe({
-            title: "Eggs Benedict",
+            name: "Eggs Benedict",
           }),
           newRecipe({
-            title: "Deep Dish Pizza",
+            name: "Deep Dish Pizza",
           }),
         ],
       })
 
       .get("/api/recipes")
-      .query({ title: "eggs" })
+      .query({ name: "eggs" })
       .reply(200, {
         recipes: [
           newRecipe({
-            title: "Eggs Benedict",
+            name: "Eggs Benedict",
           }),
         ],
       });
@@ -71,12 +71,12 @@ describe("Recipes", () => {
       </QueryClientProvider>
     );
 
-    const titleInput = screen.getByRole("textbox", { name: "Title" });
+    const nameInput = screen.getByRole("textbox", { name: "Name" });
     const submitButton = screen.getByRole("button", { name: "Apply filters" });
 
     await screen.findByText("Deep Dish Pizza");
 
-    enterValue(titleInput, "eggs");
+    enterValue(nameInput, "eggs");
     fireEvent.click(submitButton);
 
     await waitForElementToBeRemoved(() =>

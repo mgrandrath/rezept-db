@@ -18,7 +18,7 @@ describe("RecipeRepository", () => {
       const recipeRepository = RecipeRepository.create();
       const recipe = newRecipe({
         recipeId: "recipe-111",
-        title: "Grilled cheese",
+        name: "Grilled cheese",
         notes: "American cheese melts best",
       });
 
@@ -69,28 +69,28 @@ describe("RecipeRepository", () => {
       });
     });
 
-    it("should filter by title", async () => {
+    it("should filter by name", async () => {
       dbClient.recipe.findMany.mockResolvedValue([
         newRecipe({ recipeId: "recipe-111" }),
       ]);
       const recipeRepository = RecipeRepository.create();
 
-      const result = await recipeRepository.find({ title: "pizza" });
+      const result = await recipeRepository.find({ name: "pizza" });
 
       expect(result.data).toHaveLength(1);
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
-        where: { title: { contains: "pizza" } },
+        where: { name: { contains: "pizza" } },
       });
     });
 
-    it("should not pass in a title filter string when it's blank", async () => {
+    it("should not pass in a name filter string when it's blank", async () => {
       dbClient.recipe.findMany.mockResolvedValue([]);
       const recipeRepository = RecipeRepository.create();
 
-      await recipeRepository.find({ title: "" });
+      await recipeRepository.find({ name: "" });
 
       expect(
-        dbClient.recipe.findMany.mock.calls[0][0]?.where?.title?.contains
+        dbClient.recipe.findMany.mock.calls[0][0]?.where?.name?.contains
       ).toEqual(undefined);
     });
 
@@ -116,7 +116,7 @@ describe("RecipeRepository", () => {
               },
             },
             {
-              params: { title: "pizza" },
+              params: { name: "pizza" },
               response: {
                 data: [newRecipe({ recipeId: "recipe-333" })],
               },
@@ -130,7 +130,7 @@ describe("RecipeRepository", () => {
           { recipeId: "recipe-222" },
         ]);
 
-        const result2 = await recipeRepository.find({ title: "pizza" });
+        const result2 = await recipeRepository.find({ name: "pizza" });
         expect(result2.data).toMatchObject([{ recipeId: "recipe-333" }]);
       });
     });

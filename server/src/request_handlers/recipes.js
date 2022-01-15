@@ -2,7 +2,7 @@
 
 exports.index = async (services, request) => {
   const recipes = await services.recipeRepository.find({
-    title: request.query.title,
+    name: request.query.name,
   });
   return {
     data: {

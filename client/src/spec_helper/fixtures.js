@@ -8,6 +8,6 @@ const factory =
 let nextRecipeId = 1000000;
 export const newRecipe = factory(() => ({
   recipeId: `recipe-${nextRecipeId++}`,
-  title: "Default fixture title",
+  name: "Default fixture name",
   notes: "Default fixture notes",
 }));

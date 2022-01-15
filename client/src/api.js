@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 
 export const useRecipes = (filter = {}) => {
   const params = {
-    title: filter.title,
+    name: filter.name,
   };
   return useQuery(["recipes", params], async () => {
     const response = await axios({

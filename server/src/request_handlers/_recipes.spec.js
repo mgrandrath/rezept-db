@@ -38,12 +38,12 @@ describe("recipes", () => {
       });
     });
 
-    it("should filter recipes by title", async () => {
+    it("should filter recipes by name", async () => {
       const services = Services.createNull({
         recipeRepository: RecipeRepository.createNull({
           find: [
             {
-              params: { title: "pizza" },
+              params: { name: "pizza" },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
               },
@@ -52,7 +52,7 @@ describe("recipes", () => {
         }),
       });
       const request = newRequest({
-        query: { title: "pizza" },
+        query: { name: "pizza" },
       });
 
       const response = await recipes.index(services, request);
@@ -75,7 +75,7 @@ describe("recipes", () => {
       const storeCalls = services.recipeRepository.trackCalls("store");
       const request = newRequest({
         data: newRecipeInput({
-          title: "Grilled cheese",
+          name: "Grilled cheese",
           notes: "American cheese melts best",
         }),
       });
@@ -85,7 +85,7 @@ describe("recipes", () => {
       expect(storeCalls).toEqual([
         {
           recipeId,
-          title: "Grilled cheese",
+          name: "Grilled cheese",
           notes: "American cheese melts best",
         },
       ]);

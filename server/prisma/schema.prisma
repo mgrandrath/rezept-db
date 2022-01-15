@@ -9,6 +9,6 @@ generator client {
 
 model Recipe {
   recipeId String  @id @default(uuid())
-  title    String
+  name     String
   notes    String?
 }

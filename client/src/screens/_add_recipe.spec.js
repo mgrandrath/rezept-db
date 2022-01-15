@@ -16,7 +16,7 @@ const enterValue = (input, value) => {
 describe("AddRecipe", () => {
   it("should save a new recipe", async () => {
     const recipeInput = {
-      title: "Eggs Benedict",
+      name: "Eggs Benedict",
       notes: "Delicious!",
     };
 
@@ -32,11 +32,11 @@ describe("AddRecipe", () => {
       </QueryClientProvider>
     );
 
-    const titleInput = screen.getByRole("textbox", { name: "Title" });
+    const nameInput = screen.getByRole("textbox", { name: "Name" });
     const notesInput = screen.getByRole("textbox", { name: "Notes" });
     const submitButton = screen.getByRole("button", { name: "Save" });
 
-    enterValue(titleInput, recipeInput.title);
+    enterValue(nameInput, recipeInput.name);
     enterValue(notesInput, recipeInput.notes);
     fireEvent.click(submitButton);
 

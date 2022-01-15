@@ -34,7 +34,7 @@ paths:
       operationId: recipes.index
       parameters:
         - in: query
-          name: title
+          name: name
           schema:
             type: string
             example: pizza
@@ -42,7 +42,7 @@ paths:
           allowEmptyValue: true
           description: |
             If present only recipes that contain the given string in their
-            `title` will be returned.
+            `name` will be returned.
       responses:
         '200':
           description: |
@@ -87,20 +87,20 @@ components:
     RecipeInput:
       type: object
       properties:
-        title:
-          $ref: '#/components/schemas/RecipeTitle'
+        name:
+          $ref: '#/components/schemas/RecipeName'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
-        - title
+        - name
 
     Recipe:
       type: object
       properties:
         recipeId:
           $ref: '#/components/schemas/RecipeId'
-        title:
-          $ref: '#/components/schemas/RecipeTitle'
+        name:
+          $ref: '#/components/schemas/RecipeName'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -112,11 +112,11 @@ components:
         The recipe's unique id.
       example: 257066a2-a1d7-4bed-a4f8-97b54bc88efb
 
-    RecipeTitle:
+    RecipeName:
       type: string
       minLength: 1
       description: |
-        Descriptive title.
+        Descriptive name.
       example: Grilled cheese
 
     RecipeNotes:

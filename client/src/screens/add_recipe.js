@@ -12,8 +12,8 @@ const getFieldProps = (formik, name) => ({
 const validateRecipeInput = (recipeInput) => {
   const errors = {};
 
-  if (!recipeInput.title) {
-    errors.title = "Please enter a title";
+  if (!recipeInput.name) {
+    errors.name = "Please enter a name";
   }
 
   return errors;
@@ -34,7 +34,7 @@ const AddRecipeForm = () => {
 
   return (
     <Formik
-      initialValues={{ title: "", notes: "" }}
+      initialValues={{ name: "", notes: "" }}
       validate={validateRecipeInput}
       onSubmit={async (recipeInput, { setSubmitting, resetForm }) => {
         try {
@@ -62,15 +62,15 @@ const AddRecipeForm = () => {
           )}
 
           <Row lg={2} xxl={3} className="mb-3">
-            <Form.Group as={Col} controlId="title">
-              <Form.Label>Title</Form.Label>
+            <Form.Group as={Col} controlId="name">
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
                 size="lg"
-                {...getFieldProps(formik, "title")}
+                {...getFieldProps(formik, "name")}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors.title}
+                {formik.errors.name}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
