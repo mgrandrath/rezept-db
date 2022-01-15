@@ -70,6 +70,7 @@ describe("RecipeRepository", () => {
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           select: { recipeId: true, name: true, notes: true },
+          orderBy: { name: "asc" },
         })
       );
     });
@@ -86,6 +87,7 @@ describe("RecipeRepository", () => {
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
         select: { recipeId: true, name: true, notes: true },
         where: { name: { contains: "pizza" } },
+        orderBy: { name: "asc" },
       });
     });
 

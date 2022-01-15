@@ -18,6 +18,7 @@ module.exports = class RecipeRepository {
         params: {
           select: selectRecipeProps,
           where: { name: { contains: params?.name } },
+          orderBy: { name: "asc" },
         },
         response: response.data,
       })),
@@ -39,6 +40,7 @@ module.exports = class RecipeRepository {
     const recipes = await this._dbClient.recipe.findMany({
       select: selectRecipeProps,
       where: { name: { contains: filter.name || undefined } },
+      orderBy: { name: "asc" },
     });
     return {
       data: recipes,
