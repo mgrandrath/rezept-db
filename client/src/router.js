@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { App } from "./app.js";
 import AddRecipe from "./screens/add_recipe.js";
+import Recipe from "./screens/recipe.js";
 import Recipes from "./screens/recipes.js";
 
 export const Router = () => {
@@ -10,7 +11,10 @@ export const Router = () => {
         <Route path="/" element={<App />}>
           <Route index element={<Navigate replace to="/recipes" />} />
           <Route path="add-recipe" element={<AddRecipe />} />
-          <Route path="recipes" element={<Recipes />} />
+          <Route path="recipes">
+            <Route index element={<Recipes />} />
+            <Route path=":recipeId" element={<Recipe />} />
+          </Route>
           <Route path="*" element={<p>404 — Screen not found</p>} />
         </Route>
       </Routes>

@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Formik } from "formik";
 import { Button, Col, Form, ListGroup, Row, Stack } from "react-bootstrap";
 import { useRecipes } from "../api.js";
@@ -53,7 +53,12 @@ const RecipesList = (props) => {
   return (
     <ListGroup variant="flush">
       {recipes.data.map((recipe) => (
-        <ListGroup.Item key={recipe.recipeId} className="p-3">
+        <ListGroup.Item
+          key={recipe.recipeId}
+          className="p-3"
+          as={Link}
+          to={`/recipes/${recipe.recipeId}`}
+        >
           <div className="fs-5">{recipe.name}</div>
         </ListGroup.Item>
       ))}
