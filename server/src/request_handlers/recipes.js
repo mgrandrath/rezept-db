@@ -11,6 +11,15 @@ exports.index = async (services, request) => {
   };
 };
 
+exports.show = async () => {
+  return {
+    status: 501,
+    data: {
+      message: "Not implemented",
+    },
+  };
+};
+
 exports.create = async (services, request) => {
   const recipeId = services.uuid.uuidV4();
   const recipe = {

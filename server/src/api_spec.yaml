@@ -82,6 +82,33 @@ paths:
                 format: uri
                 example: https://example.com/recipes/recipe-123
 
+  /recipes/{recipeId}:
+    get:
+      description: |
+        Get a recipe by its id.
+      operationId: recipes.show
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            $ref: '#/components/schemas/RecipeId'
+          required: true
+      responses:
+        '200':
+          description: |
+            OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '404':
+          description: |
+            The given `recipeId` does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     RecipeInput:
@@ -139,3 +166,12 @@ components:
           example: OK
       required:
         - status
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: |
+            A (hopefully) helpful error message.
+          example: Something went wrong
