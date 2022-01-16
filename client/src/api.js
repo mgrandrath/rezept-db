@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { urlPath } from "./util/url.js";
 
 export const useRecipes = (filter = {}) => {
@@ -29,11 +29,39 @@ export const useRecipe = (recipeId) => {
 };
 
 export const useAddRecipe = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (recipeInput) => {
+      await axios({
+        method: "post",
+        url: "/api/recipes",
+        data: recipeInput,
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("recipes");
+      },
+    }
+  );
+};
+
+export const useUpdateRecipe = (recipeId) => {
+  const queryClient = useQueryClient();
+
   return useMutation(async (recipeInput) => {
-    await axios({
-      method: "post",
-      url: "/api/recipes",
-      data: recipeInput,
-    });
+    await axios(
+      {
+        method: "put",
+        url: urlPath`/api/recipes/${recipeId}`,
+        data: recipeInput,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["recipe", recipeId]);
+        },
+      }
+    );
   });
 };

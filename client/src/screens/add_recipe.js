@@ -4,7 +4,7 @@ import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
 import { useToast } from "../toast.js";
 
-const AddRecipeForm = () => {
+const AddRecipe = () => {
   const addRecipe = useAddRecipe();
   const { addToast } = useToast();
   const [counter, setCounter] = useState(1);
@@ -19,14 +19,19 @@ const AddRecipeForm = () => {
         });
       },
     });
+
+    // Increasing the counter creates a new `key` for the <RecipeInputForm>
+    // which forces a re-render and thus resets the form values.
     setCounter((c) => c + 1);
   };
 
   return (
-    <>
+    <div>
+      <h1 className="mb-5">Add recipe</h1>
+
       {addRecipe.isError && (
-        <Row lg={2} xxl={3} className="mb-3">
-          <Col>
+        <Row className="mb-3">
+          <Col md={10} lg={6} xxl={5}>
             <Alert variant="danger" dismissible onClose={addRecipe.reset}>
               Error: {addRecipe.error.message}
             </Alert>
@@ -34,26 +39,13 @@ const AddRecipeForm = () => {
         </Row>
       )}
 
-      {/*
-        We update the form's key after each successful submit to force
-        a re-render and thus resetting the form values
-      */}
-      <RecipeInputForm
-        key={`submit-${counter}`}
-        recipeInput={recipeInput}
-        onSubmit={onSubmit}
-      />
-    </>
-  );
-};
-
-const AddRecipe = () => {
-  return (
-    <div>
-      <h1 className="mb-5">Add recipe</h1>
       <Row>
         <Col md={10} lg={6} xxl={5}>
-          <AddRecipeForm />
+          <RecipeInputForm
+            key={`submit-${counter}`}
+            recipeInput={recipeInput}
+            onSubmit={onSubmit}
+          />
         </Col>
       </Row>
     </div>

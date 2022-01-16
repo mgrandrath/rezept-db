@@ -6,6 +6,7 @@ const {
 } = require("@testing-library/react");
 const nock = require("nock");
 const { QueryClientProvider, QueryClient } = require("react-query");
+const { newRecipeInput } = require("../spec_helper/fixtures.js");
 const { ToastContextProvider } = require("../toast.js");
 const { default: AddRecipe } = require("./add_recipe.js");
 
@@ -15,13 +16,13 @@ const enterValue = (input, value) => {
 
 describe("<AddRecipe>", () => {
   it("should save a new recipe", async () => {
-    const recipeInput = {
+    const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       notes: "Delicious!",
-    };
+    });
 
     const nockScope = nock("http://localhost")
-      .post("/api/recipes", recipeInput)
+      .post("/api/recipes", expectedRecipeInput)
       .reply(201);
 
     render(
@@ -36,8 +37,8 @@ describe("<AddRecipe>", () => {
     const notesInput = screen.getByRole("textbox", { name: "Notes" });
     const submitButton = screen.getByRole("button", { name: "Save" });
 
-    enterValue(nameInput, recipeInput.name);
-    enterValue(notesInput, recipeInput.notes);
+    enterValue(nameInput, expectedRecipeInput.name);
+    enterValue(notesInput, expectedRecipeInput.notes);
     fireEvent.click(submitButton);
 
     await waitFor(() => {

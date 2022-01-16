@@ -1,5 +1,22 @@
 import { Formik } from "formik";
+import { useEffect, useRef } from "react";
 import { Button, Form, Stack } from "react-bootstrap";
+
+const useOnlyWhenMounted = () => {
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  return (f) => {
+    if (isMountedRef.current) {
+      f();
+    }
+  };
+};
 
 const getFieldProps = (formik, name) => ({
   ...formik.getFieldProps(name),
@@ -18,12 +35,18 @@ const validateRecipeInput = (recipeInput) => {
 
 export const RecipeInputForm = (props) => {
   const { recipeInput, onSubmit } = props;
+  const onlyWhenMounted = useOnlyWhenMounted();
 
   const handleSubmit = async (recipeInput, { setSubmitting }) => {
     try {
       await onSubmit(recipeInput);
     } finally {
-      setSubmitting(false);
+      // Only update Formik's `submitting` state if this component is still
+      // mounted. Otherwise this will result in the error message "Can't perform
+      // a React state update on an unmounted component".
+      onlyWhenMounted(() => {
+        setSubmitting(false);
+      });
     }
   };
 
