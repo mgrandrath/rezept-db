@@ -2,11 +2,12 @@
 
 const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
-const { newRecipe } = require("../spec_helper/fixtures.js");
+const { newRecipe, newRecipeInput } = require("../spec_helper/fixtures.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
     create: jest.fn(),
+    update: jest.fn(),
     findUnique: jest.fn(),
     findMany: jest.fn(),
   },
@@ -47,6 +48,64 @@ describe("RecipeRepository", () => {
         await recipeRepository.store(recipe);
 
         expect(storeCalls).toEqual([recipe]);
+      });
+    });
+  });
+
+  describe("update", () => {
+    it("should update the given recipe with the new values", async () => {
+      dbClient.recipe.update.mockResolvedValue();
+      const recipeRepository = RecipeRepository.create();
+      const recipeId = "recipe-111";
+      const recipeInput = newRecipeInput({
+        name: "Grilled cheese",
+        notes: "American cheese melts best",
+      });
+
+      await recipeRepository.update(recipeId, recipeInput);
+
+      expect(dbClient.recipe.update).toHaveBeenCalledWith({
+        where: { recipeId },
+        data: recipeInput,
+      });
+    });
+
+    describe("null instance", () => {
+      it("should not interact with the database", async () => {
+        const recipeRepository = RecipeRepository.createNull();
+
+        await recipeRepository.update("irrelevant-id", newRecipe());
+
+        expect(dbClient.recipe.update).not.toHaveBeenCalled();
+      });
+
+      it("should track calls", async () => {
+        const recipeRepository = RecipeRepository.createNull();
+        const updateCalls = recipeRepository.trackCalls("update");
+        const recipeId = "recipe-111";
+        const recipeInput = newRecipeInput();
+
+        await recipeRepository.update(recipeId, recipeInput);
+
+        expect(updateCalls).toEqual([[recipeId, recipeInput]]);
+      });
+
+      it("can be configured to throw an error", async () => {
+        const recipeId = "recipe-111";
+        const recipeInput = newRecipeInput();
+
+        const recipeRepository = RecipeRepository.createNull({
+          update: [
+            {
+              params: [recipeId, recipeInput],
+              response: new Error("Some error"),
+            },
+          ],
+        });
+
+        await expect(
+          recipeRepository.update(recipeId, recipeInput)
+        ).rejects.toMatchObject({ message: "Some error" });
       });
     });
   });

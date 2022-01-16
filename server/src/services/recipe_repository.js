@@ -14,6 +14,13 @@ module.exports = class RecipeRepository {
 
   static createNull(options = {}) {
     const clientOptions = {
+      update: (options.update ?? []).map(
+        ({ params: [recipeId, recipeInput], response }) => ({
+          params: { where: { recipeId }, data: recipeInput },
+          response,
+        })
+      ),
+
       findUnique: (options.findById ?? []).map(({ params, response }) => ({
         params: { select: selectRecipeProps, where: { recipeId: params } },
         response,
@@ -39,6 +46,14 @@ module.exports = class RecipeRepository {
   async store(recipe) {
     this._emitter.emit("store", recipe);
     await this._dbClient.recipe.create({ data: recipe });
+  }
+
+  async update(recipeId, recipeInput) {
+    this._emitter.emit("update", [recipeId, recipeInput]);
+    await this._dbClient.recipe.update({
+      where: { recipeId },
+      data: recipeInput,
+    });
   }
 
   findById(recipeId) {
@@ -67,6 +82,17 @@ module.exports = class RecipeRepository {
 const newNullDbClient = (options) => ({
   recipe: {
     create: () => Promise.resolve(),
+
+    update: (params) => {
+      const responses = options.update;
+      const match = responses.find((response) =>
+        equals(response.params, params)
+      ) ?? { response: null };
+
+      return match.response instanceof Error
+        ? Promise.reject(match.response)
+        : Promise.resolve(match.response);
+    },
 
     findUnique: (params) => {
       const responses = options.findUnique;
