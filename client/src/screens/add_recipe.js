@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Formik } from "formik";
 import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
@@ -23,27 +22,27 @@ const AddRecipeForm = () => {
   const addRecipe = useAddRecipe();
   const { addToast } = useToast();
 
-  useEffect(() => {
-    if (addRecipe.isSuccess) {
-      addToast({
-        heading: "Success",
-        message: "Recipe has been added",
+  const handleSubmit = async (recipeInput, { setSubmitting, resetForm }) => {
+    try {
+      await addRecipe.mutateAsync(recipeInput, {
+        onSuccess: () => {
+          addToast({
+            heading: "Success NEW",
+            message: "Recipe has been added",
+          });
+        },
       });
+      resetForm();
+    } finally {
+      setSubmitting(false);
     }
-  }, [addToast, addRecipe.isSuccess]);
+  };
 
   return (
     <Formik
       initialValues={{ name: "", notes: "" }}
       validate={validateRecipeInput}
-      onSubmit={async (recipeInput, { setSubmitting, resetForm }) => {
-        try {
-          await addRecipe.mutateAsync(recipeInput);
-          resetForm();
-        } finally {
-          setSubmitting(false);
-        }
-      }}
+      onSubmit={handleSubmit}
     >
       {(formik) => (
         <Form
