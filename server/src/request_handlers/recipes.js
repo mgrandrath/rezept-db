@@ -46,3 +46,9 @@ exports.create = async (services, request) => {
     },
   };
 };
+
+exports.update = async () => {
+  return {
+    status: 501,
+  };
+};

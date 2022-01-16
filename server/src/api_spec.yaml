@@ -83,16 +83,16 @@ paths:
                 example: https://example.com/recipes/recipe-123
 
   /recipes/{recipeId}:
+    parameters:
+      - in: path
+        name: recipeId
+        schema:
+          $ref: '#/components/schemas/RecipeId'
+        required: true
     get:
       description: |
         Get a recipe by its id.
       operationId: recipes.show
-      parameters:
-        - in: path
-          name: recipeId
-          schema:
-            $ref: '#/components/schemas/RecipeId'
-          required: true
       responses:
         '200':
           description: |
@@ -102,14 +102,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/Recipe'
         '404':
+          $ref: '#/components/responses/RecipeNotFound'
+
+    put:
+      description: |
+        Update a recipe. Missing optional values will be set to `null`.
+      operationId: recipes.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeInput'
+      responses:
+        '204':
           description: |
-            The given `recipeId` does not exist.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+            The update has been applied.
+        '404':
+          $ref: '#/components/responses/RecipeNotFound'
 
 components:
+  responses:
+    RecipeNotFound:
+      description: |
+        The given `recipeId` does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
   schemas:
     RecipeInput:
       type: object
