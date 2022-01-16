@@ -147,4 +147,75 @@ describe("recipes", () => {
       });
     });
   });
+
+  describe("update", () => {
+    it("should replace the given recipe's data", async () => {
+      const recipeId = "recipe-111";
+      const recipeInput = newRecipeInput();
+
+      const services = Services.createNull();
+      const updateCalls = services.recipeRepository.trackCalls("update");
+      const request = newRequest({
+        params: { recipeId },
+        data: recipeInput,
+      });
+
+      const response = await recipes.update(services, request);
+
+      expect(updateCalls).toEqual([[recipeId, recipeInput]]);
+      expect(response).toEqual({
+        status: 204,
+      });
+    });
+
+    it("should implement PUT semantics by setting missing optional values to null", async () => {
+      const recipeId = "recipe-111";
+      const recipeInput = newRecipeInput();
+      delete recipeInput.notes;
+      const expectedRecipeInput = {
+        ...recipeInput,
+        notes: null,
+      };
+
+      const services = Services.createNull();
+      const updateCalls = services.recipeRepository.trackCalls("update");
+      const request = newRequest({
+        params: { recipeId },
+        data: recipeInput,
+      });
+
+      await recipes.update(services, request);
+
+      expect(updateCalls).toEqual([[recipeId, expectedRecipeInput]]);
+    });
+
+    it("should return a 404 error when recipeId does not exist", async () => {
+      const recipeId = "recipe-123";
+      const recipeInput = newRecipeInput();
+
+      const services = Services.createNull({
+        recipeRepository: RecipeRepository.createNull({
+          update: [
+            {
+              params: [recipeId, recipeInput],
+              response: Object.assign(new Error(), {
+                meta: { cause: "Record to update not found" },
+              }),
+            },
+          ],
+        }),
+      });
+      const request = newRequest({
+        params: { recipeId },
+        data: recipeInput,
+      });
+
+      const response = await recipes.update(services, request);
+
+      expect(response.status).toEqual(404);
+      expect(response.data).toEqual({
+        message: "The given recipeId 'recipe-123' does not exist.",
+      });
+    });
+  });
 });
