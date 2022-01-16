@@ -1,4 +1,5 @@
 import { Formik } from "formik";
+import { useState } from "react";
 import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { useToast } from "../toast.js";
@@ -18,21 +19,12 @@ const validateRecipeInput = (recipeInput) => {
   return errors;
 };
 
-const AddRecipeForm = () => {
-  const addRecipe = useAddRecipe();
-  const { addToast } = useToast();
+const RecipeInputForm = (props) => {
+  const { recipeInput, onSubmit } = props;
 
-  const handleSubmit = async (recipeInput, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (recipeInput, { setSubmitting }) => {
     try {
-      await addRecipe.mutateAsync(recipeInput, {
-        onSuccess: () => {
-          addToast({
-            heading: "Success NEW",
-            message: "Recipe has been added",
-          });
-        },
-      });
-      resetForm();
+      await onSubmit(recipeInput);
     } finally {
       setSubmitting(false);
     }
@@ -40,7 +32,7 @@ const AddRecipeForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: "", notes: "" }}
+      initialValues={recipeInput}
       validate={validateRecipeInput}
       onSubmit={handleSubmit}
     >
@@ -50,16 +42,6 @@ const AddRecipeForm = () => {
           onSubmit={formik.handleSubmit}
           disabled={formik.isSubmitting}
         >
-          {addRecipe.isError && (
-            <Row lg={2} xxl={3} className="mb-3">
-              <Col>
-                <Alert variant="danger" dismissible onClose={addRecipe.reset}>
-                  Error: {addRecipe.error.message}
-                </Alert>
-              </Col>
-            </Row>
-          )}
-
           <Row lg={2} xxl={3} className="mb-3">
             <Form.Group as={Col} controlId="name">
               <Form.Label>Name</Form.Label>
@@ -96,6 +78,49 @@ const AddRecipeForm = () => {
         </Form>
       )}
     </Formik>
+  );
+};
+
+const AddRecipeForm = () => {
+  const addRecipe = useAddRecipe();
+  const { addToast } = useToast();
+  const [counter, setCounter] = useState(1);
+  const recipeInput = { name: "", notes: "" };
+
+  const onSubmit = async (recipeInput) => {
+    await addRecipe.mutateAsync(recipeInput, {
+      onSuccess: () => {
+        addToast({
+          heading: "Success",
+          message: "Recipe has been added",
+        });
+      },
+    });
+    setCounter((c) => c + 1);
+  };
+
+  return (
+    <>
+      {addRecipe.isError && (
+        <Row lg={2} xxl={3} className="mb-3">
+          <Col>
+            <Alert variant="danger" dismissible onClose={addRecipe.reset}>
+              Error: {addRecipe.error.message}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+
+      {/*
+        We update the form's key after each successful submit to force
+        a re-render and thus resetting the form values
+      */}
+      <RecipeInputForm
+        key={`submit-${counter}`}
+        recipeInput={recipeInput}
+        onSubmit={onSubmit}
+      />
+    </>
   );
 };
 
