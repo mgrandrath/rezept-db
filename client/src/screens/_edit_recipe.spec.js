@@ -3,7 +3,6 @@ const {
   waitFor,
   screen,
   fireEvent,
-  act,
 } = require("@testing-library/react");
 const nock = require("nock");
 const { QueryClientProvider, QueryClient } = require("react-query");
