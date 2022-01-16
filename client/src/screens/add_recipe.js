@@ -1,85 +1,8 @@
-import { Formik } from "formik";
 import { useState } from "react";
-import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap";
+import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
+import { RecipeInputForm } from "../components/recipe.js";
 import { useToast } from "../toast.js";
-
-const getFieldProps = (formik, name) => ({
-  ...formik.getFieldProps(name),
-  isInvalid: Boolean(formik.touched[name] && formik.errors[name]),
-});
-
-const validateRecipeInput = (recipeInput) => {
-  const errors = {};
-
-  if (!recipeInput.name) {
-    errors.name = "Please enter a name";
-  }
-
-  return errors;
-};
-
-const RecipeInputForm = (props) => {
-  const { recipeInput, onSubmit } = props;
-
-  const handleSubmit = async (recipeInput, { setSubmitting }) => {
-    try {
-      await onSubmit(recipeInput);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <Formik
-      initialValues={recipeInput}
-      validate={validateRecipeInput}
-      onSubmit={handleSubmit}
-    >
-      {(formik) => (
-        <Form
-          noValidate
-          onSubmit={formik.handleSubmit}
-          disabled={formik.isSubmitting}
-        >
-          <Row lg={2} xxl={3} className="mb-3">
-            <Form.Group as={Col} controlId="name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                size="lg"
-                {...getFieldProps(formik, "name")}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-
-          <Row lg={2} xxl={3} className="mb-4">
-            <Form.Group as={Col} controlId="notes">
-              <Form.Label>Notes</Form.Label>
-              <Form.Control as="textarea" {...getFieldProps(formik, "notes")} />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.notes}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-
-          <Row lg={2} xxl={3}>
-            <Col>
-              <Stack direction="horizontal">
-                <Button type="submit" className="ms-auto">
-                  Save
-                </Button>
-              </Stack>
-            </Col>
-          </Row>
-        </Form>
-      )}
-    </Formik>
-  );
-};
 
 const AddRecipeForm = () => {
   const addRecipe = useAddRecipe();
@@ -128,7 +51,11 @@ const AddRecipe = () => {
   return (
     <div>
       <h1 className="mb-5">Add recipe</h1>
-      <AddRecipeForm />
+      <Row>
+        <Col md={10} lg={6} xxl={5}>
+          <AddRecipeForm />
+        </Col>
+      </Row>
     </div>
   );
 };
