@@ -1,4 +1,9 @@
 {
+  "compilerOptions": {
+    "module": "ES6",
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "build"],
   "typeAcquisition": {
     "exclude": ["agent-base", "https-proxy-agent", "source-map"]
   }
