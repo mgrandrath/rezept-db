@@ -1,15 +1,10 @@
-const {
-  render,
-  waitFor,
-  screen,
-  fireEvent,
-} = require("@testing-library/react");
-const nock = require("nock");
-const { QueryClientProvider, QueryClient } = require("react-query");
-const { MemoryRouter, Routes, Route } = require("react-router-dom");
-const { newRecipe, newRecipeInput } = require("../spec_helper/fixtures.js");
-const { ToastContextProvider } = require("../toast.js");
-const { default: EditRecipe } = require("./edit_recipe.js");
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import nock from "nock";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
+import { ToastContextProvider } from "../toast.js";
+import EditRecipe from "./edit_recipe.js";
 
 const enterValue = (input, value) => {
   fireEvent.change(input, { target: { value } });
