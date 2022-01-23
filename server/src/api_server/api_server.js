@@ -35,28 +35,34 @@ const loadRequestHandler = (requestHandlerDirectory, route, apiSpec) => {
   return handleRequest;
 };
 
-const expressHandler = (handleRequest) => async (httpRequest, httpResponse) => {
-  const request = {
-    query: httpRequest.query,
-    data: httpRequest.body,
-    params: httpRequest.params,
+const expressHandler =
+  (handleRequest) => async (httpRequest, httpResponse, next) => {
+    const request = {
+      query: httpRequest.query,
+      data: httpRequest.body,
+      params: httpRequest.params,
+    };
+
+    try {
+      const response = await handleRequest(httpRequest.services, request);
+
+      if (response?.status) {
+        httpResponse.status(response.status);
+      }
+
+      if (response?.headers) {
+        httpResponse.header(response.headers);
+      }
+
+      if (response?.data) {
+        httpResponse.json(response.data);
+      } else {
+        httpResponse.end();
+      }
+    } catch (error) {
+      next(error);
+    }
   };
-  const response = await handleRequest(httpRequest.services, request);
-
-  if (response?.status) {
-    httpResponse.status(response.status);
-  }
-
-  if (response?.headers) {
-    httpResponse.header(response.headers);
-  }
-
-  if (response?.data) {
-    httpResponse.json(response.data);
-  } else {
-    httpResponse.end();
-  }
-};
 
 const resolveOperationHandler = (requestHandlerDirectory, route, apiSpec) => {
   const handleRequest = loadRequestHandler(
@@ -105,6 +111,25 @@ module.exports = class Server {
           },
         })
       );
+      expressServer.use("/api", (error, httpRequest, httpResponse, next) => {
+        if (httpResponse.headersSent) {
+          next(error);
+          return;
+        }
+
+        const status = error.status ?? 500;
+        if (status > 499) {
+          console.log(error);
+          httpResponse.status(status).json({
+            message: "Internal error",
+          });
+        } else {
+          httpResponse.status(status).json({
+            message: error.message,
+            errors: error.errors,
+          });
+        }
+      });
       expressServer.use(express.static(CLIENT_DIRECTORY));
       expressServer.use((httpRequest, httpResponse) => {
         httpResponse.sendFile(path.join(CLIENT_DIRECTORY, "index.html"));
