@@ -1,16 +1,16 @@
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { contentTypes, sendRequest } from "./util/http.js";
 import { urlPath } from "./util/url.js";
 
 export const useRecipes = (filter = {}) => {
-  const params = {
+  const query = {
     name: filter.name,
   };
-  return useQuery(["recipes", params], async () => {
-    const response = await axios({
-      method: "get",
+  return useQuery(["recipes", query], async () => {
+    const response = await sendRequest({
+      method: "GET",
       url: "/api/recipes",
-      params,
+      query,
     });
 
     return response.data.recipes;
@@ -19,8 +19,8 @@ export const useRecipes = (filter = {}) => {
 
 export const useRecipe = (recipeId) => {
   return useQuery(["recipe", recipeId], async () => {
-    const response = await axios({
-      method: "get",
+    const response = await sendRequest({
+      method: "GET",
       url: urlPath`/api/recipes/${recipeId}`,
     });
 
@@ -33,9 +33,10 @@ export const useAddRecipe = () => {
 
   return useMutation(
     async (recipeInput) => {
-      await axios({
-        method: "post",
+      await sendRequest({
+        method: "POST",
         url: "/api/recipes",
+        contentType: contentTypes.JSON,
         data: recipeInput,
       });
     },
@@ -50,18 +51,19 @@ export const useAddRecipe = () => {
 export const useUpdateRecipe = (recipeId) => {
   const queryClient = useQueryClient();
 
-  return useMutation(async (recipeInput) => {
-    await axios(
-      {
-        method: "put",
+  return useMutation(
+    async (recipeInput) => {
+      await sendRequest({
+        method: "PUT",
         url: urlPath`/api/recipes/${recipeId}`,
+        contentType: contentTypes.JSON,
         data: recipeInput,
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["recipe", recipeId]);
       },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries(["recipe", recipeId]);
-        },
-      }
-    );
-  });
+    }
+  );
 };

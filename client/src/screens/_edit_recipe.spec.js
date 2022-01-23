@@ -15,6 +15,7 @@ describe("<EditRecipe>", () => {
     const expectedRecipeInput = newRecipeInput();
 
     const nockScope = nock("http://localhost")
+      .persist()
       .get("/api/recipes/recipe-123")
       .reply(
         200,
