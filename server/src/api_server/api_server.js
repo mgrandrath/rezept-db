@@ -102,8 +102,16 @@ module.exports = class Server {
       expressServer.use(
         "/api",
         openApiValidator({
-          validateRequests: true,
-          validateResponses: true,
+          validateRequests: {
+            allowUnknownQueryParameters: false,
+            coerceTypes: false,
+            removeAdditional: true,
+          },
+          validateResponses: {
+            coerceTypes: false,
+            removeAdditional: "all",
+          },
+          validateApiSpec: true,
           apiSpec: this._apiSpecFilename,
           $refParser: {
             mode: "dereference",
