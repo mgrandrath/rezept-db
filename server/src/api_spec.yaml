@@ -133,17 +133,23 @@ components:
 
   schemas:
     RecipeInput:
+      description: |
+        Input parameters for adding / updating a recipe.
       type: object
       additionalProperties: false
       properties:
         name:
           $ref: '#/components/schemas/RecipeName'
+        source:
+          $ref: '#/components/schemas/RecipeSource'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
         - name
 
     Recipe:
+      description: |
+        A recipe.
       type: object
       additionalProperties: false
       properties:
@@ -151,6 +157,8 @@ components:
           $ref: '#/components/schemas/RecipeId'
         name:
           $ref: '#/components/schemas/RecipeName'
+        source:
+          $ref: '#/components/schemas/RecipeSource'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -158,32 +166,87 @@ components:
         - name
 
     RecipeId:
-      type: string
       description: |
         The recipe's unique id.
+      type: string
       example: 257066a2-a1d7-4bed-a4f8-97b54bc88efb
 
     RecipeName:
-      type: string
-      minLength: 1
       description: |
         Descriptive name.
+      type: string
+      minLength: 1
       example: Grilled cheese
 
+    RecipeSource:
+      description: |
+        The source where the actual recipe instructions can be looked up.
+      oneOf:
+        - $ref: '#/components/schemas/OnlineSource'
+        - $ref: '#/components/schemas/OfflineSource'
+      discriminator:
+        propertyName: type
+        mapping:
+          ONLINE: '#/components/schemas/OnlineSource'
+          OFFLINE: '#/components/schemas/OfflineSource'
+
+    OnlineSource:
+      description: |
+        A reference to an online source (aka URL).
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ONLINE
+        url:
+          description: |
+            The URL where the recipe instructions can be found.
+          type: string
+          format: url
+          example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+      required:
+        - type
+        - url
+
+    OfflineSource:
+      description: |
+        A reference to an offline source (book or other recipe collection).
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - OFFLINE
+        name:
+          description: |
+            The name of the book or collection.
+          type: string
+          example: Great American Burger Book
+        page:
+          description: |
+            The page within the book where the recipe instructions can be found.
+          type: string
+          example: '42'
+      required:
+        - type
+        - name
+        - page
+
     RecipeNotes:
-      type: string
-      nullable: true
       description: |
         Arbitrary notes.
+      type: string
+      nullable: true
       example: American cheese melts best
 
     SystemStatus:
       type: object
       properties:
         status:
-          type: string
           description: |
             "OK" if system is healthy, an error message otherwise.
+          type: string
           example: OK
       required:
         - status
@@ -192,7 +255,7 @@ components:
       type: object
       properties:
         message:
-          type: string
           description: |
             A (hopefully) helpful error message.
+          type: string
           example: Something went wrong
