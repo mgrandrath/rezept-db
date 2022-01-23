@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("node:path");
-const fetch = require("node-fetch");
+const { default: axios } = require("axios");
 const ApiServer = require("./api_server.js");
 
 describe("ApiServer", () => {
@@ -14,10 +14,11 @@ describe("ApiServer", () => {
     await server.start({ port: 0 });
 
     try {
-      const response = await fetch(
-        `http://localhost:${server.port}/api/echo?message=Hello`
-      );
-      expect(await response.json()).toEqual({ message: "Hello" });
+      const response = await axios.request({
+        method: "get",
+        url: `http://localhost:${server.port}/api/echo?message=Hello`,
+      });
+      expect(response.data).toEqual({ message: "Hello" });
     } finally {
       await server.stop();
     }
