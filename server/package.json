@@ -14,7 +14,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@prisma/client": "3.7.0",
+    "@prisma/client": "3.8.1",
     "deep-equal": "^2.0.5",
     "deepmerge": "^4.2.2",
     "express": "^4.17.2",
