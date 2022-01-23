@@ -105,6 +105,9 @@ module.exports = class Server {
           validateRequests: true,
           validateResponses: true,
           apiSpec: this._apiSpecFilename,
+          $refParser: {
+            mode: "dereference",
+          },
           operationHandlers: {
             basePath: this._requestHandlerDirectory,
             resolver: resolveOperationHandler,
