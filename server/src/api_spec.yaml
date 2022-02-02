@@ -12,11 +12,16 @@ servers:
     description: |
       Production server.
 
+tags:
+  - name: Recipes
+  - name: System
+
 paths:
   /health:
     get:
-      description: |
-        Reports system health.
+      summary: Reports system health
+      tags:
+        - System
       operationId: health.show
       responses:
         '200':
@@ -29,8 +34,9 @@ paths:
 
   /recipes:
     get:
-      description: |
-        Get a list of recipes.
+      summary: Get a list of recipes
+      tags:
+        - Recipes
       operationId: recipes.index
       parameters:
         - in: query
@@ -60,8 +66,9 @@ paths:
                   - recipes
 
     post:
-      description: |
-        Create a new recipe entry.
+      summary: Create a new recipe entry
+      tags:
+        - Recipes
       operationId: recipes.create
       requestBody:
         required: true
@@ -90,8 +97,9 @@ paths:
           $ref: '#/components/schemas/RecipeId'
         required: true
     get:
-      description: |
-        Get a recipe by its id.
+      summary: Get a recipe by its id
+      tags:
+        - Recipes
       operationId: recipes.show
       responses:
         '200':
@@ -105,8 +113,11 @@ paths:
           $ref: '#/components/responses/RecipeNotFound'
 
     put:
+      summary: Update a recipe
       description: |
-        Update a recipe. Missing optional values will be set to `null`.
+        Missing optional values will be set to `null`.
+      tags:
+        - Recipes
       operationId: recipes.update
       requestBody:
         required: true
