@@ -2,7 +2,13 @@
 
 const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
-const { newRecipe, newRecipeInput } = require("../spec_helper/fixtures.js");
+const {
+  newRecipe,
+  newRecipeInput,
+  newRecipeOnlineSource,
+  newRecipeOfflineSource,
+} = require("../spec_helper/fixtures.js");
+const { sourceTypes } = require("../constants.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
@@ -15,19 +21,58 @@ jest.mock("./db_client.js", () => ({
 
 describe("RecipeRepository", () => {
   describe("store", () => {
-    it("should store a recipe in the database", async () => {
+    it("should store an ONLINE recipe in the database", async () => {
       dbClient.recipe.create.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipe = newRecipe({
         recipeId: "recipe-111",
         name: "Grilled cheese",
         notes: "American cheese melts best",
+        source: newRecipeOnlineSource({
+          url: "https://example.com/path/to/some-recipe",
+        }),
       });
 
       await recipeRepository.store(recipe);
 
       expect(dbClient.recipe.create).toHaveBeenCalledWith({
-        data: recipe,
+        data: {
+          recipeId: "recipe-111",
+          name: "Grilled cheese",
+          notes: "American cheese melts best",
+          sourceType: sourceTypes.ONLINE,
+          onlineSourceUrl: "https://example.com/path/to/some-recipe",
+          offlineSourceName: null,
+          offlineSourcePage: null,
+        },
+      });
+    });
+
+    it("should store an OFFLINE recipe in the database", async () => {
+      dbClient.recipe.create.mockResolvedValue();
+      const recipeRepository = RecipeRepository.create();
+      const recipe = newRecipe({
+        recipeId: "recipe-111",
+        name: "Grilled cheese",
+        notes: "American cheese melts best",
+        source: newRecipeOfflineSource({
+          name: "My Recipe Collection",
+          page: "123",
+        }),
+      });
+
+      await recipeRepository.store(recipe);
+
+      expect(dbClient.recipe.create).toHaveBeenCalledWith({
+        data: {
+          recipeId: "recipe-111",
+          name: "Grilled cheese",
+          notes: "American cheese melts best",
+          sourceType: sourceTypes.OFFLINE,
+          offlineSourceName: "My Recipe Collection",
+          offlineSourcePage: "123",
+          onlineSourceUrl: null,
+        },
       });
     });
 
@@ -53,20 +98,58 @@ describe("RecipeRepository", () => {
   });
 
   describe("update", () => {
-    it("should update the given recipe with the new values", async () => {
+    it("should update the given ONLINE recipe with the new values", async () => {
       dbClient.recipe.update.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipeId = "recipe-111";
       const recipeInput = newRecipeInput({
         name: "Grilled cheese",
         notes: "American cheese melts best",
+        source: newRecipeOnlineSource({
+          url: "https://example.com/path/to/some-recipe",
+        }),
       });
 
       await recipeRepository.update(recipeId, recipeInput);
 
       expect(dbClient.recipe.update).toHaveBeenCalledWith({
         where: { recipeId },
-        data: recipeInput,
+        data: {
+          name: "Grilled cheese",
+          notes: "American cheese melts best",
+          sourceType: sourceTypes.ONLINE,
+          onlineSourceUrl: "https://example.com/path/to/some-recipe",
+          offlineSourceName: null,
+          offlineSourcePage: null,
+        },
+      });
+    });
+
+    it("should update the given OFFLINE recipe with the new values", async () => {
+      dbClient.recipe.update.mockResolvedValue();
+      const recipeRepository = RecipeRepository.create();
+      const recipeId = "recipe-111";
+      const recipeInput = newRecipeInput({
+        name: "Grilled cheese",
+        notes: "American cheese melts best",
+        source: newRecipeOfflineSource({
+          name: "My Recipe Collection",
+          page: "123",
+        }),
+      });
+
+      await recipeRepository.update(recipeId, recipeInput);
+
+      expect(dbClient.recipe.update).toHaveBeenCalledWith({
+        where: { recipeId },
+        data: {
+          name: "Grilled cheese",
+          notes: "American cheese melts best",
+          sourceType: sourceTypes.OFFLINE,
+          offlineSourceName: "My Recipe Collection",
+          offlineSourcePage: "123",
+          onlineSourceUrl: null,
+        },
       });
     });
 
@@ -111,18 +194,65 @@ describe("RecipeRepository", () => {
   });
 
   describe("findById", () => {
-    it("should return a single recipe by its id", async () => {
+    it("should return a single ONLINE recipe by its id", async () => {
       const recipeId = "recipe-123";
-      const recipe = newRecipe({ recipeId });
+      const recipe = newRecipe({
+        recipeId,
+        source: newRecipeOnlineSource(),
+      });
 
-      dbClient.recipe.findUnique.mockResolvedValue(recipe);
+      dbClient.recipe.findUnique.mockResolvedValue(
+        RecipeRepository.recipeToRecord(recipe)
+      );
       const recipeRepository = RecipeRepository.create();
 
       const result = await recipeRepository.findById(recipeId);
 
       expect(result).toEqual(recipe);
       expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
-        select: { recipeId: true, name: true, notes: true },
+        select: RecipeRepository.selectRecipeProps,
+        where: { recipeId },
+      });
+    });
+
+    it("should return a single OFFLINE recipe by its id", async () => {
+      const recipeId = "recipe-123";
+      const recipe = newRecipe({
+        recipeId,
+        source: newRecipeOfflineSource(),
+      });
+
+      dbClient.recipe.findUnique.mockResolvedValue(
+        RecipeRepository.recipeToRecord(recipe)
+      );
+      const recipeRepository = RecipeRepository.create();
+
+      const result = await recipeRepository.findById(recipeId);
+
+      expect(result).toEqual(recipe);
+      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+        select: RecipeRepository.selectRecipeProps,
+        where: { recipeId },
+      });
+    });
+
+    it("should return a single recipe w/o source by its id", async () => {
+      const recipeId = "recipe-123";
+      const recipe = newRecipe({
+        recipeId,
+      });
+      recipe.source = undefined;
+
+      dbClient.recipe.findUnique.mockResolvedValue(
+        RecipeRepository.recipeToRecord(recipe)
+      );
+      const recipeRepository = RecipeRepository.create();
+
+      const result = await recipeRepository.findById(recipeId);
+
+      expect(result).toEqual(recipe);
+      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+        select: RecipeRepository.selectRecipeProps,
         where: { recipeId },
       });
     });
@@ -162,8 +292,15 @@ describe("RecipeRepository", () => {
   describe("find", () => {
     it("should return all recipes when no filter is given", async () => {
       dbClient.recipe.findMany.mockResolvedValue([
-        newRecipe({ recipeId: "recipe-111" }),
-        newRecipe({ recipeId: "recipe-222" }),
+        RecipeRepository.recipeToRecord(
+          newRecipe({ recipeId: "recipe-111", source: newRecipeOnlineSource() })
+        ),
+        RecipeRepository.recipeToRecord(
+          newRecipe({
+            recipeId: "recipe-222",
+            source: newRecipeOfflineSource(),
+          })
+        ),
       ]);
       const recipeRepository = RecipeRepository.create();
 
@@ -172,13 +309,19 @@ describe("RecipeRepository", () => {
       expect(result.data).toHaveLength(2);
       expect(result.data).toContainMatchingObject({
         recipeId: "recipe-111",
+        source: {
+          type: sourceTypes.ONLINE,
+        },
       });
       expect(result.data).toContainMatchingObject({
         recipeId: "recipe-222",
+        source: {
+          type: sourceTypes.OFFLINE,
+        },
       });
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          select: { recipeId: true, name: true, notes: true },
+          select: RecipeRepository.selectRecipeProps,
           orderBy: { name: "asc" },
         })
       );
@@ -186,7 +329,7 @@ describe("RecipeRepository", () => {
 
     it("should filter by name", async () => {
       dbClient.recipe.findMany.mockResolvedValue([
-        newRecipe({ recipeId: "recipe-111" }),
+        RecipeRepository.recipeToRecord(newRecipe({ recipeId: "recipe-111" })),
       ]);
       const recipeRepository = RecipeRepository.create();
 
@@ -194,7 +337,7 @@ describe("RecipeRepository", () => {
 
       expect(result.data).toHaveLength(1);
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
-        select: { recipeId: true, name: true, notes: true },
+        select: RecipeRepository.selectRecipeProps,
         where: { name: { contains: "pizza" } },
         orderBy: { name: "asc" },
       });
