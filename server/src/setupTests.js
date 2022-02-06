@@ -2,24 +2,25 @@
 
 expect.extend({
   toContainMatchingObject(array, object) {
+    const pass = array.some((item) => {
+      try {
+        expect(item).toMatchObject(object);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    });
+
     const prettyArray = this.utils.printReceived(array);
     const prettyObject = this.utils.printExpected(object);
-
-    try {
-      expect(array).toContainEqual(expect.objectContaining(object));
-      return {
-        pass: true,
-        message: () =>
+    const message = pass
+      ? () =>
           `Expected value: not ${prettyObject}\n` +
-          `Received array:     ${prettyArray}`,
-      };
-    } catch (error) {
-      return {
-        pass: false,
-        message: () =>
+          `Received array:     ${prettyArray}`
+      : () =>
           `Expected value: ${prettyObject}\n` +
-          `Received array: ${prettyArray}`,
-      };
-    }
+          `Received array: ${prettyArray}`;
+
+    return { message, pass };
   },
 });
