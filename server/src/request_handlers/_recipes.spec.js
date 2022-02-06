@@ -8,7 +8,9 @@ const {
   newRecipe,
   newRecipeInput,
   newRequest,
+  newRecipeOfflineSource,
 } = require("../spec_helper/fixtures.js");
+const { sourceTypes } = require("../constants.js");
 
 describe("recipes", () => {
   describe("index", () => {
@@ -115,6 +117,10 @@ describe("recipes", () => {
         data: newRecipeInput({
           name: "Grilled cheese",
           notes: "American cheese melts best",
+          source: newRecipeOfflineSource({
+            name: "My Recipe Collection",
+            page: "123",
+          }),
         }),
       });
 
@@ -125,6 +131,11 @@ describe("recipes", () => {
           recipeId,
           name: "Grilled cheese",
           notes: "American cheese melts best",
+          source: {
+            type: sourceTypes.OFFLINE,
+            name: "My Recipe Collection",
+            page: "123",
+          },
         },
       ]);
     });

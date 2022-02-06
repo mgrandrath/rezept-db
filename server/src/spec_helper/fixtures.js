@@ -1,5 +1,6 @@
 "use strict";
 
+const { sourceTypes } = require("../constants.js");
 const { deepmerge } = require("../util/object.js");
 
 const factory =
@@ -13,14 +14,27 @@ exports.newRequest = factory(() => ({
   data: null,
 }));
 
-exports.newRecipeInput = factory(() => ({
+exports.newRecipeOnlineSource = factory(() => ({
+  type: sourceTypes.ONLINE,
+  url: "https://fixture.example.com/some-recipe",
+}));
+
+exports.newRecipeOfflineSource = factory(() => ({
+  type: sourceTypes.OFFLINE,
+  name: "My Fixture Collection",
+  page: "42",
+}));
+
+exports.newRecipeInput = factory((overrides) => ({
   name: "Default fixture name",
   notes: "Default fixture notes",
+  source: overrides?.source ?? exports.newRecipeOnlineSource(),
 }));
 
 let nextRecipeId = 1000000;
-exports.newRecipe = factory(() => ({
+exports.newRecipe = factory((overrides) => ({
   recipeId: `recipe-${nextRecipeId++}`,
   name: "Default fixture name",
   notes: "Default fixture notes",
+  source: overrides?.source ?? exports.newRecipeOnlineSource(),
 }));
