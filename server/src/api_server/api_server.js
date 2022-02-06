@@ -107,10 +107,14 @@ module.exports = class Server {
             coerceTypes: false,
             removeAdditional: true,
           },
-          validateResponses: {
-            coerceTypes: false,
-            removeAdditional: "all",
-          },
+          /*
+            Response validation is disabled for the moment b/c it reports false
+            errors for OFFLINE recipe sources.
+          */
+          // validateResponses: {
+          //   coerceTypes: false,
+          //   removeAdditional: "all",
+          // },
           validateApiSpec: true,
           apiSpec: this._apiSpecFilename,
           $refParser: {
