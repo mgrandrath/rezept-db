@@ -1,4 +1,4 @@
-import { Field, Formik, useFormikContext } from "formik";
+import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Form, Stack } from "react-bootstrap";
 import { sourceTypes } from "../constants.js";
@@ -6,7 +6,7 @@ import { useOnlyWhenMounted } from "../util/react.js";
 
 const commonFieldProps = (formik, name) => ({
   name,
-  isInvalid: Boolean(formik.touched[name] && formik.errors[name]),
+  isInvalid: Boolean(getIn(formik.touched, name) && getIn(formik.errors, name)),
 });
 
 const textInputProps = (formik, name, { type = "text" } = {}) => ({
@@ -26,11 +26,38 @@ const radioProps = (formik, name) => ({
   type: "radio",
 });
 
+const isValidUrl = (candidate) => {
+  try {
+    const url = new URL(candidate);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (error) {
+    return false;
+  }
+};
+
 const validateRecipeInput = (recipeInput) => {
   const errors = {};
 
   if (!recipeInput.name) {
     errors.name = "Please enter a name";
+  }
+
+  if (recipeInput.source.type === sourceTypes.ONLINE) {
+    if (!isValidUrl(recipeInput.source.url)) {
+      errors.source = errors.source ?? {};
+      errors.source.url = "Please enter a valid URL";
+    }
+  }
+
+  if (recipeInput.source.type === sourceTypes.OFFLINE) {
+    if (!recipeInput.source.name) {
+      errors.source = errors.source ?? {};
+      errors.source.name = "Please enter a name";
+    }
+    if (!recipeInput.source.page) {
+      errors.source = errors.source ?? {};
+      errors.source.page = "Please enter a page";
+    }
   }
 
   return errors;
@@ -44,20 +71,27 @@ const UpdateSource = (props) => {
   const {
     values: { source: { type } = {} },
     setFieldValue,
+    setFieldTouched,
   } = useFormikContext();
 
   const setFieldValueRef = useRef();
   setFieldValueRef.current = setFieldValue;
+
+  const setFieldTouchedRef = useRef();
+  setFieldTouchedRef.current = setFieldTouched;
 
   useEffect(() => {
     switch (type) {
       case sourceTypes.ONLINE:
         setFieldValueRef.current("source.name", "");
         setFieldValueRef.current("source.page", "");
+        setFieldTouchedRef.current("source.url", false);
         break;
 
       case sourceTypes.OFFLINE:
         setFieldValueRef.current("source.url", "");
+        setFieldTouchedRef.current("source.name", false);
+        setFieldTouchedRef.current("source.page", false);
         break;
 
       default:
@@ -159,6 +193,9 @@ export const RecipeInputForm = (props) => {
                 <Field
                   {...textInputProps(formik, "source.url", { type: "url" })}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.source?.url}
+                </Form.Control.Feedback>
               </Form.Group>
             )}
 
@@ -167,10 +204,16 @@ export const RecipeInputForm = (props) => {
                 <Form.Group controlId="source.name" className="mb-3">
                   <Form.Label>Source Name</Form.Label>
                   <Field {...textInputProps(formik, "source.name")} />
+                  <Form.Control.Feedback type="invalid">
+                    {formik.errors.source?.name}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="source.page" className="mb-3">
                   <Form.Label>Page</Form.Label>
                   <Field {...textInputProps(formik, "source.page")} />
+                  <Form.Control.Feedback type="invalid">
+                    {formik.errors.source?.page}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </>
             )}
