@@ -96,6 +96,7 @@ paths:
         schema:
           $ref: '#/components/schemas/RecipeId'
         required: true
+
     get:
       summary: Get a recipe by its id
       tags:

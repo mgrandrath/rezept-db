@@ -105,7 +105,7 @@ module.exports = class Server {
           validateRequests: {
             allowUnknownQueryParameters: false,
             coerceTypes: false,
-            removeAdditional: "all",
+            removeAdditional: "failing",
           },
           validateResponses: {
             coerceTypes: false,
