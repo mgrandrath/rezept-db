@@ -2,6 +2,8 @@ import { Alert, Card } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api.js";
 import { sourceTypes } from "../constants.js";
+import { paths } from "../paths.js";
+import { safeGeneratePath } from "../util/url.js";
 
 const Recipe = () => {
   const { recipeId } = useParams();
@@ -40,7 +42,7 @@ const Recipe = () => {
           <Card.Body>{recipe.notes}</Card.Body>
         </Card>
       </div>
-      <Link to="edit">Edit</Link>
+      <Link to={safeGeneratePath(paths.editRecipe, { recipeId })}>Edit</Link>
     </div>
   );
 };

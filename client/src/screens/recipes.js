@@ -10,6 +10,8 @@ import {
   Stack,
 } from "react-bootstrap";
 import { useRecipes } from "../api.js";
+import { paths } from "../paths.js";
+import { safeGeneratePath } from "../util/url.js";
 
 const searchParamsToObject = (urlSearchParams) =>
   Object.fromEntries(urlSearchParams.entries());
@@ -60,14 +62,14 @@ const RecipesList = (props) => {
 
   return (
     <ListGroup variant="flush">
-      {recipesQuery.data.map((recipe) => (
+      {recipesQuery.data.map(({ recipeId, name }) => (
         <ListGroup.Item
-          key={recipe.recipeId}
+          key={recipeId}
           className="p-3"
           as={Link}
-          to={`/recipes/${recipe.recipeId}`}
+          to={safeGeneratePath(paths.recipe, { recipeId })}
         >
-          <div className="fs-5">{recipe.name}</div>
+          <div className="fs-5">{name}</div>
         </ListGroup.Item>
       ))}
     </ListGroup>

@@ -1,6 +1,7 @@
 import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Form, Stack } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 
@@ -131,7 +132,7 @@ const cleanupRecipeInput = (formValues) => {
 };
 
 export const RecipeInputForm = (props) => {
-  const { recipeInput, onSubmit } = props;
+  const { recipeInput, onSubmit, backLink } = props;
   const onlyWhenMounted = useOnlyWhenMounted();
 
   const handleSubmit = async (recipeInput, { setSubmitting }) => {
@@ -227,8 +228,13 @@ export const RecipeInputForm = (props) => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Stack direction="horizontal">
-            <Button type="submit" className="ms-auto">
+          <Stack direction="horizontal" className="gap-3 justify-content-end">
+            {backLink && (
+              <Button variant="outline-secondary" as={Link} to={backLink}>
+                Cancel
+              </Button>
+            )}
+            <Button type="submit" className="x-ms-auto">
               Save
             </Button>
           </Stack>

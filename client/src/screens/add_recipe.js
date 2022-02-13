@@ -3,6 +3,7 @@ import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
 import { sourceTypes } from "../constants.js";
+import { paths } from "../paths.js";
 import { useToast } from "../toast.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 
@@ -54,6 +55,7 @@ const AddRecipe = () => {
             key={`submit-${counter}`}
             recipeInput={recipeInput}
             onSubmit={onSubmit}
+            backLink={paths.recipes}
           />
         </Col>
       </Row>

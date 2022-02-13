@@ -2,8 +2,9 @@ import { Alert, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecipe, useUpdateRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
+import { paths } from "../paths.js";
 import { useToast } from "../toast.js";
-import { urlPath } from "../util/url.js";
+import { safeGeneratePath } from "../util/url.js";
 
 const EditRecipe = () => {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ const EditRecipe = () => {
           heading: "Success",
           message: "Recipe has been updated",
         });
-        navigate(urlPath`/recipes/${recipeId}`, { replace: true });
+        navigate(safeGeneratePath(paths.recipe, { recipeId }), {
+          replace: true,
+        });
       },
     });
   };
@@ -55,7 +58,11 @@ const EditRecipe = () => {
 
       <Row>
         <Col md={10} lg={6} xxl={5}>
-          <RecipeInputForm recipeInput={recipeInput} onSubmit={onSubmit} />
+          <RecipeInputForm
+            recipeInput={recipeInput}
+            backLink={safeGeneratePath(paths.recipe, { recipeId })}
+            onSubmit={onSubmit}
+          />
         </Col>
       </Row>
     </div>

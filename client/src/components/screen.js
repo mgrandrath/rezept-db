@@ -4,6 +4,7 @@ import {
   Search as FindIcon,
   PlusCircle as AddIcon,
 } from "bootstrap-icons-react";
+import { paths } from "../paths.js";
 
 const NavLink = (props) => {
   const { to, end, ...linkProps } = props;
@@ -32,13 +33,13 @@ export const AppHeader = () => {
       </Navbar.Brand>
       <Nav className="ms-auto">
         <Nav.Item className="ms-4">
-          <NavLink to="/recipes">
+          <NavLink to={paths.recipes}>
             <FindIcon className="d-block mx-auto mb-1" width={18} height={18} />
             Find recipe
           </NavLink>
         </Nav.Item>
         <Nav.Item className="ms-4">
-          <NavLink to="/add-recipe">
+          <NavLink to={paths.addRecipe}>
             <AddIcon className="d-block mx-auto mb-1" width={18} height={18} />
             Add recipe
           </NavLink>
