@@ -36,6 +36,7 @@ const EditRecipe = () => {
   const recipeInput = {
     name: recipe.name,
     notes: recipe.notes,
+    source: recipe.source,
   };
 
   return (

@@ -1,14 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { clickButton, enterTextValue } from "../spec_helper/dom.js";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast.js";
 import EditRecipe from "./edit_recipe.js";
-
-const enterValue = (input, value) => {
-  fireEvent.change(input, { target: { value } });
-};
 
 describe("<EditRecipe>", () => {
   it("should update a recipe's data", async () => {
@@ -40,13 +37,13 @@ describe("<EditRecipe>", () => {
       </QueryClientProvider>
     );
 
-    const nameInput = await screen.findByRole("textbox", { name: "Name" });
-    const notesInput = await screen.findByRole("textbox", { name: "Notes" });
-    const submitButton = await screen.findByRole("button", { name: "Save" });
+    await waitFor(() => {
+      expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+    });
 
-    enterValue(nameInput, expectedRecipeInput.name);
-    enterValue(notesInput, expectedRecipeInput.notes);
-    fireEvent.click(submitButton);
+    enterTextValue("Name", expectedRecipeInput.name);
+    enterTextValue("Notes", expectedRecipeInput.notes);
+    clickButton("Save");
 
     await waitFor(() => {
       nockScope.done();

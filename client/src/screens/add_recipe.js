@@ -2,13 +2,20 @@ import { useState } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
+import { sourceTypes } from "../constants.js";
 import { useToast } from "../toast.js";
+import { useOnlyWhenMounted } from "../util/react.js";
 
 const AddRecipe = () => {
   const addRecipe = useAddRecipe();
   const { addToast } = useToast();
   const [counter, setCounter] = useState(1);
-  const recipeInput = { name: "", notes: "" };
+  const onlyWhenMounted = useOnlyWhenMounted();
+  const recipeInput = {
+    name: "",
+    notes: "",
+    source: { type: sourceTypes.ONLINE, url: "" },
+  };
 
   const onSubmit = async (recipeInput) => {
     await addRecipe.mutateAsync(recipeInput, {
@@ -20,9 +27,11 @@ const AddRecipe = () => {
       },
     });
 
-    // Increasing the counter creates a new `key` for the <RecipeInputForm>
-    // which forces a re-render and thus resets the form values.
-    setCounter((c) => c + 1);
+    onlyWhenMounted(() => {
+      // Increasing the counter creates a new `key` for the <RecipeInputForm>
+      // which forces a re-render and thus resets the form values.
+      setCounter((c) => c + 1);
+    });
   };
 
   return (

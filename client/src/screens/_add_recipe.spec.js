@@ -1,19 +1,27 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { newRecipeInput } from "../spec_helper/fixtures.js";
+import {
+  clickButton,
+  clickRadioButton,
+  enterTextValue,
+} from "../spec_helper/dom.js";
+import {
+  newRecipeInput,
+  newRecipeOfflineSource,
+  newRecipeOnlineSource,
+} from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast.js";
 import AddRecipe from "./add_recipe.js";
 
-const enterValue = (input, value) => {
-  fireEvent.change(input, { target: { value } });
-};
-
 describe("<AddRecipe>", () => {
-  it("should save a new recipe", async () => {
+  it("should save a new online recipe", async () => {
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       notes: "Delicious!",
+      source: newRecipeOnlineSource({
+        url: "https://example.com/my-recipe",
+      }),
     });
 
     const nockScope = nock("http://localhost")
@@ -28,13 +36,44 @@ describe("<AddRecipe>", () => {
       </QueryClientProvider>
     );
 
-    const nameInput = screen.getByRole("textbox", { name: "Name" });
-    const notesInput = screen.getByRole("textbox", { name: "Notes" });
-    const submitButton = screen.getByRole("button", { name: "Save" });
+    enterTextValue("Name", expectedRecipeInput.name);
+    enterTextValue("URL", expectedRecipeInput.source.url);
+    enterTextValue("Notes", expectedRecipeInput.notes);
+    clickButton("Save");
 
-    enterValue(nameInput, expectedRecipeInput.name);
-    enterValue(notesInput, expectedRecipeInput.notes);
-    fireEvent.click(submitButton);
+    await waitFor(() => {
+      nockScope.done();
+    });
+  });
+
+  it("should save a new offline recipe", async () => {
+    const expectedRecipeInput = newRecipeInput({
+      name: "Eggs Benedict",
+      notes: "Delicious!",
+      source: newRecipeOfflineSource({
+        name: "Cooking For Dummies",
+        page: "123",
+      }),
+    });
+
+    const nockScope = nock("http://localhost")
+      .post("/api/recipes", expectedRecipeInput)
+      .reply(201);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ToastContextProvider>
+          <AddRecipe />
+        </ToastContextProvider>
+      </QueryClientProvider>
+    );
+
+    enterTextValue("Name", expectedRecipeInput.name);
+    clickRadioButton("Offline");
+    enterTextValue("Source Name", expectedRecipeInput.source.name);
+    enterTextValue("Page", expectedRecipeInput.source.page);
+    enterTextValue("Notes", expectedRecipeInput.notes);
+    clickButton("Save");
 
     await waitFor(() => {
       nockScope.done();
