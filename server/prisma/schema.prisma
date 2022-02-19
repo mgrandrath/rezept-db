@@ -11,7 +11,7 @@ model Recipe {
   recipeId           String   @id @default(uuid())
   name               String
   notes              String?
-  sourceType         String?
+  sourceType         String
   onlineSourceUrl    String?
   offlineSourceTitle String?
   offlineSourcePage  Int?
