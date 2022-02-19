@@ -26,7 +26,16 @@ const Recipe = () => {
         <div>Type: {recipe.source?.type}</div>
         {recipe.source?.type === sourceTypes.ONLINE && (
           <>
-            <div>URL: {recipe.source.url}</div>
+            <div>
+              URL:{" "}
+              <a
+                rel="external noopener noreferrer"
+                target="_blank"
+                href={recipe.source.url}
+              >
+                {recipe.source.url}
+              </a>
+            </div>
           </>
         )}
         {recipe.source?.type === sourceTypes.OFFLINE && (
