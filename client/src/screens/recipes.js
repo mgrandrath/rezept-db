@@ -84,7 +84,7 @@ const Recipes = () => {
   const resetFilter = () => setFilter(defaultValues);
 
   return (
-    <div>
+    <div className="mb-5">
       <h1 className="mb-5">Find recipe</h1>
       <Row className="g-5">
         <Col xs={12} md={5} lg={4}>

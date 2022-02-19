@@ -201,15 +201,19 @@ export const RecipeInputForm = (props) => {
             )}
 
             {formik.values.source?.type === sourceTypes.OFFLINE && (
-              <>
-                <Form.Group controlId="source.title" className="mb-3">
+              <Stack
+                direction="horizontal"
+                gap={3}
+                className="justify-content-between mb-3"
+              >
+                <Form.Group controlId="source.title" className="flex-grow-1">
                   <Form.Label>Title</Form.Label>
                   <Field {...textInputProps(formik, "source.title")} />
                   <Form.Control.Feedback type="invalid">
                     {formik.errors.source?.title}
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group controlId="source.page" className="mb-3">
+                <Form.Group controlId="source.page" className="w-25">
                   <Form.Label>Page</Form.Label>
                   <Field
                     {...textInputProps(formik, "source.page", {
@@ -220,7 +224,7 @@ export const RecipeInputForm = (props) => {
                     {formik.errors.source?.page}
                   </Form.Control.Feedback>
                 </Form.Group>
-              </>
+              </Stack>
             )}
           </fieldset>
 

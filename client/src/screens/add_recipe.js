@@ -36,7 +36,7 @@ const AddRecipe = () => {
   };
 
   return (
-    <div>
+    <div className="mb-5">
       <h1 className="mb-5">Add recipe</h1>
 
       {addRecipe.isError && (

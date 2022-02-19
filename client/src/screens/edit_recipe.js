@@ -43,7 +43,7 @@ const EditRecipe = () => {
   };
 
   return (
-    <div>
+    <div className="mb-5">
       <h1 className="mb-5">Edit recipe</h1>
 
       {updateRecipe.isError && (
