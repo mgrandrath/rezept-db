@@ -204,7 +204,7 @@ export const RecipeInputForm = (props) => {
               <Stack
                 direction="horizontal"
                 gap={3}
-                className="justify-content-between mb-3"
+                className="justify-content-between align-items-start mb-3"
               >
                 <Form.Group controlId="source.title" className="flex-grow-1">
                   <Form.Label>Title</Form.Label>
