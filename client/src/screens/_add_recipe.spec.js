@@ -1,6 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter } from "react-router-dom";
 import {
   clickButton,
   clickRadioButton,
@@ -31,7 +32,9 @@ describe("<AddRecipe>", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ToastContextProvider>
-          <AddRecipe />
+          <MemoryRouter>
+            <AddRecipe />
+          </MemoryRouter>
         </ToastContextProvider>
       </QueryClientProvider>
     );
@@ -63,7 +66,9 @@ describe("<AddRecipe>", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ToastContextProvider>
-          <AddRecipe />
+          <MemoryRouter>
+            <AddRecipe />
+          </MemoryRouter>
         </ToastContextProvider>
       </QueryClientProvider>
     );
