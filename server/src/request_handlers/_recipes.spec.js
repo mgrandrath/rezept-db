@@ -118,7 +118,7 @@ describe("recipes", () => {
           name: "Grilled cheese",
           notes: "American cheese melts best",
           source: newRecipeOfflineSource({
-            name: "My Recipe Collection",
+            title: "My Recipe Collection",
             page: "123",
           }),
         }),
@@ -133,7 +133,7 @@ describe("recipes", () => {
           notes: "American cheese melts best",
           source: {
             type: sourceTypes.OFFLINE,
-            name: "My Recipe Collection",
+            title: "My Recipe Collection",
             page: "123",
           },
         },

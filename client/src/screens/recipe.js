@@ -31,7 +31,7 @@ const Recipe = () => {
         )}
         {recipe.source?.type === sourceTypes.OFFLINE && (
           <>
-            <div>Source Name: {recipe.source.name}</div>
+            <div>Title: {recipe.source.title}</div>
             <div>Page: {recipe.source.page}</div>
           </>
         )}

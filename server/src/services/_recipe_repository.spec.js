@@ -42,7 +42,7 @@ describe("RecipeRepository", () => {
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
-          offlineSourceName: null,
+          offlineSourceTitle: null,
           offlineSourcePage: null,
         },
       });
@@ -56,7 +56,7 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
-          name: "My Recipe Collection",
+          title: "My Recipe Collection",
           page: "123",
         }),
       });
@@ -69,7 +69,7 @@ describe("RecipeRepository", () => {
           name: "Grilled cheese",
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
-          offlineSourceName: "My Recipe Collection",
+          offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
         },
@@ -119,7 +119,7 @@ describe("RecipeRepository", () => {
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
-          offlineSourceName: null,
+          offlineSourceTitle: null,
           offlineSourcePage: null,
         },
       });
@@ -133,7 +133,7 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
-          name: "My Recipe Collection",
+          title: "My Recipe Collection",
           page: "123",
         }),
       });
@@ -146,7 +146,7 @@ describe("RecipeRepository", () => {
           name: "Grilled cheese",
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
-          offlineSourceName: "My Recipe Collection",
+          offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
         },

@@ -54,7 +54,7 @@ describe("<AddRecipe>", () => {
       name: "Eggs Benedict",
       notes: "Delicious!",
       source: newRecipeOfflineSource({
-        name: "Cooking For Dummies",
+        title: "Cooking For Dummies",
         page: "123",
       }),
     });
@@ -75,7 +75,7 @@ describe("<AddRecipe>", () => {
 
     enterTextValue("Name", expectedRecipeInput.name);
     clickRadioButton("Offline");
-    enterTextValue("Source Name", expectedRecipeInput.source.name);
+    enterTextValue("Title", expectedRecipeInput.source.title);
     enterTextValue("Page", expectedRecipeInput.source.page);
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");

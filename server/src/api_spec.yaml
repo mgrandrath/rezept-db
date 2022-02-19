@@ -230,9 +230,9 @@ components:
           type: string
           enum:
             - OFFLINE
-        name:
+        title:
           description: |
-            The name of the book or collection.
+            The title of the book or collection.
           type: string
           example: Great American Burger Book
         page:
@@ -242,7 +242,7 @@ components:
           example: '42'
       required:
         - type
-        - name
+        - title
         - page
 
     RecipeNotes:

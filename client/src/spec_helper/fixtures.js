@@ -13,7 +13,7 @@ export const newRecipeOnlineSource = factory(() => ({
 
 export const newRecipeOfflineSource = factory(() => ({
   type: sourceTypes.OFFLINE,
-  name: "Default Fixture Source",
+  title: "Default Fixture Source",
   page: "0",
 }));
 

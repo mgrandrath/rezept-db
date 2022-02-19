@@ -51,9 +51,9 @@ const validateRecipeInput = (recipeInput) => {
   }
 
   if (recipeInput.source.type === sourceTypes.OFFLINE) {
-    if (!recipeInput.source.name) {
+    if (!recipeInput.source.title) {
       errors.source = errors.source ?? {};
-      errors.source.name = "Please enter a name";
+      errors.source.title = "Please enter a title";
     }
     if (!recipeInput.source.page) {
       errors.source = errors.source ?? {};
@@ -84,14 +84,14 @@ const UpdateSource = (props) => {
   useEffect(() => {
     switch (type) {
       case sourceTypes.ONLINE:
-        setFieldValueRef.current("source.name", "");
+        setFieldValueRef.current("source.title", "");
         setFieldValueRef.current("source.page", "");
         setFieldTouchedRef.current("source.url", false);
         break;
 
       case sourceTypes.OFFLINE:
         setFieldValueRef.current("source.url", "");
-        setFieldTouchedRef.current("source.name", false);
+        setFieldTouchedRef.current("source.title", false);
         setFieldTouchedRef.current("source.page", false);
         break;
 
@@ -116,7 +116,7 @@ const cleanupRecipeInput = (formValues) => {
     case sourceTypes.OFFLINE:
       source = {
         type: sourceTypes.OFFLINE,
-        name: formValues.source.name,
+        title: formValues.source.title,
         page: formValues.source.page,
       };
       break;
@@ -202,11 +202,11 @@ export const RecipeInputForm = (props) => {
 
             {formik.values.source?.type === sourceTypes.OFFLINE && (
               <>
-                <Form.Group controlId="source.name" className="mb-3">
-                  <Form.Label>Source Name</Form.Label>
-                  <Field {...textInputProps(formik, "source.name")} />
+                <Form.Group controlId="source.title" className="mb-3">
+                  <Form.Label>Title</Form.Label>
+                  <Field {...textInputProps(formik, "source.title")} />
                   <Form.Control.Feedback type="invalid">
-                    {formik.errors.source?.name}
+                    {formik.errors.source?.title}
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="source.page" className="mb-3">

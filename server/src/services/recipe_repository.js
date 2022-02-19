@@ -50,7 +50,7 @@ module.exports = class RecipeRepository {
       notes: true,
       sourceType: true,
       onlineSourceUrl: true,
-      offlineSourceName: true,
+      offlineSourceTitle: true,
       offlineSourcePage: true,
     };
   }
@@ -62,7 +62,7 @@ module.exports = class RecipeRepository {
         dbSource = {
           sourceType: null,
           onlineSourceUrl: null,
-          offlineSourceName: null,
+          offlineSourceTitle: null,
           offlineSourcePage: null,
         };
         break;
@@ -71,7 +71,7 @@ module.exports = class RecipeRepository {
         dbSource = {
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: source.url,
-          offlineSourceName: null,
+          offlineSourceTitle: null,
           offlineSourcePage: null,
         };
         break;
@@ -79,7 +79,7 @@ module.exports = class RecipeRepository {
       case sourceTypes.OFFLINE:
         dbSource = {
           sourceType: sourceTypes.OFFLINE,
-          offlineSourceName: source.name,
+          offlineSourceTitle: source.title,
           offlineSourcePage: source.page,
           onlineSourceUrl: null,
         };
@@ -99,7 +99,7 @@ module.exports = class RecipeRepository {
     const {
       sourceType,
       onlineSourceUrl,
-      offlineSourceName,
+      offlineSourceTitle,
       offlineSourcePage,
       ...recipe
     } = record;
@@ -120,7 +120,7 @@ module.exports = class RecipeRepository {
       case sourceTypes.OFFLINE:
         source = {
           type: sourceTypes.OFFLINE,
-          name: offlineSourceName,
+          title: offlineSourceTitle,
           page: offlineSourcePage,
         };
         break;
