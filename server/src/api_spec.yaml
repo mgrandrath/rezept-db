@@ -238,8 +238,8 @@ components:
         page:
           description: |
             The page within the book where the recipe instructions can be found.
-          type: string
-          example: '42'
+          type: integer
+          example: 42
       required:
         - type
         - title

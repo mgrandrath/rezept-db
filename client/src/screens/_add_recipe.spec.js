@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import {
   clickButton,
   clickRadioButton,
+  enterNumberValue,
   enterTextValue,
 } from "../spec_helper/dom.js";
 import {
@@ -55,7 +56,7 @@ describe("<AddRecipe>", () => {
       notes: "Delicious!",
       source: newRecipeOfflineSource({
         title: "Cooking For Dummies",
-        page: "123",
+        page: 123,
       }),
     });
 
@@ -76,7 +77,7 @@ describe("<AddRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     clickRadioButton("Offline");
     enterTextValue("Title", expectedRecipeInput.source.title);
-    enterTextValue("Page", expectedRecipeInput.source.page);
+    enterNumberValue("Page", expectedRecipeInput.source.page);
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

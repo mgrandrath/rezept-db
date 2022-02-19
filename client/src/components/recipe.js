@@ -211,7 +211,11 @@ export const RecipeInputForm = (props) => {
                 </Form.Group>
                 <Form.Group controlId="source.page" className="mb-3">
                   <Form.Label>Page</Form.Label>
-                  <Field {...textInputProps(formik, "source.page")} />
+                  <Field
+                    {...textInputProps(formik, "source.page", {
+                      type: "number",
+                    })}
+                  />
                   <Form.Control.Feedback type="invalid">
                     {formik.errors.source?.page}
                   </Form.Control.Feedback>

@@ -14,7 +14,7 @@ model Recipe {
   sourceType         String?
   onlineSourceUrl    String?
   offlineSourceTitle String?
-  offlineSourcePage  String?
+  offlineSourcePage  Int?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
