@@ -1,4 +1,4 @@
-import { Alert, Card } from "react-bootstrap";
+import { Alert, Card, Stack } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api.js";
 import { sourceTypes } from "../constants.js";
@@ -21,37 +21,44 @@ const Recipe = () => {
   return (
     <div>
       <h1 className="mb-5">{recipe.name}</h1>
-      <div className="mb-3">
-        <div>Source</div>
-        <div>Type: {recipe.source?.type}</div>
-        {recipe.source?.type === sourceTypes.ONLINE && (
-          <>
-            <div>
-              URL:{" "}
-              <a
-                rel="external noopener noreferrer"
-                target="_blank"
-                href={recipe.source.url}
-              >
-                {recipe.source.url}
-              </a>
-            </div>
-          </>
-        )}
-        {recipe.source?.type === sourceTypes.OFFLINE && (
-          <>
-            <div>Title: {recipe.source.title}</div>
-            <div>Page: {recipe.source.page}</div>
-          </>
-        )}
-      </div>
-      <div className="mb-3">
-        <div>Notes</div>
-        <Card>
-          <Card.Body>{recipe.notes}</Card.Body>
-        </Card>
-      </div>
-      <Link to={safeGeneratePath(paths.editRecipe, { recipeId })}>Edit</Link>
+
+      <Stack gap={3}>
+        <div>
+          <div>Source</div>
+          <div>Type: {recipe.source?.type}</div>
+          {recipe.source?.type === sourceTypes.ONLINE && (
+            <>
+              <div>
+                URL:{" "}
+                <a
+                  rel="external noopener noreferrer"
+                  target="_blank"
+                  href={recipe.source.url}
+                >
+                  {recipe.source.url}
+                </a>
+              </div>
+            </>
+          )}
+          {recipe.source?.type === sourceTypes.OFFLINE && (
+            <>
+              <div>Title: {recipe.source.title}</div>
+              <div>Page: {recipe.source.page}</div>
+            </>
+          )}
+        </div>
+
+        <div>Diet: {recipe.diet}</div>
+
+        <div>
+          <div>Notes</div>
+          <Card>
+            <Card.Body>{recipe.notes}</Card.Body>
+          </Card>
+        </div>
+
+        <Link to={safeGeneratePath(paths.editRecipe, { recipeId })}>Edit</Link>
+      </Stack>
     </div>
   );
 };
