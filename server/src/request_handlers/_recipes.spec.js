@@ -40,12 +40,12 @@ describe("recipes", () => {
       });
     });
 
-    it("should filter recipes by name", async () => {
+    it("should filter recipes", async () => {
       const services = Services.createNull({
         recipeRepository: RecipeRepository.createNull({
           find: [
             {
-              params: { name: "pizza" },
+              params: { name: "pizza", maxDiet: diets.VEGETARIAN },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
               },
@@ -54,7 +54,7 @@ describe("recipes", () => {
         }),
       });
       const request = newRequest({
-        query: { name: "pizza" },
+        query: { name: "pizza", maxDiet: diets.VEGETARIAN },
       });
 
       const response = await recipes.index(services, request);
