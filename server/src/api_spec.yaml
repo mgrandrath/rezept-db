@@ -154,6 +154,8 @@ components:
           $ref: '#/components/schemas/RecipeName'
         source:
           $ref: '#/components/schemas/RecipeSource'
+        diet:
+          $ref: '#/components/schemas/Diet'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -172,6 +174,8 @@ components:
           $ref: '#/components/schemas/RecipeName'
         source:
           $ref: '#/components/schemas/RecipeSource'
+        diet:
+          $ref: '#/components/schemas/Diet'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -246,6 +250,16 @@ components:
         - type
         - title
         - page
+
+    Diet:
+      description: |
+        The (minimal) diet a recipe is compatible with.
+      type: string
+      enum:
+        - VEGAN
+        - VEGETARIAN
+        - OMNIVORE
+      example: VEGETARIAN
 
     RecipeNotes:
       description: |
