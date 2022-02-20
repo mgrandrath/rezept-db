@@ -3,14 +3,11 @@ import { contentTypes, sendRequest } from "./util/http.js";
 import { urlPath } from "./util/url.js";
 
 export const useRecipes = (filter = {}) => {
-  const query = {
-    name: filter.name,
-  };
-  return useQuery(["recipes", query], async () => {
+  return useQuery(["recipes", filter], async () => {
     const response = await sendRequest({
       method: "GET",
       url: "/api/recipes",
-      query,
+      query: filter,
     });
 
     return response.data.recipes;
