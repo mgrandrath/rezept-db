@@ -255,10 +255,12 @@ components:
       description: |
         The (minimal) diet a recipe is compatible with.
       type: string
+      nullable: true
       enum:
         - VEGAN
         - VEGETARIAN
         - OMNIVORE
+        - null
       example: VEGETARIAN
 
     RecipeNotes:
