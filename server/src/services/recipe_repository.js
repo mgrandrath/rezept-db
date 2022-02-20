@@ -47,6 +47,7 @@ module.exports = class RecipeRepository {
     return {
       recipeId: true,
       name: true,
+      diet: true,
       notes: true,
       sourceType: true,
       onlineSourceUrl: true,

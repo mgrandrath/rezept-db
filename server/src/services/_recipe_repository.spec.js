@@ -8,7 +8,7 @@ const {
   newRecipeOnlineSource,
   newRecipeOfflineSource,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes } = require("../constants.js");
+const { sourceTypes, diets } = require("../constants.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
@@ -27,6 +27,7 @@ describe("RecipeRepository", () => {
       const recipe = newRecipe({
         recipeId: "recipe-111",
         name: "Grilled cheese",
+        diet: diets.VEGETARIAN,
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
@@ -39,6 +40,7 @@ describe("RecipeRepository", () => {
         data: {
           recipeId: "recipe-111",
           name: "Grilled cheese",
+          diet: diets.VEGETARIAN,
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
@@ -54,6 +56,7 @@ describe("RecipeRepository", () => {
       const recipe = newRecipe({
         recipeId: "recipe-111",
         name: "Grilled cheese",
+        diet: diets.VEGETARIAN,
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -67,6 +70,7 @@ describe("RecipeRepository", () => {
         data: {
           recipeId: "recipe-111",
           name: "Grilled cheese",
+          diet: diets.VEGETARIAN,
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
@@ -104,6 +108,7 @@ describe("RecipeRepository", () => {
       const recipeId = "recipe-111";
       const recipeInput = newRecipeInput({
         name: "Grilled cheese",
+        diet: diets.VEGETARIAN,
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
@@ -116,6 +121,7 @@ describe("RecipeRepository", () => {
         where: { recipeId },
         data: {
           name: "Grilled cheese",
+          diet: diets.VEGETARIAN,
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
@@ -131,6 +137,7 @@ describe("RecipeRepository", () => {
       const recipeId = "recipe-111";
       const recipeInput = newRecipeInput({
         name: "Grilled cheese",
+        diet: diets.VEGETARIAN,
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -144,6 +151,7 @@ describe("RecipeRepository", () => {
         where: { recipeId },
         data: {
           name: "Grilled cheese",
+          diet: diets.VEGETARIAN,
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
