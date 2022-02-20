@@ -335,31 +335,103 @@ describe("RecipeRepository", () => {
       );
     });
 
-    it("should filter by name", async () => {
-      dbClient.recipe.findMany.mockResolvedValue([
-        RecipeRepository.recipeToRecord(newRecipe({ recipeId: "recipe-111" })),
-      ]);
-      const recipeRepository = RecipeRepository.create();
+    describe("name", () => {
+      it("should filter by name", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
 
-      const result = await recipeRepository.find({ name: "pizza" });
+        const result = await recipeRepository.find({ name: "pizza" });
 
-      expect(result.data).toHaveLength(1);
-      expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
-        select: RecipeRepository.selectRecipeProps,
-        where: { name: { contains: "pizza" } },
-        orderBy: { name: "asc" },
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
+          select: RecipeRepository.selectRecipeProps,
+          where: { name: { contains: "pizza" } },
+          orderBy: { name: "asc" },
+        });
+      });
+
+      it("should not pass in a name filter string when it's blank", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([]);
+        const recipeRepository = RecipeRepository.create();
+
+        await recipeRepository.find({ name: "" });
+
+        expect(
+          dbClient.recipe.findMany.mock.calls[0][0]?.where?.name?.contains
+        ).toEqual(undefined);
       });
     });
 
-    it("should not pass in a name filter string when it's blank", async () => {
-      dbClient.recipe.findMany.mockResolvedValue([]);
-      const recipeRepository = RecipeRepository.create();
+    describe("maxDiet", () => {
+      it("should return vegan recipes when maxDiet is `VEGAN`", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
 
-      await recipeRepository.find({ name: "" });
+        const result = await recipeRepository.find({ maxDiet: diets.VEGAN });
 
-      expect(
-        dbClient.recipe.findMany.mock.calls[0][0]?.where?.name?.contains
-      ).toEqual(undefined);
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: { diet: { in: [diets.VEGAN] } },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return vegetarian and vegan recipes when maxDiet is `VEGETARIAN`", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          maxDiet: diets.VEGETARIAN,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: { diet: { in: [diets.VEGAN, diets.VEGETARIAN] } },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return omnivore, vegetarian and vegan recipes when maxDiet is `OMNIVORE`", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          maxDiet: diets.OMNIVORE,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: {
+              diet: { in: [diets.VEGAN, diets.VEGETARIAN, diets.OMNIVORE] },
+            },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
     });
 
     describe("null instance", () => {
@@ -389,6 +461,12 @@ describe("RecipeRepository", () => {
                 data: [newRecipe({ recipeId: "recipe-333" })],
               },
             },
+            {
+              params: { maxDiet: diets.VEGETARIAN },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-444" })],
+              },
+            },
           ],
         });
 
@@ -400,6 +478,11 @@ describe("RecipeRepository", () => {
 
         const result2 = await recipeRepository.find({ name: "pizza" });
         expect(result2.data).toMatchObject([{ recipeId: "recipe-333" }]);
+
+        const result3 = await recipeRepository.find({
+          maxDiet: diets.VEGETARIAN,
+        });
+        expect(result3.data).toMatchObject([{ recipeId: "recipe-444" }]);
       });
     });
   });

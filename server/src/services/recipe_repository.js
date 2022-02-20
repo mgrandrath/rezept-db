@@ -1,7 +1,7 @@
 "use strict";
 
 const EventEmitter = require("node:events");
-const { sourceTypes } = require("../constants.js");
+const { sourceTypes, diets } = require("../constants.js");
 const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
@@ -34,7 +34,7 @@ module.exports = class RecipeRepository {
       findMany: (options.find ?? []).map(({ params, response }) => ({
         params: {
           select: RecipeRepository.selectRecipeProps,
-          where: { name: { contains: params?.name } },
+          where: RecipeRepository.filterToWhereClause(params),
           orderBy: { name: "asc" },
         },
         response: response.data.map(RecipeRepository.recipeToRecord),
@@ -54,6 +54,22 @@ module.exports = class RecipeRepository {
       offlineSourceTitle: true,
       offlineSourcePage: true,
     };
+  }
+
+  static filterToWhereClause(filter = {}) {
+    const allDiets = [diets.VEGAN, diets.VEGETARIAN, diets.OMNIVORE];
+    const where = {};
+
+    if (filter.name) {
+      where.name = { contains: filter.name };
+    }
+
+    if (allDiets.includes(filter.maxDiet)) {
+      const dietIndex = allDiets.indexOf(filter.maxDiet);
+      where.diet = { in: allDiets.slice(0, dietIndex + 1) };
+    }
+
+    return where;
   }
 
   static recipeToRecord({ source = {}, ...recipe }) {
@@ -167,7 +183,7 @@ module.exports = class RecipeRepository {
   async find(filter = {}) {
     const recipes = await this._dbClient.recipe.findMany({
       select: RecipeRepository.selectRecipeProps,
-      where: { name: { contains: filter.name || undefined } },
+      where: RecipeRepository.filterToWhereClause(filter),
       orderBy: { name: "asc" },
     });
     return {
