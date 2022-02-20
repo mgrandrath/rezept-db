@@ -1,6 +1,11 @@
 import axios from "axios";
 import { stringify as stringifyQuery } from "query-string";
 
+const removeEmptyStrings = (params) =>
+  Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => value !== "")
+  );
+
 export const contentTypes = {
   JSON: {
     headers: { "Content-Type": "application/json;charset=utf-8" },
@@ -22,7 +27,7 @@ export const sendRequest = async (request) => {
       ...request.headers,
       ...contentType.headers,
     },
-    paramsSerializer: stringifyQuery,
+    paramsSerializer: (params) => stringifyQuery(removeEmptyStrings(params)),
     params: request.query,
     data: contentType.stringify(request.data),
   });

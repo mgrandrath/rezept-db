@@ -92,6 +92,24 @@ describe("sendRequest", () => {
     expect(queryParts).toContain("some%20param=some%20value");
     expect(queryParts).toContain("other%20param=other%20value");
   });
+
+  it("should remove empty strings from query parameters b/c the API does not accept those", async () => {
+    server.setResponse({
+      status: 200,
+    });
+
+    await sendRequest({
+      method: "GET",
+      url: `http://localhost:${server.port}/my/path`,
+      query: {
+        some_param: "",
+      },
+    });
+
+    const query = server.lastRequest.query;
+
+    expect(query).toEqual({});
+  });
 });
 
 class SpyServer {
