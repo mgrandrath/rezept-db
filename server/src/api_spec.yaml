@@ -169,6 +169,7 @@ components:
       required:
         - name
         - source
+        - diet
 
     Recipe:
       description: |
@@ -190,6 +191,7 @@ components:
         - recipeId
         - name
         - source
+        - diet
 
     RecipeId:
       description: |
@@ -263,12 +265,10 @@ components:
       description: |
         The (minimal) diet a recipe is compatible with.
       type: string
-      nullable: true
       enum:
         - VEGAN
         - VEGETARIAN
         - OMNIVORE
-        - null
       example: VEGETARIAN
 
     RecipeNotes:

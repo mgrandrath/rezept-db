@@ -15,7 +15,7 @@ model Recipe {
   onlineSourceUrl    String?
   offlineSourceTitle String?
   offlineSourcePage  Int?
-  diet               String?
+  diet               String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
