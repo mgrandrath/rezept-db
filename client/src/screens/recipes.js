@@ -73,6 +73,14 @@ const RecipesList = (props) => {
     return <Alert variant="danger">Error: {recipesQuery.error.message}</Alert>;
   }
 
+  if (recipesQuery.data.length === 0) {
+    return (
+      <Alert variant="info">
+        Your filter settings did not yield any matching recipes
+      </Alert>
+    );
+  }
+
   return (
     <ListGroup variant="flush">
       {recipesQuery.data.map(({ recipeId, name }) => (
