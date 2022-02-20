@@ -45,10 +45,18 @@ paths:
             type: string
             example: pizza
           required: false
-          allowEmptyValue: true
           description: |
             If present only recipes that contain the given string in their
             `name` will be returned.
+        - in: query
+          name: maxDiet
+          schema:
+            $ref: '#/components/schemas/Diet'
+          required: false
+          description: |
+            If present only recipes that conform to the given diet will be
+            returned. E.g. `VEGETARIAN` will return vegetarian as well as vegan
+            recipes.
       responses:
         '200':
           description: |
