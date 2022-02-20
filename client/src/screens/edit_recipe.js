@@ -38,6 +38,7 @@ const EditRecipe = () => {
   const recipe = recipeQuery.data;
   const recipeInput = {
     name: recipe.name,
+    diet: recipe.diet,
     notes: recipe.notes,
     source: recipe.source,
   };

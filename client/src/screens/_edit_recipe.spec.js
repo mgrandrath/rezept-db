@@ -3,7 +3,11 @@ import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { paths } from "../paths.js";
-import { clickButton, enterTextValue } from "../spec_helper/dom.js";
+import {
+  clickButton,
+  selectOptionValue,
+  enterTextValue,
+} from "../spec_helper/dom.js";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast.js";
 import { safeGeneratePath } from "../util/url.js";
@@ -48,6 +52,7 @@ describe("<EditRecipe>", () => {
     });
 
     enterTextValue("Name", expectedRecipeInput.name);
+    selectOptionValue("Diet", expectedRecipeInput.diet);
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

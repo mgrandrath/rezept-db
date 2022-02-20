@@ -2,7 +2,7 @@ import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Form, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { sourceTypes } from "../constants.js";
+import { diets, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 
 const commonFieldProps = (formik, name) => ({
@@ -25,6 +25,11 @@ const radioProps = (formik, name) => ({
   ...commonFieldProps(formik, name),
   as: Form.Check,
   type: "radio",
+});
+
+const selectInputProps = (formik, name) => ({
+  ...commonFieldProps(formik, name),
+  as: Form.Select,
 });
 
 const isValidUrl = (candidate) => {
@@ -59,6 +64,10 @@ const validateRecipeInput = (recipeInput) => {
       errors.source = errors.source ?? {};
       errors.source.page = "Please enter a page";
     }
+  }
+
+  if (!recipeInput.diet) {
+    errors.diet = "Please select a diet";
   }
 
   return errors;
@@ -227,6 +236,19 @@ export const RecipeInputForm = (props) => {
               </Stack>
             )}
           </fieldset>
+
+          <Form.Group controlId="diet" className="mb-3">
+            <Form.Label>Diet</Form.Label>
+            <Field {...selectInputProps(formik, "diet")}>
+              <option>Please select</option>
+              <option value={diets.VEGAN}>Vegan</option>
+              <option value={diets.VEGETARIAN}>Vegetarian</option>
+              <option value={diets.OMNIVORE}>Omnivore</option>
+            </Field>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.diet}
+            </Form.Control.Feedback>
+          </Form.Group>
 
           <Form.Group controlId="notes" className="mb-4">
             <Form.Label>Notes</Form.Label>

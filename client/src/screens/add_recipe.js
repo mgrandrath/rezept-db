@@ -14,6 +14,7 @@ const AddRecipe = () => {
   const onlyWhenMounted = useOnlyWhenMounted();
   const recipeInput = {
     name: "",
+    diet: "",
     notes: "",
     source: { type: sourceTypes.ONLINE, url: "" },
   };

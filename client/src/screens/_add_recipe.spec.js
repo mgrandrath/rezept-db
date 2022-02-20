@@ -2,10 +2,12 @@ import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
+import { diets } from "../constants.js";
 import {
   clickButton,
   clickRadioButton,
   enterNumberValue,
+  selectOption,
   enterTextValue,
 } from "../spec_helper/dom.js";
 import {
@@ -20,6 +22,7 @@ describe("<AddRecipe>", () => {
   it("should save a new online recipe", async () => {
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
+      diet: diets.OMNIVORE,
       notes: "Delicious!",
       source: newRecipeOnlineSource({
         url: "https://example.com/my-recipe",
@@ -42,6 +45,7 @@ describe("<AddRecipe>", () => {
 
     enterTextValue("Name", expectedRecipeInput.name);
     enterTextValue("URL", expectedRecipeInput.source.url);
+    selectOption("Diet", "Omnivore");
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 
@@ -53,6 +57,7 @@ describe("<AddRecipe>", () => {
   it("should save a new offline recipe", async () => {
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
+      diet: diets.OMNIVORE,
       notes: "Delicious!",
       source: newRecipeOfflineSource({
         title: "Cooking For Dummies",
@@ -78,6 +83,7 @@ describe("<AddRecipe>", () => {
     clickRadioButton("Offline");
     enterTextValue("Title", expectedRecipeInput.source.title);
     enterNumberValue("Page", expectedRecipeInput.source.page);
+    selectOption("Diet", "Omnivore");
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 
