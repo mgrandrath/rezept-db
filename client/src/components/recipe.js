@@ -2,7 +2,7 @@ import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Form, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { diets, sourceTypes } from "../constants.js";
+import { diets, prepTimes, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 
 const commonFieldProps = (formik, name) => ({
@@ -68,6 +68,10 @@ const validateRecipeInput = (recipeInput) => {
 
   if (!recipeInput.diet) {
     errors.diet = "Please select a diet";
+  }
+
+  if (!recipeInput.prepTime) {
+    errors.prepTime = "Please select a preperation time";
   }
 
   return errors;
@@ -240,13 +244,35 @@ export const RecipeInputForm = (props) => {
           <Form.Group controlId="diet" className="mb-3">
             <Form.Label>Diet</Form.Label>
             <Field {...selectInputProps(formik, "diet")}>
-              <option>Please select</option>
+              <option value="">Please select</option>
               <option value={diets.VEGAN}>Vegan</option>
               <option value={diets.VEGETARIAN}>Vegetarian</option>
               <option value={diets.OMNIVORE}>Omnivore</option>
             </Field>
             <Form.Control.Feedback type="invalid">
               {formik.errors.diet}
+            </Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group controlId="prepTime" className="mb-3">
+            <Form.Label>Preperation time</Form.Label>
+            <Field {...selectInputProps(formik, "prepTime")}>
+              <option value="">Please select</option>
+              <option value={prepTimes.UNDER_30_MINUTES}>
+                under 30 minutes
+              </option>
+              <option value={prepTimes["30_TO_60_MINUTES"]}>
+                30—60 minutes
+              </option>
+              <option value={prepTimes["60_TO_120_MINUTES"]}>
+                60—120 minutes
+              </option>
+              <option value={prepTimes.OVER_120_MINUTES}>
+                over 120 minutes
+              </option>
+            </Field>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.prepTime}
             </Form.Control.Feedback>
           </Form.Group>
 

@@ -2,7 +2,7 @@ import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets } from "../constants.js";
+import { diets, prepTimes } from "../constants.js";
 import {
   clickButton,
   clickRadioButton,
@@ -23,6 +23,7 @@ describe("<AddRecipe>", () => {
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       diet: diets.OMNIVORE,
+      prepTime: prepTimes["60_TO_120_MINUTES"],
       notes: "Delicious!",
       source: newRecipeOnlineSource({
         url: "https://example.com/my-recipe",
@@ -46,6 +47,7 @@ describe("<AddRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     enterTextValue("URL", expectedRecipeInput.source.url);
     selectOption("Diet", "Omnivore");
+    selectOption("Preperation time", "60—120 minutes");
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 
@@ -58,6 +60,7 @@ describe("<AddRecipe>", () => {
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       diet: diets.OMNIVORE,
+      prepTime: prepTimes.UNDER_30_MINUTES,
       notes: "Delicious!",
       source: newRecipeOfflineSource({
         title: "Cooking For Dummies",
@@ -84,6 +87,7 @@ describe("<AddRecipe>", () => {
     enterTextValue("Title", expectedRecipeInput.source.title);
     enterNumberValue("Page", expectedRecipeInput.source.page);
     selectOption("Diet", "Omnivore");
+    selectOption("Preperation time", "under 30 minutes");
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

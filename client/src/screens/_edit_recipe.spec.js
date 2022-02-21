@@ -53,6 +53,7 @@ describe("<EditRecipe>", () => {
 
     enterTextValue("Name", expectedRecipeInput.name);
     selectOptionValue("Diet", expectedRecipeInput.diet);
+    selectOptionValue("Preperation time", expectedRecipeInput.prepTime);
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

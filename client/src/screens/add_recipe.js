@@ -15,6 +15,7 @@ const AddRecipe = () => {
   const recipeInput = {
     name: "",
     diet: "",
+    prepTime: "",
     notes: "",
     source: { type: sourceTypes.ONLINE, url: "" },
   };

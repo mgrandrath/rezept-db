@@ -1,4 +1,4 @@
-import { diets, sourceTypes } from "../constants.js";
+import { diets, prepTimes, sourceTypes } from "../constants.js";
 import { deepmerge } from "../util/object.js";
 
 const factory =
@@ -20,6 +20,7 @@ export const newRecipeOfflineSource = factory(() => ({
 export const newRecipeInput = factory((overrides) => ({
   name: "Default fixture name",
   diet: diets.VEGAN,
+  prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
 }));
@@ -29,6 +30,7 @@ export const newRecipe = factory((overrides) => ({
   recipeId: `recipe-${nextRecipeId++}`,
   name: "Default fixture name",
   diet: diets.VEGAN,
+  // prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
 }));
