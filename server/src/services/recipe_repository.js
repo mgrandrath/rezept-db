@@ -57,16 +57,16 @@ module.exports = class RecipeRepository {
   }
 
   static filterToWhereClause(filter = {}) {
-    const allDiets = [diets.VEGAN, diets.VEGETARIAN, diets.OMNIVORE];
+    const dietSubsets = [diets.VEGAN, diets.VEGETARIAN];
     const where = {};
 
     if (filter.name) {
       where.name = { contains: filter.name };
     }
 
-    if (allDiets.includes(filter.maxDiet)) {
-      const dietIndex = allDiets.indexOf(filter.maxDiet);
-      where.diet = { in: allDiets.slice(0, dietIndex + 1) };
+    if (dietSubsets.includes(filter.maxDiet)) {
+      const dietIndex = dietSubsets.indexOf(filter.maxDiet);
+      where.diet = { in: dietSubsets.slice(0, dietIndex + 1) };
     }
 
     return where;

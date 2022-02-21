@@ -361,7 +361,7 @@ describe("RecipeRepository", () => {
         await recipeRepository.find({ name: "" });
 
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0]?.where?.name?.contains
+          dbClient.recipe.findMany.mock.calls[0][0].where?.name?.contains
         ).toEqual(undefined);
       });
     });
@@ -409,7 +409,7 @@ describe("RecipeRepository", () => {
         );
       });
 
-      it("should return omnivore, vegetarian and vegan recipes when maxDiet is `OMNIVORE`", async () => {
+      it("should return all recipes when maxDiet is `OMNIVORE`", async () => {
         dbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
@@ -422,14 +422,8 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
-          expect.objectContaining({
-            select: RecipeRepository.selectRecipeProps,
-            where: {
-              diet: { in: [diets.VEGAN, diets.VEGETARIAN, diets.OMNIVORE] },
-            },
-            orderBy: { name: "asc" },
-          })
+        expect(dbClient.recipe.findMany.mock.calls[0][0].where?.diet).toEqual(
+          undefined
         );
       });
     });
