@@ -10,7 +10,7 @@ const {
   newRequest,
   newRecipeOfflineSource,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets } = require("../constants.js");
+const { sourceTypes, diets, prepTimes } = require("../constants.js");
 
 describe("recipes", () => {
   describe("index", () => {
@@ -117,6 +117,7 @@ describe("recipes", () => {
         data: newRecipeInput({
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes.UNDER_30_MINUTES,
           notes: "American cheese melts best",
           source: newRecipeOfflineSource({
             title: "My Recipe Collection",
@@ -132,6 +133,7 @@ describe("recipes", () => {
           recipeId,
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes.UNDER_30_MINUTES,
           notes: "American cheese melts best",
           source: {
             type: sourceTypes.OFFLINE,

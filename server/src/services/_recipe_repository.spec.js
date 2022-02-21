@@ -8,7 +8,7 @@ const {
   newRecipeOnlineSource,
   newRecipeOfflineSource,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets } = require("../constants.js");
+const { sourceTypes, diets, prepTimes } = require("../constants.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
@@ -27,6 +27,7 @@ describe("RecipeRepository", () => {
       const recipe = newRecipe({
         recipeId: "recipe-111",
         name: "Grilled cheese",
+        prepTime: prepTimes.UNDER_30_MINUTES,
         diet: diets.VEGETARIAN,
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
@@ -41,6 +42,7 @@ describe("RecipeRepository", () => {
           recipeId: "recipe-111",
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes.UNDER_30_MINUTES,
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
@@ -57,6 +59,7 @@ describe("RecipeRepository", () => {
         recipeId: "recipe-111",
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
+        prepTime: prepTimes.UNDER_30_MINUTES,
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -71,6 +74,7 @@ describe("RecipeRepository", () => {
           recipeId: "recipe-111",
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes.UNDER_30_MINUTES,
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
@@ -109,6 +113,7 @@ describe("RecipeRepository", () => {
       const recipeInput = newRecipeInput({
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
+        prepTime: prepTimes["60_TO_120_MINUTES"],
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
@@ -122,6 +127,7 @@ describe("RecipeRepository", () => {
         data: {
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes["60_TO_120_MINUTES"],
           notes: "American cheese melts best",
           sourceType: sourceTypes.ONLINE,
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
@@ -138,6 +144,7 @@ describe("RecipeRepository", () => {
       const recipeInput = newRecipeInput({
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
+        prepTime: prepTimes.UNDER_30_MINUTES,
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -152,6 +159,7 @@ describe("RecipeRepository", () => {
         data: {
           name: "Grilled cheese",
           diet: diets.VEGETARIAN,
+          prepTime: prepTimes.UNDER_30_MINUTES,
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
