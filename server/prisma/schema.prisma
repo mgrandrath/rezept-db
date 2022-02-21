@@ -16,7 +16,7 @@ model Recipe {
   offlineSourceTitle String?
   offlineSourcePage  Int?
   diet               String
-  prepTime           String   @default("OVER_120_MINUTES")
+  prepTime           String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

@@ -172,6 +172,7 @@ components:
         - name
         - source
         - diet
+        - prepTime
 
     Recipe:
       description: |
@@ -196,6 +197,7 @@ components:
         - name
         - source
         - diet
+        - prepTime
 
     RecipeId:
       description: |
