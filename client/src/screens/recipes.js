@@ -12,7 +12,7 @@ import {
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
-import { diets } from "../constants.js";
+import { diets, prepTimes } from "../constants.js";
 
 const searchParamsToObject = (urlSearchParams) =>
   Object.fromEntries(urlSearchParams.entries());
@@ -40,6 +40,20 @@ const RecipesFilter = (props) => {
                 <option value={diets.OMNIVORE}>Omnivore</option>
                 <option value={diets.VEGETARIAN}>Vegetarian</option>
                 <option value={diets.VEGAN}>Vegan</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId="maxPrepTime">
+              <Form.Label>Maximum preperation time</Form.Label>
+              <Form.Select {...formik.getFieldProps("maxPrepTime")}>
+                <option value={prepTimes.OVER_120_MINUTES}>none</option>
+                <option value={prepTimes["60_TO_120_MINUTES"]}>
+                  120 minutes
+                </option>
+                <option value={prepTimes["30_TO_60_MINUTES"]}>
+                  60 minutes
+                </option>
+                <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
               </Form.Select>
             </Form.Group>
 
@@ -98,7 +112,11 @@ const RecipesList = (props) => {
 };
 
 const Recipes = () => {
-  const defaultValues = { name: "", maxDiet: diets.OMNIVORE };
+  const defaultValues = {
+    name: "",
+    maxDiet: diets.OMNIVORE,
+    maxPrepTime: prepTimes.OVER_120_MINUTES,
+  };
   const [filterParams, setFilterParams] = useSearchParams(defaultValues);
   const filter = searchParamsToObject(filterParams);
   const setFilter = (filter) => setFilterParams(filter, { replace: true });

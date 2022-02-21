@@ -6,7 +6,7 @@ import {
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets } from "../constants.js";
+import { diets, prepTimes } from "../constants.js";
 import {
   clickButton,
   enterTextValue,
@@ -55,7 +55,11 @@ describe("<Recipes>", () => {
       })
 
       .get("/api/recipes")
-      .query({ name: "eggs", maxDiet: diets.OMNIVORE })
+      .query({
+        name: "eggs",
+        maxDiet: diets.OMNIVORE,
+        maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+      })
       .reply(200, {
         recipes: [
           newRecipe({
@@ -76,6 +80,7 @@ describe("<Recipes>", () => {
 
     enterTextValue("Name", "eggs");
     selectOption("Diet", "Omnivore");
+    selectOption("Maximum preperation time", "60 minutes");
     clickButton("Apply filters");
 
     await waitForElementToBeRemoved(() =>
