@@ -50,6 +50,8 @@ const Recipe = () => {
 
         <div>Diet: {recipe.diet}</div>
 
+        <div>Preperation time: {recipe.prepTime}</div>
+
         <div>
           <div>Notes</div>
           <Card>
