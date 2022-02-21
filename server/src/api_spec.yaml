@@ -57,6 +57,14 @@ paths:
             If present only recipes that conform to the given diet will be
             returned. E.g. `VEGETARIAN` will return vegetarian as well as vegan
             recipes.
+        - in: query
+          name: maxPrepTime
+          schema:
+            $ref: '#/components/schemas/PrepTime'
+          required: false
+          description: |
+            If present only recipes that have a preperation time shorter than
+            the given value (in minutes) will be returned.
       responses:
         '200':
           description: |
