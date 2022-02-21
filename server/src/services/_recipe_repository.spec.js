@@ -436,6 +436,78 @@ describe("RecipeRepository", () => {
       });
     });
 
+    describe("maxPrepTime", () => {
+      it("should return recipes w/ prepTime 'UNDER_30_MINUTES' when maxPrepTime is 'UNDER_30_MINUTES'", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          maxPrepTime: prepTimes.UNDER_30_MINUTES,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: { prepTime: { in: [prepTimes.UNDER_30_MINUTES] } },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return recipes w/ prepTime up to '60_TO_120_MINUTES' when maxPrepTime is '60_TO_120_MINUTES'", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          maxPrepTime: prepTimes["60_TO_120_MINUTES"],
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: {
+              prepTime: {
+                in: [
+                  prepTimes.UNDER_30_MINUTES,
+                  prepTimes["30_TO_60_MINUTES"],
+                  prepTimes["60_TO_120_MINUTES"],
+                ],
+              },
+            },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return all recipes when maxPrepTime is `OVER_120_MINUTES`", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          maxPrepTime: prepTimes.OVER_120_MINUTES,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(
+          dbClient.recipe.findMany.mock.calls[0][0].where?.prepTime
+        ).toEqual(undefined);
+      });
+    });
+
     describe("null instance", () => {
       it("should return a default response", async () => {
         const recipeRepository = RecipeRepository.createNull();

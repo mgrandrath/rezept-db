@@ -45,7 +45,11 @@ describe("recipes", () => {
         recipeRepository: RecipeRepository.createNull({
           find: [
             {
-              params: { name: "pizza", maxDiet: diets.VEGETARIAN },
+              params: {
+                name: "pizza",
+                maxDiet: diets.VEGETARIAN,
+                maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+              },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
               },
@@ -54,7 +58,11 @@ describe("recipes", () => {
         }),
       });
       const request = newRequest({
-        query: { name: "pizza", maxDiet: diets.VEGETARIAN },
+        query: {
+          name: "pizza",
+          maxDiet: diets.VEGETARIAN,
+          maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+        },
       });
 
       const response = await recipes.index(services, request);

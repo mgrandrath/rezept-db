@@ -1,7 +1,7 @@
 "use strict";
 
 const EventEmitter = require("node:events");
-const { sourceTypes, diets } = require("../constants.js");
+const { sourceTypes, diets, prepTimes } = require("../constants.js");
 const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
@@ -59,6 +59,11 @@ module.exports = class RecipeRepository {
 
   static filterToWhereClause(filter = {}) {
     const dietSubsets = [diets.VEGAN, diets.VEGETARIAN];
+    const prepTimeSubsets = [
+      prepTimes.UNDER_30_MINUTES,
+      prepTimes["30_TO_60_MINUTES"],
+      prepTimes["60_TO_120_MINUTES"],
+    ];
     const where = {};
 
     if (filter.name) {
@@ -68,6 +73,11 @@ module.exports = class RecipeRepository {
     if (dietSubsets.includes(filter.maxDiet)) {
       const dietIndex = dietSubsets.indexOf(filter.maxDiet);
       where.diet = { in: dietSubsets.slice(0, dietIndex + 1) };
+    }
+
+    if (prepTimeSubsets.includes(filter.maxPrepTime)) {
+      const prepTimeIndex = prepTimeSubsets.indexOf(filter.maxPrepTime);
+      where.prepTime = { in: prepTimeSubsets.slice(0, prepTimeIndex + 1) };
     }
 
     return where;
