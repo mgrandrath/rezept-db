@@ -164,6 +164,8 @@ components:
           $ref: '#/components/schemas/RecipeSource'
         diet:
           $ref: '#/components/schemas/Diet'
+        prepTime:
+          $ref: '#/components/schemas/PrepTime'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -185,6 +187,8 @@ components:
           $ref: '#/components/schemas/RecipeSource'
         diet:
           $ref: '#/components/schemas/Diet'
+        prepTime:
+          $ref: '#/components/schemas/PrepTime'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
       required:
@@ -270,6 +274,17 @@ components:
         - VEGETARIAN
         - OMNIVORE
       example: VEGETARIAN
+
+    PrepTime:
+      description: |
+        Rough range of required preperation time.
+      type: string
+      enum:
+        - UNDER_30_MINUTES
+        - 30_TO_60_MINUTES
+        - 60_TO_120_MINUTES
+        - OVER_120_MINUTES
+      example: 30_TO_60_MINUTES
 
     RecipeNotes:
       description: |
