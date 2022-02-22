@@ -19,4 +19,11 @@ model Recipe {
   prepTime           String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  tags               Tag[]
+}
+
+model Tag {
+  tagId   String   @id @default(uuid())
+  name    String   @unique
+  recipes Recipe[]
 }
