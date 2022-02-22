@@ -176,6 +176,8 @@ components:
           $ref: '#/components/schemas/PrepTime'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
+        tags:
+          $ref: '#/components/schemas/Tags'
       required:
         - name
         - source
@@ -200,6 +202,8 @@ components:
           $ref: '#/components/schemas/PrepTime'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
+        tags:
+          $ref: '#/components/schemas/Tags'
       required:
         - recipeId
         - name
@@ -302,6 +306,15 @@ components:
       type: string
       nullable: true
       example: American cheese melts best
+
+    Tags:
+      description: |
+        A list of tags.
+      type: array
+      items:
+        type: string
+        minLength: 1
+      example: ['Indian', 'Potato', 'Curry']
 
     SystemStatus:
       type: object
