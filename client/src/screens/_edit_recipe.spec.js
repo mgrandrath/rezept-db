@@ -15,7 +15,9 @@ import EditRecipe from "./edit_recipe.js";
 
 describe("<EditRecipe>", () => {
   it("should update a recipe's data", async () => {
-    const expectedRecipeInput = newRecipeInput();
+    const expectedRecipeInput = newRecipeInput({
+      tags: ["foo", "bar"],
+    });
 
     const nockScope = nock("http://localhost")
       .persist()
@@ -54,6 +56,10 @@ describe("<EditRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     selectOptionValue("Diet", expectedRecipeInput.diet);
     selectOptionValue("Preperation time", expectedRecipeInput.prepTime);
+    expectedRecipeInput.tags.forEach((tag) => {
+      enterTextValue("Tags", tag);
+      clickButton("Add tag");
+    });
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

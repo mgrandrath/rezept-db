@@ -18,6 +18,7 @@ const AddRecipe = () => {
     prepTime: "",
     notes: "",
     source: { type: sourceTypes.ONLINE, url: "" },
+    tags: [],
   };
 
   const onSubmit = async (recipeInput) => {

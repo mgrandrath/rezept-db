@@ -4,6 +4,7 @@ import { Button, Form, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
+import { TagsInput } from "./form.js";
 
 const commonFieldProps = (formik, name) => ({
   name,
@@ -274,6 +275,15 @@ export const RecipeInputForm = (props) => {
             <Form.Control.Feedback type="invalid">
               {formik.errors.prepTime}
             </Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group controlId="tags">
+            <Form.Label>Tags</Form.Label>
+            <TagsInput
+              name="tags"
+              value={formik.values.tags}
+              onChange={formik.handleChange}
+            />
           </Form.Group>
 
           <Form.Group controlId="notes" className="mb-4">

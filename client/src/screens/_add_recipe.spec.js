@@ -28,6 +28,7 @@ describe("<AddRecipe>", () => {
       source: newRecipeOnlineSource({
         url: "https://example.com/my-recipe",
       }),
+      tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
     const nockScope = nock("http://localhost")
@@ -48,6 +49,10 @@ describe("<AddRecipe>", () => {
     enterTextValue("URL", expectedRecipeInput.source.url);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "60—120 minutes");
+    expectedRecipeInput.tags.forEach((tag) => {
+      enterTextValue("Tags", tag);
+      clickButton("Add tag");
+    });
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 
@@ -66,6 +71,7 @@ describe("<AddRecipe>", () => {
         title: "Cooking For Dummies",
         page: 123,
       }),
+      tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
     const nockScope = nock("http://localhost")
@@ -88,6 +94,10 @@ describe("<AddRecipe>", () => {
     enterNumberValue("Page", expectedRecipeInput.source.page);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "under 30 minutes");
+    expectedRecipeInput.tags.forEach((tag) => {
+      enterTextValue("Tags", tag);
+      clickButton("Add tag");
+    });
     enterTextValue("Notes", expectedRecipeInput.notes);
     clickButton("Save");
 

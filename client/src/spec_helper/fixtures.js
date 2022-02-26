@@ -23,6 +23,7 @@ export const newRecipeInput = factory((overrides) => ({
   prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
+  tags: [],
 }));
 
 let nextRecipeId = 1000000;
@@ -30,7 +31,8 @@ export const newRecipe = factory((overrides) => ({
   recipeId: `recipe-${nextRecipeId++}`,
   name: "Default fixture name",
   diet: diets.VEGAN,
-  // prepTime: prepTimes["60_TO_120_MINUTES"],
+  prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
+  tags: [],
 }));
