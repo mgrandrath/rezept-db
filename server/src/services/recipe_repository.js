@@ -17,7 +17,7 @@ module.exports = class RecipeRepository {
         ({ params: [recipeId, recipeInput], response }) => ({
           params: {
             where: { recipeId },
-            data: RecipeRepository.recipeToRecord(recipeInput),
+            data: RecipeRepository.recipeToPrismaData(recipeInput),
           },
           response,
         })
@@ -54,6 +54,7 @@ module.exports = class RecipeRepository {
       onlineSourceUrl: true,
       offlineSourceTitle: true,
       offlineSourcePage: true,
+      tags: { select: { name: true } },
     };
   }
 
@@ -83,7 +84,49 @@ module.exports = class RecipeRepository {
     return where;
   }
 
-  static recipeToRecord({ source = {}, ...recipe }) {
+  static recordToRecipe(record) {
+    const {
+      sourceType,
+      onlineSourceUrl,
+      offlineSourceTitle,
+      offlineSourcePage,
+      tags,
+      ...recipe
+    } = record;
+
+    let source;
+    switch (sourceType) {
+      case null:
+        source = undefined;
+        break;
+
+      case sourceTypes.ONLINE:
+        source = {
+          type: sourceTypes.ONLINE,
+          url: onlineSourceUrl,
+        };
+        break;
+
+      case sourceTypes.OFFLINE:
+        source = {
+          type: sourceTypes.OFFLINE,
+          title: offlineSourceTitle,
+          page: offlineSourcePage,
+        };
+        break;
+
+      default:
+        throw new Error(`Received unknown source type '${sourceType}'`);
+    }
+
+    return {
+      ...recipe,
+      source,
+      tags: tags.map(({ name }) => name),
+    };
+  }
+
+  static recipeToRecord({ source = {}, tags = [], ...recipe }) {
     let dbSource;
     switch (source.type) {
       case undefined:
@@ -120,46 +163,26 @@ module.exports = class RecipeRepository {
     return {
       ...recipe,
       ...dbSource,
+      tags: tags.map((name) => ({ name })),
     };
   }
 
-  static recordToRecipe(record) {
-    const {
-      sourceType,
-      onlineSourceUrl,
-      offlineSourceTitle,
-      offlineSourcePage,
-      ...recipe
-    } = record;
+  static recipeToPrismaData(recipe) {
+    const { tags, ...record } = RecipeRepository.recipeToRecord(recipe);
 
-    let source;
-    switch (sourceType) {
-      case null:
-        source = undefined;
-        break;
-
-      case sourceTypes.ONLINE:
-        source = {
-          type: sourceTypes.ONLINE,
-          url: onlineSourceUrl,
-        };
-        break;
-
-      case sourceTypes.OFFLINE:
-        source = {
-          type: sourceTypes.OFFLINE,
-          title: offlineSourceTitle,
-          page: offlineSourcePage,
-        };
-        break;
-
-      default:
-        throw new Error(`Received unknown source type '${sourceType}'`);
+    let createTags;
+    if (tags) {
+      createTags = {
+        connectOrCreate: tags.map(({ name }) => ({
+          where: { name },
+          create: { name },
+        })),
+      };
     }
 
     return {
-      ...recipe,
-      source,
+      ...record,
+      tags: createTags,
     };
   }
 
@@ -171,7 +194,7 @@ module.exports = class RecipeRepository {
   async store(recipe) {
     this._emitter.emit("store", recipe);
     await this._dbClient.recipe.create({
-      data: RecipeRepository.recipeToRecord(recipe),
+      data: RecipeRepository.recipeToPrismaData(recipe),
     });
   }
 
@@ -179,7 +202,7 @@ module.exports = class RecipeRepository {
     this._emitter.emit("update", [recipeId, recipeInput]);
     await this._dbClient.recipe.update({
       where: { recipeId },
-      data: RecipeRepository.recipeToRecord(recipeInput),
+      data: RecipeRepository.recipeToPrismaData(recipeInput),
     });
   }
 

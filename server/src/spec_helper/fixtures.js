@@ -31,6 +31,7 @@ exports.newRecipeInput = factory((overrides) => ({
   prepTime: prepTimes["30_TO_60_MINUTES"],
   notes: "Default fixture notes",
   source: overrides?.source ?? exports.newRecipeOnlineSource(),
+  tags: [],
 }));
 
 let nextRecipeId = 1000000;
@@ -41,4 +42,5 @@ exports.newRecipe = factory((overrides) => ({
   prepTime: prepTimes["30_TO_60_MINUTES"],
   notes: "Default fixture notes",
   source: overrides?.source ?? exports.newRecipeOnlineSource(),
+  tags: [],
 }));

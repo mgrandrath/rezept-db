@@ -131,6 +131,7 @@ describe("recipes", () => {
             title: "My Recipe Collection",
             page: "123",
           }),
+          tags: ["Cheese", "Bread"],
         }),
       });
 
@@ -148,6 +149,7 @@ describe("recipes", () => {
             title: "My Recipe Collection",
             page: "123",
           },
+          tags: ["Cheese", "Bread"],
         },
       ]);
     });

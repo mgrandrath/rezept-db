@@ -33,6 +33,7 @@ describe("RecipeRepository", () => {
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
         }),
+        tags: ["Cheese", "Bread"],
       });
 
       await recipeRepository.store(recipe);
@@ -48,6 +49,12 @@ describe("RecipeRepository", () => {
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
           offlineSourceTitle: null,
           offlineSourcePage: null,
+          tags: {
+            connectOrCreate: [
+              { where: { name: "Cheese" }, create: { name: "Cheese" } },
+              { where: { name: "Bread" }, create: { name: "Bread" } },
+            ],
+          },
         },
       });
     });
@@ -65,6 +72,7 @@ describe("RecipeRepository", () => {
           title: "My Recipe Collection",
           page: "123",
         }),
+        tags: [],
       });
 
       await recipeRepository.store(recipe);
@@ -80,6 +88,9 @@ describe("RecipeRepository", () => {
           offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
+          tags: {
+            connectOrCreate: [],
+          },
         },
       });
     });
@@ -118,6 +129,7 @@ describe("RecipeRepository", () => {
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
         }),
+        tags: ["Cheese", "Bread"],
       });
 
       await recipeRepository.update(recipeId, recipeInput);
@@ -133,6 +145,12 @@ describe("RecipeRepository", () => {
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
           offlineSourceTitle: null,
           offlineSourcePage: null,
+          tags: {
+            connectOrCreate: [
+              { where: { name: "Cheese" }, create: { name: "Cheese" } },
+              { where: { name: "Bread" }, create: { name: "Bread" } },
+            ],
+          },
         },
       });
     });
@@ -150,6 +168,7 @@ describe("RecipeRepository", () => {
           title: "My Recipe Collection",
           page: "123",
         }),
+        tags: [],
       });
 
       await recipeRepository.update(recipeId, recipeInput);
@@ -165,6 +184,9 @@ describe("RecipeRepository", () => {
           offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
+          tags: {
+            connectOrCreate: [],
+          },
         },
       });
     });
@@ -215,6 +237,7 @@ describe("RecipeRepository", () => {
       const recipe = newRecipe({
         recipeId,
         source: newRecipeOnlineSource(),
+        tags: ["Cheese", "Bread"],
       });
 
       dbClient.recipe.findUnique.mockResolvedValue(
