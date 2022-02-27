@@ -17,6 +17,10 @@ model Recipe {
   offlineSourcePage  Int?
   diet               String
   prepTime           String
+  seasonsSpring      Boolean?
+  seasonsSummer      Boolean?
+  seasonsFall        Boolean?
+  seasonsWinter      Boolean?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   tags               Tag[]
