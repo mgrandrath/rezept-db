@@ -17,7 +17,7 @@ module.exports = class RecipeRepository {
         ({ params: [recipeId, recipeInput], response }) => ({
           params: {
             where: { recipeId },
-            data: RecipeRepository.recipeToPrismaData(recipeInput),
+            data: RecipeRepository.recipeToPrismaUpdate(recipeInput),
           },
           response,
         })
@@ -90,7 +90,6 @@ module.exports = class RecipeRepository {
       onlineSourceUrl,
       offlineSourceTitle,
       offlineSourcePage,
-      tags,
       ...recipe
     } = record;
 
@@ -122,11 +121,11 @@ module.exports = class RecipeRepository {
     return {
       ...recipe,
       source,
-      tags: tags.map(({ name }) => name),
+      tags: recipe.tags.map(({ name }) => name),
     };
   }
 
-  static recipeToRecord({ source = {}, tags = [], ...recipe }) {
+  static recipeToRecord({ source = {}, ...recipe }) {
     let dbSource;
     switch (source.type) {
       case undefined:
@@ -163,26 +162,33 @@ module.exports = class RecipeRepository {
     return {
       ...recipe,
       ...dbSource,
-      tags: tags.map((name) => ({ name })),
+      tags: recipe.tags.map((name) => ({ name })),
     };
   }
 
-  static recipeToPrismaData(recipe) {
-    const { tags, ...record } = RecipeRepository.recipeToRecord(recipe);
-
-    let createTags;
-    if (tags) {
-      createTags = {
-        connectOrCreate: tags.map(({ name }) => ({
-          where: { name },
-          create: { name },
-        })),
-      };
-    }
+  static recipeToPrismaCreate(recipe) {
+    const record = RecipeRepository.recipeToRecord(recipe);
 
     return {
       ...record,
-      tags: createTags,
+      tags: {
+        connectOrCreate: record.tags.map(({ name }) => ({
+          where: { name },
+          create: { name },
+        })),
+      },
+    };
+  }
+
+  static recipeToPrismaUpdate(recipe) {
+    const prismaCreate = RecipeRepository.recipeToPrismaCreate(recipe);
+
+    return {
+      ...prismaCreate,
+      tags: {
+        set: [],
+        connectOrCreate: prismaCreate.tags.connectOrCreate,
+      },
     };
   }
 
@@ -194,7 +200,7 @@ module.exports = class RecipeRepository {
   async store(recipe) {
     this._emitter.emit("store", recipe);
     await this._dbClient.recipe.create({
-      data: RecipeRepository.recipeToPrismaData(recipe),
+      data: RecipeRepository.recipeToPrismaCreate(recipe),
     });
   }
 
@@ -202,7 +208,7 @@ module.exports = class RecipeRepository {
     this._emitter.emit("update", [recipeId, recipeInput]);
     await this._dbClient.recipe.update({
       where: { recipeId },
-      data: RecipeRepository.recipeToPrismaData(recipeInput),
+      data: RecipeRepository.recipeToPrismaUpdate(recipeInput),
     });
   }
 

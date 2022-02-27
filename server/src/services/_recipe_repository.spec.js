@@ -146,6 +146,7 @@ describe("RecipeRepository", () => {
           offlineSourceTitle: null,
           offlineSourcePage: null,
           tags: {
+            set: [],
             connectOrCreate: [
               { where: { name: "Cheese" }, create: { name: "Cheese" } },
               { where: { name: "Bread" }, create: { name: "Bread" } },
@@ -185,6 +186,7 @@ describe("RecipeRepository", () => {
           offlineSourcePage: "123",
           onlineSourceUrl: null,
           tags: {
+            set: [],
             connectOrCreate: [],
           },
         },
