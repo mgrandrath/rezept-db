@@ -2,11 +2,13 @@ import { render, screen, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { seasons } from "../constants.js";
 import { paths } from "../paths.js";
 import {
   clickButton,
   selectOptionValue,
   enterTextValue,
+  clickCheckbox,
 } from "../spec_helper/dom.js";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast.js";
@@ -16,6 +18,12 @@ import EditRecipe from "./edit_recipe.js";
 describe("<EditRecipe>", () => {
   it("should update a recipe's data", async () => {
     const expectedRecipeInput = newRecipeInput({
+      seasons: {
+        [seasons.SPRING]: true,
+        [seasons.SUMMER]: true,
+        [seasons.FALL]: false,
+        [seasons.WINTER]: false,
+      },
       tags: ["foo", "bar"],
     });
 
@@ -26,6 +34,12 @@ describe("<EditRecipe>", () => {
         200,
         newRecipe({
           recipeId: "recipe-123",
+          seasons: {
+            [seasons.SPRING]: false,
+            [seasons.SUMMER]: false,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: false,
+          },
         })
       )
       //
@@ -56,6 +70,8 @@ describe("<EditRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     selectOptionValue("Diet", expectedRecipeInput.diet);
     selectOptionValue("Preperation time", expectedRecipeInput.prepTime);
+    clickCheckbox("Spring");
+    clickCheckbox("Summer");
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");

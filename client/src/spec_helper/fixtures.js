@@ -1,4 +1,4 @@
-import { diets, prepTimes, sourceTypes } from "../constants.js";
+import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
 import { deepmerge } from "../util/object.js";
 
 const factory =
@@ -17,12 +17,20 @@ export const newRecipeOfflineSource = factory(() => ({
   page: 0,
 }));
 
+export const newRecipeSeasons = factory(() => ({
+  [seasons.SPRING]: false,
+  [seasons.SUMMER]: false,
+  [seasons.FALL]: false,
+  [seasons.WINTER]: false,
+}));
+
 export const newRecipeInput = factory((overrides) => ({
   name: "Default fixture name",
   diet: diets.VEGAN,
   prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
+  seasons: newRecipeSeasons(),
   tags: [],
 }));
 
@@ -34,5 +42,6 @@ export const newRecipe = factory((overrides) => ({
   prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides.source ?? newRecipeOnlineSource(),
+  seasons: newRecipeSeasons(),
   tags: [],
 }));

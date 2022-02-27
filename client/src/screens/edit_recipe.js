@@ -42,6 +42,7 @@ const EditRecipe = () => {
     prepTime: recipe.prepTime,
     notes: recipe.notes,
     source: recipe.source,
+    seasons: recipe.seasons,
     tags: recipe.tags,
   };
 

@@ -32,6 +32,11 @@ export const clickRadioButton = (label) => {
   fireEvent.click(radio);
 };
 
+export const clickCheckbox = (label) => {
+  const checkbox = screen.getByRole("checkbox", { name: label });
+  fireEvent.click(checkbox);
+};
+
 export const clickButton = (label) => {
   const button = screen.getByRole("button", { name: label });
   fireEvent.click(button);

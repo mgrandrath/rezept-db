@@ -2,7 +2,7 @@ import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Form, OverlayTrigger, Popover, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { diets, prepTimes, sourceTypes } from "../constants.js";
+import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 import { TagsInput } from "./form.js";
 
@@ -26,6 +26,12 @@ const radioProps = (formik, name) => ({
   ...commonFieldProps(formik, name),
   as: Form.Check,
   type: "radio",
+});
+
+const checkboxProps = (formik, name) => ({
+  ...commonFieldProps(formik, name),
+  as: Form.Check.Input,
+  type: "checkbox",
 });
 
 const selectInputProps = (formik, name) => ({
@@ -284,6 +290,51 @@ export const RecipeInputForm = (props) => {
                 {formik.errors.prepTime}
               </Form.Control.Feedback>
             </Form.Group>
+
+            <div>
+              <div className="fw-bold form-label">Seasons</div>
+              <Stack
+                direction="horizontal"
+                className="justify-content-between align-items-start"
+              >
+                <Form.Group controlId={`seasons.${seasons.SPRING}`}>
+                  <Form.Check>
+                    <Field
+                      {...checkboxProps(formik, `seasons.${seasons.SPRING}`)}
+                    />
+                    <Form.Check.Label>Spring</Form.Check.Label>
+                    <Form.Text className="d-block">Mar, Apr, May</Form.Text>
+                  </Form.Check>
+                </Form.Group>
+                <Form.Group controlId={`seasons.${seasons.SUMMER}`}>
+                  <Form.Check>
+                    <Field
+                      {...checkboxProps(formik, `seasons.${seasons.SUMMER}`)}
+                    />
+                    <Form.Check.Label>Summer</Form.Check.Label>
+                    <Form.Text className="d-block">Jun, Jul, Aug</Form.Text>
+                  </Form.Check>
+                </Form.Group>
+                <Form.Group controlId={`seasons.${seasons.FALL}`}>
+                  <Form.Check>
+                    <Field
+                      {...checkboxProps(formik, `seasons.${seasons.FALL}`)}
+                    />
+                    <Form.Check.Label>Fall</Form.Check.Label>
+                    <Form.Text className="d-block">Sep, Oct, Nov</Form.Text>
+                  </Form.Check>
+                </Form.Group>
+                <Form.Group controlId={`seasons.${seasons.WINTER}`}>
+                  <Form.Check>
+                    <Field
+                      {...checkboxProps(formik, `seasons.${seasons.WINTER}`)}
+                    />
+                    <Form.Check.Label>Winter</Form.Check.Label>
+                    <Form.Text className="d-block">Dec, Jan, Feb</Form.Text>
+                  </Form.Check>
+                </Form.Group>
+              </Stack>
+            </div>
 
             <Form.Group controlId="tags">
               <Form.Label className="fw-bold">Tags</Form.Label>{" "}

@@ -2,13 +2,14 @@ import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes } from "../constants.js";
+import { diets, prepTimes, seasons } from "../constants.js";
 import {
   clickButton,
   clickRadioButton,
   enterNumberValue,
   selectOption,
   enterTextValue,
+  clickCheckbox,
 } from "../spec_helper/dom.js";
 import {
   newRecipeInput,
@@ -28,6 +29,12 @@ describe("<AddRecipe>", () => {
       source: newRecipeOnlineSource({
         url: "https://example.com/my-recipe",
       }),
+      seasons: {
+        [seasons.SPRING]: true,
+        [seasons.SUMMER]: true,
+        [seasons.FALL]: false,
+        [seasons.WINTER]: false,
+      },
       tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
@@ -49,6 +56,8 @@ describe("<AddRecipe>", () => {
     enterTextValue("URL", expectedRecipeInput.source.url);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "60—120 minutes");
+    clickCheckbox("Fall");
+    clickCheckbox("Winter");
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
@@ -71,6 +80,12 @@ describe("<AddRecipe>", () => {
         title: "Cooking For Dummies",
         page: 123,
       }),
+      seasons: {
+        [seasons.SPRING]: false,
+        [seasons.SUMMER]: true,
+        [seasons.FALL]: true,
+        [seasons.WINTER]: true,
+      },
       tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
@@ -94,6 +109,7 @@ describe("<AddRecipe>", () => {
     enterNumberValue("Page", expectedRecipeInput.source.page);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "under 30 minutes");
+    clickCheckbox("Spring");
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
