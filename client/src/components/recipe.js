@@ -320,14 +320,19 @@ export const RecipeInputForm = (props) => {
             </Form.Group>
 
             <Stack direction="horizontal" className="gap-3 justify-content-end">
+              <Button type="submit" className="order-2">
+                Save
+              </Button>
               {backLink && (
-                <Button variant="outline-secondary" as={Link} to={backLink}>
+                <Button
+                  variant="outline-secondary"
+                  className="order-1"
+                  as={Link}
+                  to={backLink}
+                >
                   Cancel
                 </Button>
               )}
-              <Button type="submit" className="x-ms-auto">
-                Save
-              </Button>
             </Stack>
           </Stack>
         </Form>
