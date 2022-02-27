@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Button, Form, Stack } from "react-bootstrap";
+import { Button, Form, ListGroup, Stack } from "react-bootstrap";
+import { Trash as DeleteIcon } from "bootstrap-icons-react";
 
 const randomId = () => Math.random().toString(36).substring(2);
 
@@ -52,23 +53,38 @@ export const TagsInput = (props) => {
   };
 
   return (
-    <Stack>
+    <Stack gap={3}>
       {value?.length > 0 && (
-        <ul>
+        <ListGroup>
           {value.map((tag) => (
-            <li key={tag}>
-              {tag}{" "}
-              <Button type="button" onClick={removeTag(tag)}>
-                Remove
-              </Button>
-            </li>
+            <ListGroup.Item key={tag}>
+              <Stack direction="horizontal" gap={3}>
+                <span className="me-auto">{tag}</span>
+                <Button type="button" variant="light" onClick={removeTag(tag)}>
+                  <DeleteIcon />
+                  <span className="visually-hidden">Remove</span>
+                </Button>
+              </Stack>
+            </ListGroup.Item>
           ))}
-        </ul>
+        </ListGroup>
       )}
-      <Form.Control type="text" name="tag" form={formIdRef.current} />
-      <Button type="submit" form={formIdRef.current}>
-        Add tag
-      </Button>
+      <Stack direction="horizontal" gap={3}>
+        <Form.Control
+          className="me-auto"
+          type="text"
+          name="tag"
+          form={formIdRef.current}
+        />
+        <Button
+          type="submit"
+          variant="outline-primary"
+          form={formIdRef.current}
+          className="text-nowrap"
+        >
+          Add tag
+        </Button>
+      </Stack>
     </Stack>
   );
 };

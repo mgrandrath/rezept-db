@@ -277,7 +277,7 @@ export const RecipeInputForm = (props) => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group controlId="tags">
+          <Form.Group controlId="tags" className="mb-3">
             <Form.Label>Tags</Form.Label>{" "}
             <OverlayTrigger
               overlay={
