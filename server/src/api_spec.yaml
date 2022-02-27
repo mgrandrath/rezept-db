@@ -183,6 +183,7 @@ components:
         - source
         - diet
         - prepTime
+        - tags
 
     Recipe:
       description: |
@@ -210,6 +211,7 @@ components:
         - source
         - diet
         - prepTime
+        - tags
 
     RecipeId:
       description: |
@@ -309,7 +311,7 @@ components:
 
     Tags:
       description: |
-        A list of tags.
+        A list of tags. Order is not guarenteed.
       type: array
       items:
         type: string
