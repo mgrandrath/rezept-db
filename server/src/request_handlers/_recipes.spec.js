@@ -9,8 +9,9 @@ const {
   newRecipeInput,
   newRequest,
   newRecipeOfflineSource,
+  newRecipeSeasons,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets, prepTimes } = require("../constants.js");
+const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
 
 describe("recipes", () => {
   describe("index", () => {
@@ -131,6 +132,12 @@ describe("recipes", () => {
             title: "My Recipe Collection",
             page: "123",
           }),
+          seasons: newRecipeSeasons({
+            [seasons.SPRING]: true,
+            [seasons.SUMMER]: false,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: true,
+          }),
           tags: ["Cheese", "Bread"],
         }),
       });
@@ -149,6 +156,12 @@ describe("recipes", () => {
             title: "My Recipe Collection",
             page: "123",
           },
+          seasons: newRecipeSeasons({
+            [seasons.SPRING]: true,
+            [seasons.SUMMER]: false,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: true,
+          }),
           tags: ["Cheese", "Bread"],
         },
       ]);

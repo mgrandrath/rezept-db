@@ -7,8 +7,9 @@ const {
   newRecipeInput,
   newRecipeOnlineSource,
   newRecipeOfflineSource,
+  newRecipeSeasons,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets, prepTimes } = require("../constants.js");
+const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
 
 jest.mock("./db_client.js", () => ({
   recipe: {
@@ -29,6 +30,12 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         prepTime: prepTimes.UNDER_30_MINUTES,
         diet: diets.VEGETARIAN,
+        seasons: newRecipeSeasons({
+          [seasons.SPRING]: true,
+          [seasons.SUMMER]: true,
+          [seasons.FALL]: false,
+          [seasons.WINTER]: false,
+        }),
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
@@ -49,6 +56,10 @@ describe("RecipeRepository", () => {
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
           offlineSourceTitle: null,
           offlineSourcePage: null,
+          seasonsSpring: true,
+          seasonsSummer: true,
+          seasonsFall: false,
+          seasonsWinter: false,
           tags: {
             connectOrCreate: [
               { where: { name: "Cheese" }, create: { name: "Cheese" } },
@@ -67,6 +78,12 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
         prepTime: prepTimes.UNDER_30_MINUTES,
+        seasons: newRecipeSeasons({
+          [seasons.SPRING]: false,
+          [seasons.SUMMER]: false,
+          [seasons.FALL]: true,
+          [seasons.WINTER]: true,
+        }),
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -88,6 +105,10 @@ describe("RecipeRepository", () => {
           offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
+          seasonsSpring: false,
+          seasonsSummer: false,
+          seasonsFall: true,
+          seasonsWinter: true,
           tags: {
             connectOrCreate: [],
           },
@@ -125,6 +146,12 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
         prepTime: prepTimes["60_TO_120_MINUTES"],
+        seasons: newRecipeSeasons({
+          [seasons.SPRING]: false,
+          [seasons.SUMMER]: false,
+          [seasons.FALL]: true,
+          [seasons.WINTER]: true,
+        }),
         notes: "American cheese melts best",
         source: newRecipeOnlineSource({
           url: "https://example.com/path/to/some-recipe",
@@ -145,6 +172,10 @@ describe("RecipeRepository", () => {
           onlineSourceUrl: "https://example.com/path/to/some-recipe",
           offlineSourceTitle: null,
           offlineSourcePage: null,
+          seasonsSpring: false,
+          seasonsSummer: false,
+          seasonsFall: true,
+          seasonsWinter: true,
           tags: {
             set: [],
             connectOrCreate: [
@@ -164,6 +195,12 @@ describe("RecipeRepository", () => {
         name: "Grilled cheese",
         diet: diets.VEGETARIAN,
         prepTime: prepTimes.UNDER_30_MINUTES,
+        seasons: newRecipeSeasons({
+          [seasons.SPRING]: true,
+          [seasons.SUMMER]: false,
+          [seasons.FALL]: false,
+          [seasons.WINTER]: true,
+        }),
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
@@ -185,6 +222,10 @@ describe("RecipeRepository", () => {
           offlineSourceTitle: "My Recipe Collection",
           offlineSourcePage: "123",
           onlineSourceUrl: null,
+          seasonsSpring: true,
+          seasonsSummer: false,
+          seasonsFall: false,
+          seasonsWinter: true,
           tags: {
             set: [],
             connectOrCreate: [],

@@ -17,3 +17,10 @@ exports.prepTimes = {
   "60_TO_120_MINUTES": "60_TO_120_MINUTES",
   OVER_120_MINUTES: "OVER_120_MINUTES",
 };
+
+exports.seasons = {
+  SPRING: "SPRING",
+  SUMMER: "SUMMER",
+  FALL: "FALL",
+  WINTER: "WINTER",
+};
