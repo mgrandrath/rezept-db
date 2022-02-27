@@ -22,13 +22,18 @@ export const TagsInput = (props) => {
       event.preventDefault();
 
       const input = event.target.elements.tag;
-      const oldValue = valueRef.current;
-      const newValue = oldValue.concat([input.value]);
+      const tag = input.value.trim();
+      if (!tag) {
+        return;
+      }
+
+      const oldTags = valueRef.current;
+      const newTags = oldTags.concat([tag]);
 
       onChangeRef.current({
         target: {
           name: nameRef.current,
-          value: removeDuplicates(newValue),
+          value: removeDuplicates(newTags),
         },
       });
       input.value = "";
