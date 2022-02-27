@@ -1,6 +1,6 @@
 import { Field, Formik, getIn, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
-import { Button, Form, Stack } from "react-bootstrap";
+import { Button, Form, OverlayTrigger, Popover, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
@@ -278,7 +278,24 @@ export const RecipeInputForm = (props) => {
           </Form.Group>
 
           <Form.Group controlId="tags">
-            <Form.Label>Tags</Form.Label>
+            <Form.Label>Tags</Form.Label>{" "}
+            <OverlayTrigger
+              overlay={
+                <Popover>
+                  <Popover.Header>Suggestions</Popover.Header>
+                  <Popover.Body>
+                    <ul className="m-0 ps-3">
+                      <li>Main ingredients</li>
+                      <li>Chef</li>
+                      <li>Cuisine</li>
+                      <li>Type ("Pasts", "Side", …)</li>
+                    </ul>
+                  </Popover.Body>
+                </Popover>
+              }
+            >
+              <span className="cursor-help">ⓘ</span>
+            </OverlayTrigger>
             <TagsInput
               name="tags"
               value={formik.values.tags}
