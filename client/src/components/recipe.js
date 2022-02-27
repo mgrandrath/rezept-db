@@ -175,151 +175,160 @@ export const RecipeInputForm = (props) => {
           disabled={formik.isSubmitting}
         >
           <UpdateSource />
-          <Form.Group controlId="name" className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Field {...textInputProps(formik, "name")} size="lg" />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.name}
-            </Form.Control.Feedback>
-          </Form.Group>
+          <Stack gap={4}>
+            <Form.Group controlId="name">
+              <Form.Label className="fw-bold">Name</Form.Label>
+              <Field {...textInputProps(formik, "name")} size="lg" />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.name}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <fieldset className="border border-2 rounded px-3 pb-2 mb-3">
-            <legend className="w-auto px-2 float-none">Source</legend>
-            <div className="mb-3">
-              <Form.Group controlId="sourceTypeOnline">
-                <Field
-                  {...radioProps(formik, "source.type")}
-                  label="Online"
-                  value={sourceTypes.ONLINE}
-                />
-              </Form.Group>
-              <Form.Group controlId="sourceTypeOffline">
-                <Field
-                  {...radioProps(formik, "source.type")}
-                  label="Offline"
-                  value={sourceTypes.OFFLINE}
-                />
-              </Form.Group>
-            </div>
+            <fieldset className="border border-2 rounded px-3 pt-0 pb-3">
+              <legend className="fs-6 fw-bold w-auto px-2 float-none">
+                Source
+              </legend>
+              <Stack gap={2}>
+                <div>
+                  <Form.Group controlId="sourceTypeOnline">
+                    <Field
+                      {...radioProps(formik, "source.type")}
+                      label="Online"
+                      value={sourceTypes.ONLINE}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="sourceTypeOffline">
+                    <Field
+                      {...radioProps(formik, "source.type")}
+                      label="Offline"
+                      value={sourceTypes.OFFLINE}
+                    />
+                  </Form.Group>
+                </div>
 
-            {formik.values.source?.type === sourceTypes.ONLINE && (
-              <Form.Group controlId="source.url" className="mb-3">
-                <Form.Label>URL</Form.Label>
-                <Field
-                  {...textInputProps(formik, "source.url", { type: "url" })}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.source?.url}
-                </Form.Control.Feedback>
-              </Form.Group>
-            )}
+                {formik.values.source?.type === sourceTypes.ONLINE && (
+                  <Form.Group controlId="source.url">
+                    <Form.Label>URL</Form.Label>
+                    <Field
+                      {...textInputProps(formik, "source.url", { type: "url" })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.source?.url}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                )}
 
-            {formik.values.source?.type === sourceTypes.OFFLINE && (
-              <Stack
-                direction="horizontal"
-                gap={3}
-                className="justify-content-between align-items-start mb-3"
-              >
-                <Form.Group controlId="source.title" className="flex-grow-1">
-                  <Form.Label>Title</Form.Label>
-                  <Field {...textInputProps(formik, "source.title")} />
-                  <Form.Control.Feedback type="invalid">
-                    {formik.errors.source?.title}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="source.page" className="w-25">
-                  <Form.Label>Page</Form.Label>
-                  <Field
-                    {...textInputProps(formik, "source.page", {
-                      type: "number",
-                    })}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {formik.errors.source?.page}
-                  </Form.Control.Feedback>
-                </Form.Group>
+                {formik.values.source?.type === sourceTypes.OFFLINE && (
+                  <Stack
+                    direction="horizontal"
+                    gap={3}
+                    className="justify-content-between align-items-start"
+                  >
+                    <Form.Group
+                      controlId="source.title"
+                      className="flex-grow-1"
+                    >
+                      <Form.Label>Title</Form.Label>
+                      <Field {...textInputProps(formik, "source.title")} />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.source?.title}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="source.page" className="w-25">
+                      <Form.Label>Page</Form.Label>
+                      <Field
+                        {...textInputProps(formik, "source.page", {
+                          type: "number",
+                        })}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.source?.page}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Stack>
+                )}
               </Stack>
-            )}
-          </fieldset>
+            </fieldset>
 
-          <Form.Group controlId="diet" className="mb-3">
-            <Form.Label>Diet</Form.Label>
-            <Field {...selectInputProps(formik, "diet")}>
-              <option value="">Please select</option>
-              <option value={diets.VEGAN}>Vegan</option>
-              <option value={diets.VEGETARIAN}>Vegetarian</option>
-              <option value={diets.OMNIVORE}>Omnivore</option>
-            </Field>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.diet}
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group controlId="diet">
+              <Form.Label className="fw-bold">Diet</Form.Label>
+              <Field {...selectInputProps(formik, "diet")}>
+                <option value="">Please select</option>
+                <option value={diets.VEGAN}>Vegan</option>
+                <option value={diets.VEGETARIAN}>Vegetarian</option>
+                <option value={diets.OMNIVORE}>Omnivore</option>
+              </Field>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.diet}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group controlId="prepTime" className="mb-3">
-            <Form.Label>Preperation time</Form.Label>
-            <Field {...selectInputProps(formik, "prepTime")}>
-              <option value="">Please select</option>
-              <option value={prepTimes.UNDER_30_MINUTES}>
-                under 30 minutes
-              </option>
-              <option value={prepTimes["30_TO_60_MINUTES"]}>
-                30—60 minutes
-              </option>
-              <option value={prepTimes["60_TO_120_MINUTES"]}>
-                60—120 minutes
-              </option>
-              <option value={prepTimes.OVER_120_MINUTES}>
-                over 120 minutes
-              </option>
-            </Field>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.prepTime}
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group controlId="prepTime">
+              <Form.Label className="fw-bold">Preperation time</Form.Label>
+              <Field {...selectInputProps(formik, "prepTime")}>
+                <option value="">Please select</option>
+                <option value={prepTimes.UNDER_30_MINUTES}>
+                  under 30 minutes
+                </option>
+                <option value={prepTimes["30_TO_60_MINUTES"]}>
+                  30—60 minutes
+                </option>
+                <option value={prepTimes["60_TO_120_MINUTES"]}>
+                  60—120 minutes
+                </option>
+                <option value={prepTimes.OVER_120_MINUTES}>
+                  over 120 minutes
+                </option>
+              </Field>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.prepTime}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group controlId="tags" className="mb-3">
-            <Form.Label>Tags</Form.Label>{" "}
-            <OverlayTrigger
-              overlay={
-                <Popover>
-                  <Popover.Header>Suggestions</Popover.Header>
-                  <Popover.Body>
-                    <ul className="m-0 ps-3">
-                      <li>Main ingredients</li>
-                      <li>Chef</li>
-                      <li>Cuisine</li>
-                      <li>Type ("Pasts", "Side", …)</li>
-                    </ul>
-                  </Popover.Body>
-                </Popover>
-              }
-            >
-              <span className="cursor-help">ⓘ</span>
-            </OverlayTrigger>
-            <TagsInput
-              name="tags"
-              value={formik.values.tags}
-              onChange={formik.handleChange}
-            />
-          </Form.Group>
+            <Form.Group controlId="tags">
+              <Form.Label className="fw-bold">Tags</Form.Label>{" "}
+              <OverlayTrigger
+                overlay={
+                  <Popover>
+                    <Popover.Header>Suggestions</Popover.Header>
+                    <Popover.Body>
+                      <ul className="m-0 ps-3">
+                        <li>Main ingredients</li>
+                        <li>Chef</li>
+                        <li>Cuisine</li>
+                        <li>Type ("Pasts", "Side", …)</li>
+                      </ul>
+                    </Popover.Body>
+                  </Popover>
+                }
+              >
+                <span className="cursor-help">ⓘ</span>
+              </OverlayTrigger>
+              <TagsInput
+                name="tags"
+                value={formik.values.tags}
+                onChange={formik.handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="notes" className="mb-4">
-            <Form.Label>Notes</Form.Label>
-            <Field {...textAreaProps(formik, "notes")} />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.notes}
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group controlId="notes">
+              <Form.Label className="fw-bold">Notes</Form.Label>
+              <Field {...textAreaProps(formik, "notes")} />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.notes}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Stack direction="horizontal" className="gap-3 justify-content-end">
-            {backLink && (
-              <Button variant="outline-secondary" as={Link} to={backLink}>
-                Cancel
+            <Stack direction="horizontal" className="gap-3 justify-content-end">
+              {backLink && (
+                <Button variant="outline-secondary" as={Link} to={backLink}>
+                  Cancel
+                </Button>
+              )}
+              <Button type="submit" className="x-ms-auto">
+                Save
               </Button>
-            )}
-            <Button type="submit" className="x-ms-auto">
-              Save
-            </Button>
+            </Stack>
           </Stack>
         </Form>
       )}
