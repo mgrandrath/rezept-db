@@ -53,6 +53,15 @@ const Recipe = () => {
         <div>Preperation time: {recipe.prepTime}</div>
 
         <div>
+          Tags:
+          <ul>
+            {recipe.tags.map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
           <div>Notes</div>
           <Card>
             <Card.Body>{recipe.notes}</Card.Body>
