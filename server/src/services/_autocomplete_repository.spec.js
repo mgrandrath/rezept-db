@@ -7,6 +7,9 @@ jest.mock("./db_client.js", () => ({
   tag: {
     findMany: jest.fn(),
   },
+  recipe: {
+    findMany: jest.fn(),
+  },
 }));
 
 describe("AutocompleteRepository", () => {
@@ -49,6 +52,63 @@ describe("AutocompleteRepository", () => {
         const result = await autocompleteRepository.findTags();
 
         expect(result).toEqual(["Curry", "Indian", "Lamb"]);
+      });
+    });
+  });
+
+  describe("findOfflineSourceTitles", () => {
+    it("should return a list of all offline source titles", async () => {
+      dbClient.recipe.findMany.mockResolvedValue([
+        { offlineSourceTitle: "Cooking for Dummies" },
+        { offlineSourceTitle: "Indian Cuisine" },
+        { offlineSourceTitle: "The American Hamburger Book" },
+      ]);
+      const autocompleteRepository = AutocompleteRepository.create();
+
+      const result = await autocompleteRepository.findOfflineSourceTitles();
+
+      expect(result).toEqual([
+        "Cooking for Dummies",
+        "Indian Cuisine",
+        "The American Hamburger Book",
+      ]);
+      expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
+        select: { offlineSourceTitle: true },
+        where: { offlineSourceTitle: { not: null } },
+        distinct: ["offlineSourceTitle"],
+      });
+    });
+
+    describe("null instance", () => {
+      it("should return a default response", async () => {
+        const autocompleteRepository = AutocompleteRepository.createNull();
+
+        const result = await autocompleteRepository.findOfflineSourceTitles();
+
+        expect(result).toEqual([]);
+      });
+
+      it("should return a configurable response", async () => {
+        const autocompleteRepository = AutocompleteRepository.createNull({
+          findOfflineSourceTitles: [
+            {
+              params: {},
+              response: [
+                "Cooking for Dummies",
+                "Indian Cuisine",
+                "The American Hamburger Book",
+              ],
+            },
+          ],
+        });
+
+        const result = await autocompleteRepository.findOfflineSourceTitles();
+
+        expect(result).toEqual([
+          "Cooking for Dummies",
+          "Indian Cuisine",
+          "The American Hamburger Book",
+        ]);
       });
     });
   });

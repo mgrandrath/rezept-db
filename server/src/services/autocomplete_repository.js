@@ -9,13 +9,31 @@ module.exports = class AutocompleteRepository {
   }
 
   static createNull(options = {}) {
+    const findTags = options.findTags ?? [];
+    const findOfflineSourceTitles = options.findOfflineSourceTitles ?? [];
+
     const clientOptions = {
-      findMany: (options.findTags ?? []).map(({ params, response }) => ({
-        params: {
-          select: { name: true },
-        },
-        response: response.map((name) => ({ name })),
-      })),
+      tag: {
+        findMany: findTags.map(({ params, response }) => ({
+          params: {
+            select: { name: true },
+          },
+          response: response.map((name) => ({ name })),
+        })),
+      },
+
+      recipe: {
+        findMany: findOfflineSourceTitles.map(({ params, response }) => ({
+          params: {
+            select: { offlineSourceTitle: true },
+            where: { offlineSourceTitle: { not: null } },
+            distinct: ["offlineSourceTitle"],
+          },
+          response: response.map((offlineSourceTitle) => ({
+            offlineSourceTitle,
+          })),
+        })),
+      },
     };
     return new AutocompleteRepository(newNullDbClient(clientOptions));
   }
@@ -31,12 +49,37 @@ module.exports = class AutocompleteRepository {
 
     return tags.map(({ name }) => name);
   }
+
+  async findOfflineSourceTitles() {
+    const offlineSourceTitles = await this._dbClient.recipe.findMany({
+      select: { offlineSourceTitle: true },
+      where: { offlineSourceTitle: { not: null } },
+      distinct: ["offlineSourceTitle"],
+    });
+
+    return offlineSourceTitles.map(
+      ({ offlineSourceTitle }) => offlineSourceTitle
+    );
+  }
 };
 
 const newNullDbClient = (options) => ({
   tag: {
     findMany: (params) => {
-      const responses = options.findMany;
+      const responses = options.tag.findMany;
+      const match = responses.find((response) =>
+        equals(response.params, params)
+      ) ?? {
+        response: [],
+      };
+
+      return Promise.resolve(match.response);
+    },
+  },
+
+  recipe: {
+    findMany: (params) => {
+      const responses = options.recipe.findMany;
       const match = responses.find((response) =>
         equals(response.params, params)
       ) ?? {

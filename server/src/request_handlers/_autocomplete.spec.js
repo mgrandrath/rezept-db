@@ -44,5 +44,63 @@ describe("autocomplete", () => {
         expect(response.data).toEqual(["curry", "indian", "Lamb"]);
       });
     });
+
+    describe("offlineSourceTitle", () => {
+      it("should return a sorted list of offline source titles", async () => {
+        const services = Services.createNull({
+          autocompleteRepository: AutocompleteRepository.createNull({
+            findOfflineSourceTitles: [
+              {
+                params: {},
+                response: [
+                  "The American Hamburger Book",
+                  "Cooking for Dummies",
+                  "Indian Cuisine",
+                ],
+              },
+            ],
+          }),
+        });
+        const request = newRequest({
+          params: { attribute: "offlineSourceTitle" },
+        });
+
+        const response = await autocomplete.show(services, request);
+
+        expect(response.data).toEqual([
+          "Cooking for Dummies",
+          "Indian Cuisine",
+          "The American Hamburger Book",
+        ]);
+      });
+
+      it("should sort the list of tags case insensitively", async () => {
+        const services = Services.createNull({
+          autocompleteRepository: AutocompleteRepository.createNull({
+            findOfflineSourceTitles: [
+              {
+                params: {},
+                response: [
+                  "the American Hamburger Book",
+                  "cooking for Dummies",
+                  "Indian Cuisine",
+                ],
+              },
+            ],
+          }),
+        });
+        const request = newRequest({
+          params: { attribute: "offlineSourceTitle" },
+        });
+
+        const response = await autocomplete.show(services, request);
+
+        expect(response.data).toEqual([
+          "cooking for Dummies",
+          "Indian Cuisine",
+          "the American Hamburger Book",
+        ]);
+      });
+    });
   });
 });

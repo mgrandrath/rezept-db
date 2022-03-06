@@ -26,6 +26,14 @@ exports.show = async (services, request) => {
       };
     }
 
+    case "offlineSourceTitle": {
+      const offlineSourceTitles =
+        await services.autocompleteRepository.findOfflineSourceTitles();
+      return {
+        data: offlineSourceTitles.sort(sortCaseInsensitively),
+      };
+    }
+
     default:
       return {
         status: 400,
