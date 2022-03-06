@@ -81,6 +81,10 @@ const validateRecipeInput = (recipeInput) => {
     errors.prepTime = "Please select a preperation time";
   }
 
+  if (Object.values(recipeInput.seasons).every((value) => !value)) {
+    errors.seasons = "Please select at least one season";
+  }
+
   return errors;
 };
 
@@ -334,6 +338,14 @@ export const RecipeInputForm = (props) => {
                   </Form.Check>
                 </Form.Group>
               </Stack>
+              {(formik.touched?.seasons?.[seasons.SPRING] ||
+                formik.touched?.seasons?.[seasons.SUMMER] ||
+                formik.touched?.seasons?.[seasons.FALL] ||
+                formik.touched?.seasons?.[seasons.WINTER]) && (
+                <div className="text-danger small mt-1">
+                  {formik.errors.seasons}
+                </div>
+              )}
             </div>
 
             <Form.Group controlId="tags">
