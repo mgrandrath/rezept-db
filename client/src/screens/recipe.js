@@ -53,6 +53,17 @@ const Recipe = () => {
         <div>Preperation time: {recipe.prepTime}</div>
 
         <div>
+          Seasons:
+          <ul>
+            {Object.entries(recipe.seasons)
+              .filter(([, value]) => value)
+              .map(([key]) => (
+                <li key={key}>{key}</li>
+              ))}
+          </ul>
+        </div>
+
+        <div>
           Tags:
           <ul>
             {recipe.tags.map((tag) => (
