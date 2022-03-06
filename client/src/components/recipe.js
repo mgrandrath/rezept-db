@@ -338,14 +338,15 @@ export const RecipeInputForm = (props) => {
                   </Form.Check>
                 </Form.Group>
               </Stack>
-              {(formik.touched?.seasons?.[seasons.SPRING] ||
-                formik.touched?.seasons?.[seasons.SUMMER] ||
-                formik.touched?.seasons?.[seasons.FALL] ||
-                formik.touched?.seasons?.[seasons.WINTER]) && (
-                <div className="text-danger small mt-1">
-                  {formik.errors.seasons}
-                </div>
-              )}
+              {(formik.touched.seasons?.[seasons.SPRING] ||
+                formik.touched.seasons?.[seasons.SUMMER] ||
+                formik.touched.seasons?.[seasons.FALL] ||
+                formik.touched.seasons?.[seasons.WINTER]) &&
+                formik.errors.seasons && (
+                  <div className="text-danger small mt-1">
+                    {formik.errors.seasons}
+                  </div>
+                )}
             </div>
 
             <Form.Group controlId="tags">
