@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
 import { TagsInput } from "./form.js";
+import { useAutocomplete } from "../api.js";
+
+const randomId = () => Math.random().toString(36).substring(2);
 
 const commonFieldProps = (formik, name) => ({
   name,
@@ -159,6 +162,11 @@ export const RecipeInputForm = (props) => {
   const { recipeInput, onSubmit, backLink } = props;
   const onlyWhenMounted = useOnlyWhenMounted();
 
+  const autocompleteQuery = useAutocomplete("offlineSourceTitle");
+  const datalistIdRef = useRef(
+    `offline-source-titles-autocomplete-${randomId()}`
+  );
+
   const handleSubmit = async (recipeInput, { setSubmitting }) => {
     try {
       await onSubmit(cleanupRecipeInput(recipeInput));
@@ -239,7 +247,20 @@ export const RecipeInputForm = (props) => {
                       className="flex-grow-1"
                     >
                       <Form.Label>Title</Form.Label>
-                      <Field {...textInputProps(formik, "source.title")} />
+                      <Field
+                        {...textInputProps(formik, "source.title")}
+                        list={datalistIdRef.current}
+                      />
+                      {autocompleteQuery.data && (
+                        <datalist id={datalistIdRef.current}>
+                          {autocompleteQuery.data.map((offlineSourceTitle) => (
+                            <option
+                              key={offlineSourceTitle}
+                              value={offlineSourceTitle}
+                            />
+                          ))}
+                        </datalist>
+                      )}
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.source?.title}
                       </Form.Control.Feedback>
