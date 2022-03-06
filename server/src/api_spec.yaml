@@ -186,6 +186,7 @@ components:
         - source
         - diet
         - prepTime
+        - seasons
         - tags
 
     Recipe:
@@ -216,6 +217,7 @@ components:
         - source
         - diet
         - prepTime
+        - seasons
         - tags
 
     RecipeId:
