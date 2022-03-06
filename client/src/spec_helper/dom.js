@@ -1,7 +1,14 @@
 import { fireEvent, screen, getByText } from "@testing-library/react";
 
 export const enterTextValue = (label, value) => {
-  const input = screen.getByRole("textbox", { name: label });
+  const input =
+    screen.queryByRole("textbox", { name: label }) ||
+    screen.queryByRole("combobox", { name: label });
+  if (!input) {
+    throw new Error(
+      `Unable to find textbox or combobox with a label of '${label}'`
+    );
+  }
   fireEvent.change(input, { target: { value } });
 };
 

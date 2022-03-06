@@ -39,6 +39,11 @@ describe("<AddRecipe>", () => {
     });
 
     const nockScope = nock("http://localhost")
+      .persist()
+      .get(/^\/api\/autocomplete\//)
+      .optionally()
+      .reply(200, [])
+      //
       .post("/api/recipes", expectedRecipeInput)
       .reply(201);
 
@@ -90,6 +95,11 @@ describe("<AddRecipe>", () => {
     });
 
     const nockScope = nock("http://localhost")
+      .persist()
+      .get(/^\/api\/autocomplete\//)
+      .optionally()
+      .reply(200, [])
+      //
       .post("/api/recipes", expectedRecipeInput)
       .reply(201);
 

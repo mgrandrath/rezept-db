@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Button, Form, ListGroup, Stack } from "react-bootstrap";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
+import { useAutocomplete } from "../api.js";
 
 const randomId = () => Math.random().toString(36).substring(2);
 
@@ -8,6 +9,9 @@ const removeDuplicates = (array) => Array.from(new Set(array));
 
 export const TagsInput = (props) => {
   const { name, value, onChange } = props;
+
+  const autocompleteQuery = useAutocomplete("tag");
+  const datalistIdRef = useRef(`tags-autocomplete-${randomId()}`);
 
   const formIdRef = useRef(`tags-input-${randomId()}`);
   const nameRef = useRef();
@@ -79,8 +83,16 @@ export const TagsInput = (props) => {
           className="me-auto"
           type="text"
           name="tag"
+          list={datalistIdRef.current}
           form={formIdRef.current}
         />
+        {autocompleteQuery.data && (
+          <datalist id={datalistIdRef.current}>
+            {autocompleteQuery.data.map((tag) => (
+              <option key={tag} value={tag} />
+            ))}
+          </datalist>
+        )}
         <Button
           type="submit"
           variant="outline-primary"

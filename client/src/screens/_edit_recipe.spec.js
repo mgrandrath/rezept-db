@@ -29,6 +29,10 @@ describe("<EditRecipe>", () => {
 
     const nockScope = nock("http://localhost")
       .persist()
+      .get(/^\/api\/autocomplete\//)
+      .optionally()
+      .reply(200, [])
+      //
       .get("/api/recipes/recipe-123")
       .reply(
         200,

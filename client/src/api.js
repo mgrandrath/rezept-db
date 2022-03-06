@@ -40,6 +40,7 @@ export const useAddRecipe = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("recipes");
+        queryClient.invalidateQueries("autocomplete");
       },
     }
   );
@@ -60,7 +61,19 @@ export const useUpdateRecipe = (recipeId) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["recipe", recipeId]);
+        queryClient.invalidateQueries("autocomplete");
       },
     }
   );
+};
+
+export const useAutocomplete = (attribute) => {
+  return useQuery(["autocomplete", attribute], async () => {
+    const response = await sendRequest({
+      method: "GET",
+      url: urlPath`/api/autocomplete/${attribute}`,
+    });
+
+    return response.data;
+  });
 };
