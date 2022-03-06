@@ -13,7 +13,6 @@ module.exports = class AutocompleteRepository {
       findMany: (options.findTags ?? []).map(({ params, response }) => ({
         params: {
           select: { name: true },
-          orderBy: { name: "asc" },
         },
         response: response.map((name) => ({ name })),
       })),
@@ -28,7 +27,6 @@ module.exports = class AutocompleteRepository {
   async findTags() {
     const tags = await this._dbClient.tag.findMany({
       select: { name: true },
-      orderBy: { name: "asc" },
     });
 
     return tags.map(({ name }) => name);

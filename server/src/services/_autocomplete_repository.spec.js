@@ -11,20 +11,19 @@ jest.mock("./db_client.js", () => ({
 
 describe("AutocompleteRepository", () => {
   describe("findTags", () => {
-    it("should return a sorted list of all tags", async () => {
+    it("should return a list of all tags", async () => {
       dbClient.tag.findMany.mockResolvedValue([
-        { name: "Curry" },
         { name: "Indian" },
         { name: "Lamb" },
+        { name: "Curry" },
       ]);
       const autocompleteRepository = AutocompleteRepository.create();
 
       const result = await autocompleteRepository.findTags();
 
-      expect(result).toEqual(["Curry", "Indian", "Lamb"]);
+      expect(result).toEqual(["Indian", "Lamb", "Curry"]);
       expect(dbClient.tag.findMany).toHaveBeenCalledWith({
         select: { name: true },
-        orderBy: { name: "asc" },
       });
     });
 

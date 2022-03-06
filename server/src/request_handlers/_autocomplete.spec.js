@@ -8,13 +8,13 @@ const autocomplete = require("./autocomplete.js");
 describe("autocomplete", () => {
   describe("show", () => {
     describe("tag", () => {
-      it("should return a list of tags", async () => {
+      it("should return a sorted list of tags", async () => {
         const services = Services.createNull({
           autocompleteRepository: AutocompleteRepository.createNull({
             findTags: [
               {
                 params: {},
-                response: ["Curry", "Indian", "Lamb"],
+                response: ["Indian", "Lamb", "Curry"],
               },
             ],
           }),
@@ -24,6 +24,24 @@ describe("autocomplete", () => {
         const response = await autocomplete.show(services, request);
 
         expect(response.data).toEqual(["Curry", "Indian", "Lamb"]);
+      });
+
+      it("should sort the list of tags case insensitively", async () => {
+        const services = Services.createNull({
+          autocompleteRepository: AutocompleteRepository.createNull({
+            findTags: [
+              {
+                params: {},
+                response: ["indian", "Lamb", "curry"],
+              },
+            ],
+          }),
+        });
+        const request = newRequest({ params: { attribute: "tag" } });
+
+        const response = await autocomplete.show(services, request);
+
+        expect(response.data).toEqual(["curry", "indian", "Lamb"]);
       });
     });
   });
