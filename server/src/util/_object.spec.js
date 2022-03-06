@@ -95,3 +95,20 @@ describe("deepmerge", () => {
     expect(object.deepmerge(a, undefined, null)).toEqual({ foo: "bar" });
   });
 });
+
+describe("mapValues", () => {
+  it("should apply the given mapper function to each value", () => {
+    const input = {
+      a: "foo",
+      b: "bar",
+      c: "baz",
+    };
+    const toUpperCase = (string) => string.toUpperCase();
+
+    expect(object.mapValues(input, toUpperCase)).toEqual({
+      a: "FOO",
+      b: "BAR",
+      c: "BAZ",
+    });
+  });
+});

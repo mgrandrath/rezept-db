@@ -1,15 +1,28 @@
 "use strict";
 
-const RecipeRepository = require("./recipe_repository.js");
-const Uuid = require("./uuid.js");
+const { mapValues } = require("../util/object.js");
 
-exports.create = () => ({
-  uuid: Uuid.create(),
-  recipeRepository: RecipeRepository.create(),
-});
+const services = {
+  uuid: require("./recipe_repository.js"),
+  autocompleteRepository: require("./autocomplete_repository.js"),
+  recipeRepository: require("./recipe_repository.js"),
+};
 
-exports.createNull = (overrides) => ({
-  uuid: Uuid.createNull(),
-  recipeRepository: RecipeRepository.createNull(),
-  ...overrides,
-});
+exports.create = () => mapValues(services, (Class) => Class.create());
+
+exports.createNull = (overrides = {}) => {
+  if (
+    !Object.keys(overrides).every((key) => Object.keys(services).includes(key))
+  ) {
+    throw new Error(
+      `Services.createNull: Overrides (${Object.keys(
+        overrides
+      )}) contain invalid key`
+    );
+  }
+
+  return {
+    ...mapValues(services, (Class) => Class.createNull()),
+    ...overrides,
+  };
+};

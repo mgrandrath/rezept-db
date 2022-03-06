@@ -13,3 +13,8 @@ exports.deepmerge = (...objects) =>
     objects.filter((object) => Boolean(object)),
     { arrayMerge: overrideArrayMerge }
   );
+
+exports.mapValues = (object, f) =>
+  Object.fromEntries(
+    Object.entries(object).map(([key, value]) => [key, f(value)])
+  );
