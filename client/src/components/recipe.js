@@ -1,143 +1,18 @@
-import { Formik, useField, useFormikContext } from "formik";
+import { Formik, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
-import classNames from "classnames";
 import { Button, Form, OverlayTrigger, Popover, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
 import { useOnlyWhenMounted } from "../util/react.js";
-import { TagsInput } from "./form.js";
-import { useAutocomplete } from "../api.js";
-
-const randomId = () => Math.random().toString(36).substring(2);
-
-const TextInput = (props) => {
-  const { className, label, labelClass = "fw-bold", ...inputProps } = props;
-
-  const idRef = useRef(`text-input-${randomId()}`);
-  const [formikProps, meta] = useField(inputProps);
-  const defaultInputProps = {
-    autoComplete: "off",
-    isInvalid: meta.touched && meta.error,
-  };
-
-  return (
-    <Form.Group
-      controlId={idRef.current}
-      className={classNames(className, "position-relative")}
-    >
-      <Form.Label className={labelClass}>{label}</Form.Label>
-      <Form.Control {...defaultInputProps} {...inputProps} {...formikProps} />
-      <Form.Control.Feedback tooltip type="invalid">
-        {meta.error}
-      </Form.Control.Feedback>
-    </Form.Group>
-  );
-};
-
-const TextInputAutocomplete = (props) => {
-  const { acAttribute, ...inputProps } = props;
-
-  const autocompleteQuery = useAutocomplete(acAttribute);
-  const datalistIdRef = useRef(`autocomplete-${randomId()}`);
-
-  return (
-    <>
-      <TextInput {...inputProps} list={datalistIdRef.current} />
-      <datalist id={datalistIdRef.current}>
-        {autocompleteQuery.data?.map?.((option) => (
-          <option key={option} value={option} />
-        ))}
-      </datalist>
-    </>
-  );
-};
-
-const Textarea = (props) => {
-  const { className, label, ...inputProps } = props;
-
-  const idRef = useRef(`textarea-${randomId()}`);
-  const [formikProps, meta] = useField(inputProps);
-  const defaultInputProps = {
-    isInvalid: meta.touched && meta.error,
-  };
-
-  return (
-    <Form.Group controlId={idRef.current}>
-      <Form.Label className="fw-bold">{label}</Form.Label>
-      <TextArea {...defaultInputProps} {...inputProps} {...formikProps} />
-      <Form.Control.Feedback tooltip type="invalid">
-        {meta.error}
-      </Form.Control.Feedback>
-    </Form.Group>
-  );
-};
-
-const SelectInput = (props) => {
-  const { label, children, className, ...inputProps } = props;
-
-  const idRef = useRef(`select-input-${randomId()}`);
-  const [formikProps, meta] = useField(inputProps);
-  const defaultInputProps = {
-    isInvalid: meta.touched && meta.error,
-  };
-
-  return (
-    <Form.Group
-      controlId={idRef.current}
-      className={classNames(className, "position-relative")}
-    >
-      <Form.Label className="fw-bold">{label}</Form.Label>
-      <Form.Select {...defaultInputProps} {...inputProps} {...formikProps}>
-        {children}
-      </Form.Select>
-      <Form.Control.Feedback tooltip type="invalid">
-        {meta.error}
-      </Form.Control.Feedback>
-    </Form.Group>
-  );
-};
-
-const RadioButton = (props) => {
-  const idRef = useRef(`radio-button-${randomId()}`);
-  const [formikProps, meta] = useField({ ...props, type: "radio" });
-  const defaultInputProps = {
-    type: "radio",
-    isInvalid: meta.touched && meta.error,
-  };
-
-  return (
-    <Form.Group controlId={idRef.current}>
-      <Form.Check {...defaultInputProps} {...props} {...formikProps} />
-    </Form.Group>
-  );
-};
-
-const Checkbox = (props) => {
-  const { label, labelAddition, ...inputProps } = props;
-
-  const idRef = useRef(`checkbox-${randomId()}`);
-  const [formikProps, meta] = useField({ ...props, type: "checkbox" });
-  const defaultInputProps = {
-    type: "checkbox",
-    isInvalid: meta.touched && meta.error,
-  };
-
-  return (
-    <Form.Group controlId={idRef.current}>
-      <Form.Check>
-        <Form.Check.Input
-          {...defaultInputProps}
-          {...inputProps}
-          {...formikProps}
-        />
-        <Form.Check.Label>{label}</Form.Check.Label>
-        {labelAddition && (
-          <Form.Text className="d-block">{labelAddition}</Form.Text>
-        )}
-      </Form.Check>
-    </Form.Group>
-  );
-};
+import {
+  Checkbox,
+  RadioButton,
+  SelectInput,
+  TagsInput,
+  TextArea,
+  TextInput,
+  TextInputAutocomplete,
+} from "./form.js";
 
 const isValidUrl = (candidate) => {
   try {
@@ -186,10 +61,6 @@ const validateRecipeInput = (recipeInput) => {
   }
 
   return errors;
-};
-
-const TextArea = (props) => {
-  return <Form.Control {...props} as="textarea" />;
 };
 
 const UpdateSource = (props) => {
@@ -427,7 +298,7 @@ export const RecipeInputForm = (props) => {
               />
             </Form.Group>
 
-            <Textarea name="notes" label="Notes" />
+            <TextArea name="notes" label="Notes" />
 
             <Stack direction="horizontal" className="gap-3 justify-content-end">
               <Button type="submit" className="order-2">

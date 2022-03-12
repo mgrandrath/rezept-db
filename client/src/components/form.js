@@ -1,17 +1,185 @@
 import { useEffect, useRef } from "react";
+import classNames from "classnames";
 import { Button, Form, ListGroup, Stack } from "react-bootstrap";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
 import { useAutocomplete } from "../api.js";
+import { useField } from "formik";
 
 const randomId = () => Math.random().toString(36).substring(2);
 
 const removeDuplicates = (array) => Array.from(new Set(array));
 
+export const TextInput = (props) => {
+  const { className, label, labelClass = "fw-bold", ...inputProps } = props;
+
+  const idRef = useRef(`text-input-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    autoComplete: "off",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group
+      controlId={idRef.current}
+      className={classNames(className, "position-relative")}
+    >
+      <Form.Label className={labelClass}>{label}</Form.Label>
+      <Form.Control {...defaultInputProps} {...inputProps} {...formikProps} />
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+export const Autocomplete = (props) => {
+  const { acAttribute, ...inputProps } = props;
+
+  const autocompleteQuery = useAutocomplete(acAttribute);
+  const datalistIdRef = useRef(`autocomplete-${randomId()}`);
+  const defaultInputProps = {
+    type: "text",
+    autoComplete: "off",
+  };
+
+  return (
+    <>
+      <Form.Control
+        {...defaultInputProps}
+        {...inputProps}
+        list={datalistIdRef.current}
+      />
+      <datalist id={datalistIdRef.current}>
+        {autocompleteQuery.data?.map?.((option) => (
+          <option key={option} value={option} />
+        ))}
+      </datalist>
+    </>
+  );
+};
+
+export const TextInputAutocomplete = (props) => {
+  const {
+    className,
+    label,
+    labelClass = "fw-bold",
+    acAttribute,
+    ...inputProps
+  } = props;
+
+  const idRef = useRef(`text-input-autocomplete-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    autoComplete: "off",
+    isInvalid: meta.touched && meta.error,
+    acAttribute,
+  };
+
+  return (
+    <Form.Group
+      controlId={idRef.current}
+      className={classNames(className, "position-relative")}
+    >
+      <Form.Label className={labelClass}>{label}</Form.Label>
+      <Autocomplete {...defaultInputProps} {...inputProps} {...formikProps} />
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+export const TextArea = (props) => {
+  const { className, label, ...inputProps } = props;
+
+  const idRef = useRef(`textarea-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    as: "textarea",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Label className="fw-bold">{label}</Form.Label>
+      <Form.Control {...defaultInputProps} {...inputProps} {...formikProps} />
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+export const SelectInput = (props) => {
+  const { label, children, className, ...inputProps } = props;
+
+  const idRef = useRef(`select-input-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group
+      controlId={idRef.current}
+      className={classNames(className, "position-relative")}
+    >
+      <Form.Label className="fw-bold">{label}</Form.Label>
+      <Form.Select {...defaultInputProps} {...inputProps} {...formikProps}>
+        {children}
+      </Form.Select>
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+export const RadioButton = (props) => {
+  const idRef = useRef(`radio-button-${randomId()}`);
+  const [formikProps, meta] = useField({ ...props, type: "radio" });
+  const defaultInputProps = {
+    type: "radio",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Check {...defaultInputProps} {...props} {...formikProps} />
+    </Form.Group>
+  );
+};
+
+export const Checkbox = (props) => {
+  const { label, labelAddition, ...inputProps } = props;
+
+  const idRef = useRef(`checkbox-${randomId()}`);
+  const [formikProps, meta] = useField({ ...props, type: "checkbox" });
+  const defaultInputProps = {
+    type: "checkbox",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Check>
+        <Form.Check.Input
+          {...defaultInputProps}
+          {...inputProps}
+          {...formikProps}
+        />
+        <Form.Check.Label>{label}</Form.Check.Label>
+        {labelAddition && (
+          <Form.Text className="d-block">{labelAddition}</Form.Text>
+        )}
+      </Form.Check>
+    </Form.Group>
+  );
+};
+
 export const TagsInput = (props) => {
   const { name, value, onChange } = props;
-
-  const autocompleteQuery = useAutocomplete("tag");
-  const datalistIdRef = useRef(`tags-autocomplete-${randomId()}`);
 
   const formIdRef = useRef(`tags-input-${randomId()}`);
   const nameRef = useRef();
@@ -79,20 +247,12 @@ export const TagsInput = (props) => {
         </ListGroup>
       )}
       <Stack direction="horizontal" gap={3}>
-        <Form.Control
+        <Autocomplete
           className="me-auto"
-          type="text"
           name="tag"
-          list={datalistIdRef.current}
           form={formIdRef.current}
+          acAttribute="tag"
         />
-        {autocompleteQuery.data && (
-          <datalist id={datalistIdRef.current}>
-            {autocompleteQuery.data.map((tag) => (
-              <option key={tag} value={tag} />
-            ))}
-          </datalist>
-        )}
         <Button
           type="submit"
           variant="outline-primary"
