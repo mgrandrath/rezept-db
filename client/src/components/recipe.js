@@ -52,6 +52,21 @@ const TextInputAutocomplete = (props) => {
   );
 };
 
+const RadioButton = (props) => {
+  const idRef = useRef(`radio-button-${randomId()}`);
+  const [formikProps, meta] = useField({ ...props, type: "radio" });
+  const defaultInputProps = {
+    type: "radio",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Check {...defaultInputProps} {...props} {...formikProps} />
+    </Form.Group>
+  );
+};
+
 const commonFieldProps = (formik, name) => ({
   name,
   isInvalid: Boolean(getIn(formik.touched, name) && getIn(formik.errors, name)),
@@ -60,12 +75,6 @@ const commonFieldProps = (formik, name) => ({
 const textAreaProps = (formik, name) => ({
   ...commonFieldProps(formik, name),
   as: TextArea,
-});
-
-const radioProps = (formik, name) => ({
-  ...commonFieldProps(formik, name),
-  as: Form.Check,
-  type: "radio",
 });
 
 const checkboxProps = (formik, name) => ({
@@ -234,20 +243,16 @@ export const RecipeInputForm = (props) => {
               </legend>
               <Stack gap={2}>
                 <div>
-                  <Form.Group controlId="sourceTypeOnline">
-                    <Field
-                      {...radioProps(formik, "source.type")}
-                      label="Online"
-                      value={sourceTypes.ONLINE}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="sourceTypeOffline">
-                    <Field
-                      {...radioProps(formik, "source.type")}
-                      label="Offline"
-                      value={sourceTypes.OFFLINE}
-                    />
-                  </Form.Group>
+                  <RadioButton
+                    name="source.type"
+                    label="Online"
+                    value={sourceTypes.ONLINE}
+                  />
+                  <RadioButton
+                    name="source.type"
+                    label="Offline"
+                    value={sourceTypes.OFFLINE}
+                  />
                 </div>
 
                 {formik.values.source?.type === sourceTypes.ONLINE && (
@@ -260,28 +265,26 @@ export const RecipeInputForm = (props) => {
                 )}
 
                 {formik.values.source?.type === sourceTypes.OFFLINE && (
-                  <>
-                    <Stack
-                      direction="horizontal"
-                      gap={3}
-                      className="justify-content-between align-items-start"
-                    >
-                      <TextInputAutocomplete
-                        name="source.title"
-                        label="Title"
-                        acAttribute="offlineSourceTitle"
-                        className="flex-grow-1"
-                        labelClass="fw-normal"
-                      />
-                      <TextInput
-                        name="source.page"
-                        label="Page"
-                        type="number"
-                        labelClass="fw-normal"
-                        className="w-25"
-                      />
-                    </Stack>
-                  </>
+                  <Stack
+                    direction="horizontal"
+                    gap={3}
+                    className="justify-content-between align-items-start"
+                  >
+                    <TextInputAutocomplete
+                      name="source.title"
+                      label="Title"
+                      acAttribute="offlineSourceTitle"
+                      className="flex-grow-1"
+                      labelClass="fw-normal"
+                    />
+                    <TextInput
+                      name="source.page"
+                      label="Page"
+                      type="number"
+                      labelClass="fw-normal"
+                      className="w-25"
+                    />
+                  </Stack>
                 )}
               </Stack>
             </fieldset>
