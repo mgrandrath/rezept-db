@@ -26,4 +26,4 @@ IMAGE="rezept-db:${VERSION}"
 
 mkdir -p "${BUILD_DIR}"
 docker build -t $IMAGE "${ROOT_DIR}"
-docker save --output "${BUILD_DIR}/rezept-db_${VERSION}.docker.tar" $IMAGE
+docker image prune -f
