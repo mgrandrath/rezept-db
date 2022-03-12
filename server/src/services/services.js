@@ -3,7 +3,7 @@
 const { mapValues } = require("../util/object.js");
 
 const services = {
-  uuid: require("./recipe_repository.js"),
+  uuid: require("./uuid.js"),
   autocompleteRepository: require("./autocomplete_repository.js"),
   recipeRepository: require("./recipe_repository.js"),
 };
