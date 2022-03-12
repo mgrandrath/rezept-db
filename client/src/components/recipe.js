@@ -92,6 +92,33 @@ const RadioButton = (props) => {
   );
 };
 
+const Checkbox = (props) => {
+  const { label, labelAddition, ...inputProps } = props;
+
+  const idRef = useRef(`checkbox-${randomId()}`);
+  const [formikProps, meta] = useField({ ...props, type: "checkbox" });
+  const defaultInputProps = {
+    type: "checkbox",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Check>
+        <Form.Check.Input
+          {...defaultInputProps}
+          {...inputProps}
+          {...formikProps}
+        />
+        <Form.Check.Label>{label}</Form.Check.Label>
+        {labelAddition && (
+          <Form.Text className="d-block">{labelAddition}</Form.Text>
+        )}
+      </Form.Check>
+    </Form.Group>
+  );
+};
+
 const commonFieldProps = (formik, name) => ({
   name,
   isInvalid: Boolean(getIn(formik.touched, name) && getIn(formik.errors, name)),
@@ -100,12 +127,6 @@ const commonFieldProps = (formik, name) => ({
 const textAreaProps = (formik, name) => ({
   ...commonFieldProps(formik, name),
   as: TextArea,
-});
-
-const checkboxProps = (formik, name) => ({
-  ...commonFieldProps(formik, name),
-  as: Form.Check.Input,
-  type: "checkbox",
 });
 
 const isValidUrl = (candidate) => {
@@ -332,55 +353,39 @@ export const RecipeInputForm = (props) => {
               </option>
             </SelectInput>
 
-            <div>
+            <div className="position-relative">
               <div className="fw-bold form-label">Seasons</div>
               <Stack
                 direction="horizontal"
                 className="justify-content-between align-items-start"
               >
-                <Form.Group controlId={`seasons.${seasons.SPRING}`}>
-                  <Form.Check>
-                    <Field
-                      {...checkboxProps(formik, `seasons.${seasons.SPRING}`)}
-                    />
-                    <Form.Check.Label>Spring</Form.Check.Label>
-                    <Form.Text className="d-block">Mar, Apr, May</Form.Text>
-                  </Form.Check>
-                </Form.Group>
-                <Form.Group controlId={`seasons.${seasons.SUMMER}`}>
-                  <Form.Check>
-                    <Field
-                      {...checkboxProps(formik, `seasons.${seasons.SUMMER}`)}
-                    />
-                    <Form.Check.Label>Summer</Form.Check.Label>
-                    <Form.Text className="d-block">Jun, Jul, Aug</Form.Text>
-                  </Form.Check>
-                </Form.Group>
-                <Form.Group controlId={`seasons.${seasons.FALL}`}>
-                  <Form.Check>
-                    <Field
-                      {...checkboxProps(formik, `seasons.${seasons.FALL}`)}
-                    />
-                    <Form.Check.Label>Fall</Form.Check.Label>
-                    <Form.Text className="d-block">Sep, Oct, Nov</Form.Text>
-                  </Form.Check>
-                </Form.Group>
-                <Form.Group controlId={`seasons.${seasons.WINTER}`}>
-                  <Form.Check>
-                    <Field
-                      {...checkboxProps(formik, `seasons.${seasons.WINTER}`)}
-                    />
-                    <Form.Check.Label>Winter</Form.Check.Label>
-                    <Form.Text className="d-block">Dec, Jan, Feb</Form.Text>
-                  </Form.Check>
-                </Form.Group>
+                <Checkbox
+                  name={`seasons.${seasons.SPRING}`}
+                  label="Spring"
+                  labelAddition="Mar, Apr, May"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.SUMMER}`}
+                  label="Summer"
+                  labelAddition="Jun, Jul, Aug"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.FALL}`}
+                  label="Fall"
+                  labelAddition="Sep, Oct, Nov"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.WINTER}`}
+                  label="Winter"
+                  labelAddition="Dec, Jan, Feb"
+                />
               </Stack>
               {(formik.touched.seasons?.[seasons.SPRING] ||
                 formik.touched.seasons?.[seasons.SUMMER] ||
                 formik.touched.seasons?.[seasons.FALL] ||
                 formik.touched.seasons?.[seasons.WINTER]) &&
                 formik.errors.seasons && (
-                  <div className="text-danger small mt-1">
+                  <div className="invalid-tooltip d-block">
                     {formik.errors.seasons}
                   </div>
                 )}
