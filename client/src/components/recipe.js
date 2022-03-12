@@ -52,6 +52,31 @@ const TextInputAutocomplete = (props) => {
   );
 };
 
+const SelectInput = (props) => {
+  const { label, children, className, ...inputProps } = props;
+
+  const idRef = useRef(`select-input-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group
+      controlId={idRef.current}
+      className={classNames(className, "position-relative")}
+    >
+      <Form.Label className="fw-bold">{label}</Form.Label>
+      <Form.Select {...defaultInputProps} {...inputProps} {...formikProps}>
+        {children}
+      </Form.Select>
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
 const RadioButton = (props) => {
   const idRef = useRef(`radio-button-${randomId()}`);
   const [formikProps, meta] = useField({ ...props, type: "radio" });
@@ -81,11 +106,6 @@ const checkboxProps = (formik, name) => ({
   ...commonFieldProps(formik, name),
   as: Form.Check.Input,
   type: "checkbox",
-});
-
-const selectInputProps = (formik, name) => ({
-  ...commonFieldProps(formik, name),
-  as: Form.Select,
 });
 
 const isValidUrl = (candidate) => {
@@ -289,40 +309,28 @@ export const RecipeInputForm = (props) => {
               </Stack>
             </fieldset>
 
-            <Form.Group controlId="diet">
-              <Form.Label className="fw-bold">Diet</Form.Label>
-              <Field {...selectInputProps(formik, "diet")}>
-                <option value="">Please select</option>
-                <option value={diets.VEGAN}>Vegan</option>
-                <option value={diets.VEGETARIAN}>Vegetarian</option>
-                <option value={diets.OMNIVORE}>Omnivore</option>
-              </Field>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.diet}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <SelectInput name="diet" label="Diet">
+              <option value="">Please select</option>
+              <option value={diets.VEGAN}>Vegan</option>
+              <option value={diets.VEGETARIAN}>Vegetarian</option>
+              <option value={diets.OMNIVORE}>Omnivore</option>
+            </SelectInput>
 
-            <Form.Group controlId="prepTime">
-              <Form.Label className="fw-bold">Preperation time</Form.Label>
-              <Field {...selectInputProps(formik, "prepTime")}>
-                <option value="">Please select</option>
-                <option value={prepTimes.UNDER_30_MINUTES}>
-                  under 30 minutes
-                </option>
-                <option value={prepTimes["30_TO_60_MINUTES"]}>
-                  30—60 minutes
-                </option>
-                <option value={prepTimes["60_TO_120_MINUTES"]}>
-                  60—120 minutes
-                </option>
-                <option value={prepTimes.OVER_120_MINUTES}>
-                  over 120 minutes
-                </option>
-              </Field>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.prepTime}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <SelectInput name="prepTime" label="Preperation time">
+              <option value="">Please select</option>
+              <option value={prepTimes.UNDER_30_MINUTES}>
+                under 30 minutes
+              </option>
+              <option value={prepTimes["30_TO_60_MINUTES"]}>
+                30—60 minutes
+              </option>
+              <option value={prepTimes["60_TO_120_MINUTES"]}>
+                60—120 minutes
+              </option>
+              <option value={prepTimes.OVER_120_MINUTES}>
+                over 120 minutes
+              </option>
+            </SelectInput>
 
             <div>
               <div className="fw-bold form-label">Seasons</div>
