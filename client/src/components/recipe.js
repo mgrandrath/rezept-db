@@ -52,6 +52,26 @@ const TextInputAutocomplete = (props) => {
   );
 };
 
+const Textarea = (props) => {
+  const { className, label, ...inputProps } = props;
+
+  const idRef = useRef(`textarea-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group controlId={idRef.current}>
+      <Form.Label className="fw-bold">{label}</Form.Label>
+      <TextArea {...defaultInputProps} {...inputProps} {...formikProps} />
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
 const SelectInput = (props) => {
   const { label, children, className, ...inputProps } = props;
 
@@ -118,16 +138,6 @@ const Checkbox = (props) => {
     </Form.Group>
   );
 };
-
-const commonFieldProps = (formik, name) => ({
-  name,
-  isInvalid: Boolean(getIn(formik.touched, name) && getIn(formik.errors, name)),
-});
-
-const textAreaProps = (formik, name) => ({
-  ...commonFieldProps(formik, name),
-  as: TextArea,
-});
 
 const isValidUrl = (candidate) => {
   try {
@@ -417,13 +427,7 @@ export const RecipeInputForm = (props) => {
               />
             </Form.Group>
 
-            <Form.Group controlId="notes">
-              <Form.Label className="fw-bold">Notes</Form.Label>
-              <Field {...textAreaProps(formik, "notes")} />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.notes}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <Textarea name="notes" label="Notes" />
 
             <Stack direction="horizontal" className="gap-3 justify-content-end">
               <Button type="submit" className="order-2">
