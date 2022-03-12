@@ -1,5 +1,6 @@
-import { Field, Formik, getIn, useFormikContext } from "formik";
+import { Field, Formik, getIn, useField, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
+import classNames from "classnames";
 import { Button, Form, OverlayTrigger, Popover, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
@@ -9,15 +10,51 @@ import { useAutocomplete } from "../api.js";
 
 const randomId = () => Math.random().toString(36).substring(2);
 
+const TextInput = (props) => {
+  const { className, label, labelClass = "fw-bold", ...inputProps } = props;
+
+  const idRef = useRef(`text-input-${randomId()}`);
+  const [formikProps, meta] = useField(inputProps);
+  const defaultInputProps = {
+    autoComplete: "off",
+    isInvalid: meta.touched && meta.error,
+  };
+
+  return (
+    <Form.Group
+      controlId={idRef.current}
+      className={classNames(className, "position-relative")}
+    >
+      <Form.Label className={labelClass}>{label}</Form.Label>
+      <Form.Control {...defaultInputProps} {...inputProps} {...formikProps} />
+      <Form.Control.Feedback tooltip type="invalid">
+        {meta.error}
+      </Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+const TextInputAutocomplete = (props) => {
+  const { acAttribute, ...inputProps } = props;
+
+  const autocompleteQuery = useAutocomplete(acAttribute);
+  const datalistIdRef = useRef(`autocomplete-${randomId()}`);
+
+  return (
+    <>
+      <TextInput {...inputProps} list={datalistIdRef.current} />
+      <datalist id={datalistIdRef.current}>
+        {autocompleteQuery.data?.map?.((option) => (
+          <option key={option} value={option} />
+        ))}
+      </datalist>
+    </>
+  );
+};
+
 const commonFieldProps = (formik, name) => ({
   name,
   isInvalid: Boolean(getIn(formik.touched, name) && getIn(formik.errors, name)),
-});
-
-const textInputProps = (formik, name, { type = "text" } = {}) => ({
-  ...commonFieldProps(formik, name),
-  as: Form.Control,
-  type,
 });
 
 const textAreaProps = (formik, name) => ({
@@ -162,11 +199,6 @@ export const RecipeInputForm = (props) => {
   const { recipeInput, onSubmit, backLink } = props;
   const onlyWhenMounted = useOnlyWhenMounted();
 
-  const autocompleteQuery = useAutocomplete("offlineSourceTitle");
-  const datalistIdRef = useRef(
-    `offline-source-titles-autocomplete-${randomId()}`
-  );
-
   const handleSubmit = async (recipeInput, { setSubmitting }) => {
     try {
       await onSubmit(cleanupRecipeInput(recipeInput));
@@ -194,13 +226,7 @@ export const RecipeInputForm = (props) => {
         >
           <UpdateSource />
           <Stack gap={4}>
-            <Form.Group controlId="name">
-              <Form.Label className="fw-bold">Name</Form.Label>
-              <Field {...textInputProps(formik, "name")} size="lg" />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <TextInput name="name" label="Name" size="lg" />
 
             <fieldset className="border border-2 rounded px-3 pt-0 pb-3">
               <legend className="fs-6 fw-bold w-auto px-2 float-none">
@@ -225,58 +251,37 @@ export const RecipeInputForm = (props) => {
                 </div>
 
                 {formik.values.source?.type === sourceTypes.ONLINE && (
-                  <Form.Group controlId="source.url">
-                    <Form.Label>URL</Form.Label>
-                    <Field
-                      {...textInputProps(formik, "source.url", { type: "url" })}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {formik.errors.source?.url}
-                    </Form.Control.Feedback>
-                  </Form.Group>
+                  <TextInput
+                    name="source.url"
+                    label="URL"
+                    type="url"
+                    labelClass="fw-normal"
+                  />
                 )}
 
                 {formik.values.source?.type === sourceTypes.OFFLINE && (
-                  <Stack
-                    direction="horizontal"
-                    gap={3}
-                    className="justify-content-between align-items-start"
-                  >
-                    <Form.Group
-                      controlId="source.title"
-                      className="flex-grow-1"
+                  <>
+                    <Stack
+                      direction="horizontal"
+                      gap={3}
+                      className="justify-content-between align-items-start"
                     >
-                      <Form.Label>Title</Form.Label>
-                      <Field
-                        {...textInputProps(formik, "source.title")}
-                        list={datalistIdRef.current}
+                      <TextInputAutocomplete
+                        name="source.title"
+                        label="Title"
+                        acAttribute="offlineSourceTitle"
+                        className="flex-grow-1"
+                        labelClass="fw-normal"
                       />
-                      {autocompleteQuery.data && (
-                        <datalist id={datalistIdRef.current}>
-                          {autocompleteQuery.data.map((offlineSourceTitle) => (
-                            <option
-                              key={offlineSourceTitle}
-                              value={offlineSourceTitle}
-                            />
-                          ))}
-                        </datalist>
-                      )}
-                      <Form.Control.Feedback type="invalid">
-                        {formik.errors.source?.title}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group controlId="source.page" className="w-25">
-                      <Form.Label>Page</Form.Label>
-                      <Field
-                        {...textInputProps(formik, "source.page", {
-                          type: "number",
-                        })}
+                      <TextInput
+                        name="source.page"
+                        label="Page"
+                        type="number"
+                        labelClass="fw-normal"
+                        className="w-25"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {formik.errors.source?.page}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Stack>
+                    </Stack>
+                  </>
                 )}
               </Stack>
             </fieldset>
