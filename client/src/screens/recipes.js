@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import {
   Alert,
@@ -13,12 +13,7 @@ import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
 import { diets, prepTimes } from "../constants.js";
-import { useState } from "react";
-
-const randomString = () => Math.random().toString(36).substring(2);
-
-const searchParamsToObject = (urlSearchParams) =>
-  Object.fromEntries(urlSearchParams.entries());
+import { useUrlState, useRerenderChild } from "../util/react.js";
 
 const RecipesFilter = (props) => {
   const { initialValues, onSubmit, onReset } = props;
@@ -114,15 +109,6 @@ const RecipesList = (props) => {
   );
 };
 
-const useRerenderChild = () => {
-  const [key, setKey] = useState(randomString());
-  const rerenderChild = () => {
-    setKey(randomString());
-  };
-
-  return [key, rerenderChild];
-};
-
 const Recipes = () => {
   const defaultValues = {
     name: "",
@@ -130,9 +116,8 @@ const Recipes = () => {
     maxPrepTime: prepTimes.OVER_120_MINUTES,
   };
   const [formKey, rerenderForm] = useRerenderChild();
-  const [filterParams, setFilterParams] = useSearchParams(defaultValues);
-  const filter = searchParamsToObject(filterParams);
-  const setFilter = (filter) => setFilterParams(filter, { replace: true });
+  const [filter, setFilter] = useUrlState(defaultValues);
+
   const resetFilter = () => {
     setFilter(defaultValues);
     rerenderForm();
