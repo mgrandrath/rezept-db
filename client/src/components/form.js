@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { Button, Form, ListGroup, Stack } from "react-bootstrap";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
@@ -33,7 +33,7 @@ export const TextInput = (props) => {
   );
 };
 
-export const Autocomplete = (props) => {
+export const Autocomplete = forwardRef((props, forwardedRef) => {
   const { acAttribute, ...inputProps } = props;
 
   const autocompleteQuery = useAutocomplete(acAttribute);
@@ -49,6 +49,7 @@ export const Autocomplete = (props) => {
         {...defaultInputProps}
         {...inputProps}
         list={datalistIdRef.current}
+        ref={forwardedRef}
       />
       <datalist id={datalistIdRef.current}>
         {autocompleteQuery.data?.map?.((option) => (
@@ -57,7 +58,7 @@ export const Autocomplete = (props) => {
       </datalist>
     </>
   );
-};
+});
 
 export const TextInputAutocomplete = (props) => {
   const {
@@ -181,11 +182,15 @@ export const Checkbox = (props) => {
 export const TagsInput = (props) => {
   const { name, value, onChange } = props;
 
+  const inputRef = useRef();
   const formIdRef = useRef(`tags-input-${randomId()}`);
+
   const nameRef = useRef();
   nameRef.current = name;
+
   const valueRef = useRef();
   valueRef.current = value ?? [];
+
   const onChangeRef = useRef();
   onChangeRef.current = onChange ?? (() => {});
 
@@ -220,6 +225,18 @@ export const TagsInput = (props) => {
     };
   }, []);
 
+  const handleKeyDown = (event) => {
+    // Add tag to list when ',' key is pressed
+    if (event.key === ",") {
+      event.preventDefault();
+      event.target.form.requestSubmit();
+
+      // Close autocomplete overlay
+      inputRef.current.blur();
+      inputRef.current.focus();
+    }
+  };
+
   const removeTag = (tagToRemove) => () => {
     onChangeRef.current({
       target: {
@@ -248,10 +265,12 @@ export const TagsInput = (props) => {
       )}
       <Stack direction="horizontal" gap={3}>
         <Autocomplete
+          ref={inputRef}
           className="me-auto"
           name="tag"
           form={formIdRef.current}
           acAttribute="tag"
+          onKeyDown={handleKeyDown}
         />
         <Button
           type="submit"
