@@ -404,6 +404,7 @@ describe("RecipeRepository", () => {
       expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           select: RecipeRepository.selectRecipeProps,
+          where: { AND: [] },
           orderBy: { name: "asc" },
         })
       );
@@ -421,11 +422,15 @@ describe("RecipeRepository", () => {
         const result = await recipeRepository.find({ name: "pizza" });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
-          select: RecipeRepository.selectRecipeProps,
-          where: { name: { contains: "pizza" } },
-          orderBy: { name: "asc" },
-        });
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: {
+              AND: expect.arrayContaining([{ name: { contains: "pizza" } }]),
+            },
+            orderBy: { name: "asc" },
+          })
+        );
       });
 
       it("should not pass in a name filter string when it's blank", async () => {
@@ -435,8 +440,8 @@ describe("RecipeRepository", () => {
         await recipeRepository.find({ name: "" });
 
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where?.name?.contains
-        ).toEqual(undefined);
+          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+        ).not.toContainMatchingObject({ name: {} });
       });
     });
 
@@ -455,7 +460,9 @@ describe("RecipeRepository", () => {
         expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: { diet: { in: [diets.VEGAN] } },
+            where: {
+              AND: expect.arrayContaining([{ diet: { in: [diets.VEGAN] } }]),
+            },
             orderBy: { name: "asc" },
           })
         );
@@ -477,7 +484,11 @@ describe("RecipeRepository", () => {
         expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: { diet: { in: [diets.VEGAN, diets.VEGETARIAN] } },
+            where: {
+              AND: expect.arrayContaining([
+                { diet: { in: [diets.VEGAN, diets.VEGETARIAN] } },
+              ]),
+            },
             orderBy: { name: "asc" },
           })
         );
@@ -496,9 +507,9 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany.mock.calls[0][0].where?.diet).toEqual(
-          undefined
-        );
+        expect(
+          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+        ).not.toContainMatchingObject({ diet: {} });
       });
     });
 
@@ -519,7 +530,11 @@ describe("RecipeRepository", () => {
         expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: { prepTime: { in: [prepTimes.UNDER_30_MINUTES] } },
+            where: {
+              AND: expect.arrayContaining([
+                { prepTime: { in: [prepTimes.UNDER_30_MINUTES] } },
+              ]),
+            },
             orderBy: { name: "asc" },
           })
         );
@@ -542,13 +557,17 @@ describe("RecipeRepository", () => {
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
-              prepTime: {
-                in: [
-                  prepTimes.UNDER_30_MINUTES,
-                  prepTimes["30_TO_60_MINUTES"],
-                  prepTimes["60_TO_120_MINUTES"],
-                ],
-              },
+              AND: expect.arrayContaining([
+                {
+                  prepTime: {
+                    in: [
+                      prepTimes.UNDER_30_MINUTES,
+                      prepTimes["30_TO_60_MINUTES"],
+                      prepTimes["60_TO_120_MINUTES"],
+                    ],
+                  },
+                },
+              ]),
             },
             orderBy: { name: "asc" },
           })
@@ -569,8 +588,54 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where?.prepTime
-        ).toEqual(undefined);
+          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+        ).not.toContainMatchingObject({ prepTime: {} });
+      });
+    });
+
+    describe("tags", () => {
+      it("should return recipes that contain all given tags", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          tags: ["Indian", "Lamb", "Curry"],
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: {
+              AND: expect.arrayContaining([
+                { tags: { some: { name: "Indian" } } },
+                { tags: { some: { name: "Lamb" } } },
+                { tags: { some: { name: "Curry" } } },
+              ]),
+            },
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return all recipes when tags list is empty", async () => {
+        dbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(
+            newRecipe({ recipeId: "recipe-111" })
+          ),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({ tags: [] });
+
+        expect(result.data).toHaveLength(1);
+        expect(
+          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+        ).not.toContainMatchingObject({ tags: {} });
       });
     });
 
@@ -607,6 +672,12 @@ describe("RecipeRepository", () => {
                 data: [newRecipe({ recipeId: "recipe-444" })],
               },
             },
+            {
+              params: { tags: ["ONE", "TWO"] },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-555" })],
+              },
+            },
           ],
         });
 
@@ -623,6 +694,9 @@ describe("RecipeRepository", () => {
           maxDiet: diets.VEGETARIAN,
         });
         expect(result3.data).toMatchObject([{ recipeId: "recipe-444" }]);
+
+        const result4 = await recipeRepository.find({ tags: ["ONE", "TWO"] });
+        expect(result4.data).toMatchObject([{ recipeId: "recipe-555" }]);
       });
     });
   });

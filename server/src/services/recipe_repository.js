@@ -74,23 +74,29 @@ module.exports = class RecipeRepository {
       prepTimes["30_TO_60_MINUTES"],
       prepTimes["60_TO_120_MINUTES"],
     ];
-    const where = {};
+    const AND = [];
 
     if (filter.name) {
-      where.name = { contains: filter.name };
+      AND.push({ name: { contains: filter.name } });
     }
 
     if (dietSubsets.includes(filter.maxDiet)) {
       const dietIndex = dietSubsets.indexOf(filter.maxDiet);
-      where.diet = { in: dietSubsets.slice(0, dietIndex + 1) };
+      AND.push({ diet: { in: dietSubsets.slice(0, dietIndex + 1) } });
     }
 
     if (prepTimeSubsets.includes(filter.maxPrepTime)) {
       const prepTimeIndex = prepTimeSubsets.indexOf(filter.maxPrepTime);
-      where.prepTime = { in: prepTimeSubsets.slice(0, prepTimeIndex + 1) };
+      AND.push({
+        prepTime: { in: prepTimeSubsets.slice(0, prepTimeIndex + 1) },
+      });
     }
 
-    return where;
+    filter.tags?.forEach((name) => {
+      AND.push({ tags: { some: { name } } });
+    });
+
+    return { AND };
   }
 
   static recordToRecipe(record) {
