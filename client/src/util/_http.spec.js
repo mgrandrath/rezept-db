@@ -110,6 +110,24 @@ describe("sendRequest", () => {
 
     expect(query).toEqual({});
   });
+
+  it("should conform to style 'form' when serializing array values", async () => {
+    server.setResponse({
+      status: 200,
+    });
+
+    await sendRequest({
+      method: "GET",
+      url: `http://localhost:${server.port}/my/path`,
+      query: {
+        someArray: ["one", "two", "three"],
+      },
+    });
+
+    const rawQuery = server.lastRequest.rawQuery;
+
+    expect(rawQuery).toEqual("someArray=one&someArray=two&someArray=three");
+  });
 });
 
 class SpyServer {
