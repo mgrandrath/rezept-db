@@ -50,6 +50,7 @@ describe("recipes", () => {
                 name: "pizza",
                 maxDiet: diets.VEGETARIAN,
                 maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+                tags: ["cheese", "peperoni"],
               },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
@@ -63,6 +64,7 @@ describe("recipes", () => {
           name: "pizza",
           maxDiet: diets.VEGETARIAN,
           maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+          tags: ["cheese", "peperoni"],
         },
       });
 

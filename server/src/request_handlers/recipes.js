@@ -2,13 +2,14 @@
 
 exports.index = async (services, request) => {
   const {
-    query: { name, maxDiet, maxPrepTime },
+    query: { name, maxDiet, maxPrepTime, tags },
   } = request;
 
   const result = await services.recipeRepository.find({
     name,
     maxDiet,
     maxPrepTime,
+    tags,
   });
 
   return {
