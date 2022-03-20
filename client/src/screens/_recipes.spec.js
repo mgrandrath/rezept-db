@@ -18,6 +18,10 @@ import Recipes from "./recipes.js";
 describe("<Recipes>", () => {
   it("should list recipe names", async () => {
     nock("http://localhost")
+      .get(/^\/api\/autocomplete\//)
+      .optionally()
+      .reply(200, [])
+      //
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
@@ -41,6 +45,10 @@ describe("<Recipes>", () => {
 
   it("should filter recipes", async () => {
     nock("http://localhost")
+      .get(/^\/api\/autocomplete\//)
+      .optionally()
+      .reply(200, [])
+      //
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
@@ -53,12 +61,13 @@ describe("<Recipes>", () => {
           }),
         ],
       })
-
+      //
       .get("/api/recipes")
       .query({
         name: "eggs",
         maxDiet: diets.OMNIVORE,
         maxPrepTime: prepTimes["30_TO_60_MINUTES"],
+        tags: ["delicious", "brunch"],
       })
       .reply(200, {
         recipes: [
@@ -81,6 +90,12 @@ describe("<Recipes>", () => {
     enterTextValue("Name", "eggs");
     selectOption("Diet", "Omnivore");
     selectOption("Maximum preperation time", "60 minutes");
+
+    enterTextValue("Tags", "delicious");
+    clickButton("Add tag");
+    enterTextValue("Tags", "brunch");
+    clickButton("Add tag");
+
     clickButton("Apply filters");
 
     await waitForElementToBeRemoved(() =>

@@ -17,15 +17,47 @@ export const useOnlyWhenMounted = () => {
   };
 };
 
+const ARRAY_MARKER = "[]";
+
+const addArrayMarker = (key) => `${key}${ARRAY_MARKER}`;
+const removeArrayMarker = (key) =>
+  key.substring(0, key.length - ARRAY_MARKER.length);
+const hasArrayMarker = (key) => key.endsWith(ARRAY_MARKER);
+
 const searchParamsToObject = (urlSearchParams) =>
-  Object.fromEntries(urlSearchParams.entries());
+  [...urlSearchParams.entries()].reduce(
+    (entries, [key, value]) =>
+      hasArrayMarker(key)
+        ? {
+            ...entries,
+            [removeArrayMarker(key)]: (
+              entries[removeArrayMarker(key)] ?? []
+            ).concat([value]),
+          }
+        : {
+            ...entries,
+            [key]: value,
+          },
+    {}
+  );
+
+const objectToSearchParams = (object) =>
+  Object.fromEntries(
+    Object.entries(object).map(([key, value]) =>
+      Array.isArray(value) ? [addArrayMarker(key), value] : [key, value]
+    )
+  );
 
 export const useUrlState = (defaultValues) => {
-  const [filterParams, setFilterParams] = useSearchParams(defaultValues);
-  const filter = searchParamsToObject(filterParams);
-  const setFilter = (filter) => setFilterParams(filter, { replace: true });
+  const [queryParams, setQueryParams] = useSearchParams(
+    objectToSearchParams(defaultValues)
+  );
+  const state = searchParamsToObject(queryParams);
+  const setState = (newState) => {
+    setQueryParams(objectToSearchParams(newState));
+  };
 
-  return [filter, setFilter];
+  return [state, setState];
 };
 
 const randomString = () => Math.random().toString(36).substring(2);

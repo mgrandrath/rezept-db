@@ -14,7 +14,7 @@ import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
 import { diets, prepTimes } from "../constants.js";
 import { useUrlState, useRerenderChild } from "../util/react.js";
-import { SelectInput, TextInput } from "../components/form.js";
+import { SelectInput, TagsInput, TextInput } from "../components/form.js";
 
 const RecipesFilter = (props) => {
   const { initialValues, onSubmit, onReset } = props;
@@ -44,6 +44,11 @@ const RecipesFilter = (props) => {
               <option value={prepTimes["30_TO_60_MINUTES"]}>60 minutes</option>
               <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
             </SelectInput>
+
+            <Form.Group controlId="tags">
+              <Form.Label className="fw-bold">Tags</Form.Label>
+              <TagsInput name="tags" />
+            </Form.Group>
 
             <Stack direction="horizontal" gap={3} className="mt-1">
               <Button
@@ -104,6 +109,7 @@ const Recipes = () => {
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
+    tags: [],
   };
   const [formKey, rerenderForm] = useRerenderChild();
   const [filter, setFilter] = useUrlState(defaultValues);
