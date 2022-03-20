@@ -180,7 +180,10 @@ export const Checkbox = (props) => {
 };
 
 export const TagsInput = (props) => {
-  const { name, value, onChange } = props;
+  const { name } = props;
+
+  const [formikProps] = useField(props);
+  const { value, onChange } = formikProps;
 
   const inputRef = useRef();
   const formIdRef = useRef(`tags-input-${randomId()}`);

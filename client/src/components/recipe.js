@@ -291,11 +291,7 @@ export const RecipeInputForm = (props) => {
               >
                 <span className="cursor-help">ⓘ</span>
               </OverlayTrigger>
-              <TagsInput
-                name="tags"
-                value={formik.values.tags}
-                onChange={formik.handleChange}
-              />
+              <TagsInput name="tags" />
             </Form.Group>
 
             <TextArea name="notes" label="Notes" />
