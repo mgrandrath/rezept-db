@@ -66,6 +66,16 @@ paths:
           description: |
             If present only recipes that have a preperation time shorter than
             the given value (in minutes) will be returned.
+        - in: query
+          name: tags
+          schema:
+            $ref: '#/components/schemas/Tags'
+          style: form
+          explode: true
+          required: false
+          description: |
+            If present only recipes that contain all given tags will be
+            returned.
       responses:
         '200':
           description: |
