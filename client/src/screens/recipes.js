@@ -14,6 +14,7 @@ import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
 import { diets, prepTimes } from "../constants.js";
 import { useUrlState, useRerenderChild } from "../util/react.js";
+import { SelectInput, TextInput } from "../components/form.js";
 
 const RecipesFilter = (props) => {
   const { initialValues, onSubmit, onReset } = props;
@@ -27,33 +28,22 @@ const RecipesFilter = (props) => {
       {(formik) => (
         <Form onSubmit={formik.handleSubmit}>
           <Stack gap={3}>
-            <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" {...formik.getFieldProps("name")} />
-            </Form.Group>
+            <TextInput name="name" label="Name" />
 
-            <Form.Group controlId="maxDiet">
-              <Form.Label>Diet</Form.Label>
-              <Form.Select {...formik.getFieldProps("maxDiet")}>
-                <option value={diets.OMNIVORE}>Omnivore</option>
-                <option value={diets.VEGETARIAN}>Vegetarian</option>
-                <option value={diets.VEGAN}>Vegan</option>
-              </Form.Select>
-            </Form.Group>
+            <SelectInput name="maxDiet" label="Diet">
+              <option value={diets.OMNIVORE}>Omnivore</option>
+              <option value={diets.VEGETARIAN}>Vegetarian</option>
+              <option value={diets.VEGAN}>Vegan</option>
+            </SelectInput>
 
-            <Form.Group controlId="maxPrepTime">
-              <Form.Label>Maximum preperation time</Form.Label>
-              <Form.Select {...formik.getFieldProps("maxPrepTime")}>
-                <option value={prepTimes.OVER_120_MINUTES}>none</option>
-                <option value={prepTimes["60_TO_120_MINUTES"]}>
-                  120 minutes
-                </option>
-                <option value={prepTimes["30_TO_60_MINUTES"]}>
-                  60 minutes
-                </option>
-                <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
-              </Form.Select>
-            </Form.Group>
+            <SelectInput name="maxPrepTime" label="Maximum preperation time">
+              <option value={prepTimes.OVER_120_MINUTES}>none</option>
+              <option value={prepTimes["60_TO_120_MINUTES"]}>
+                120 minutes
+              </option>
+              <option value={prepTimes["30_TO_60_MINUTES"]}>60 minutes</option>
+              <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
+            </SelectInput>
 
             <Stack direction="horizontal" gap={3} className="mt-1">
               <Button
