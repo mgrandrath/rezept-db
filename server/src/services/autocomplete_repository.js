@@ -5,7 +5,7 @@ const realDbClient = require("./db_client.js");
 
 module.exports = class AutocompleteRepository {
   static create() {
-    return new AutocompleteRepository(realDbClient);
+    return new AutocompleteRepository(realDbClient());
   }
 
   static createNull(options = {}) {

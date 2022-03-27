@@ -1,21 +1,22 @@
 "use strict";
 
-const dbClient = require("./db_client.js");
 const AutocompleteRepository = require("./autocomplete_repository.js");
 
-jest.mock("./db_client.js", () => ({
+const mockDbClient = {
   tag: {
     findMany: jest.fn(),
   },
   recipe: {
     findMany: jest.fn(),
   },
-}));
+};
+
+jest.mock("./db_client.js", () => () => mockDbClient);
 
 describe("AutocompleteRepository", () => {
   describe("findTags", () => {
     it("should return a list of all tags", async () => {
-      dbClient.tag.findMany.mockResolvedValue([
+      mockDbClient.tag.findMany.mockResolvedValue([
         { name: "Indian" },
         { name: "Lamb" },
         { name: "Curry" },
@@ -25,7 +26,7 @@ describe("AutocompleteRepository", () => {
       const result = await autocompleteRepository.findTags();
 
       expect(result).toEqual(["Indian", "Lamb", "Curry"]);
-      expect(dbClient.tag.findMany).toHaveBeenCalledWith({
+      expect(mockDbClient.tag.findMany).toHaveBeenCalledWith({
         select: { name: true },
       });
     });
@@ -58,7 +59,7 @@ describe("AutocompleteRepository", () => {
 
   describe("findOfflineSourceTitles", () => {
     it("should return a list of all offline source titles", async () => {
-      dbClient.recipe.findMany.mockResolvedValue([
+      mockDbClient.recipe.findMany.mockResolvedValue([
         { offlineSourceTitle: "Cooking for Dummies" },
         { offlineSourceTitle: "Indian Cuisine" },
         { offlineSourceTitle: "The American Hamburger Book" },
@@ -72,7 +73,7 @@ describe("AutocompleteRepository", () => {
         "Indian Cuisine",
         "The American Hamburger Book",
       ]);
-      expect(dbClient.recipe.findMany).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith({
         select: { offlineSourceTitle: true },
         where: { offlineSourceTitle: { not: null } },
         distinct: ["offlineSourceTitle"],

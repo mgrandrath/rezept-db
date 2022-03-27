@@ -13,7 +13,7 @@ const realDbClient = require("./db_client.js");
 
 module.exports = class RecipeRepository {
   static create() {
-    return new RecipeRepository(realDbClient);
+    return new RecipeRepository(realDbClient());
   }
 
   static createNull(options = {}) {

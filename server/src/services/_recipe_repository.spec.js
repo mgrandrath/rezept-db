@@ -1,6 +1,5 @@
 "use strict";
 
-const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
 const {
   newRecipe,
@@ -11,7 +10,7 @@ const {
 } = require("../spec_helper/fixtures.js");
 const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
 
-jest.mock("./db_client.js", () => ({
+const mockDbClient = {
   recipe: {
     create: jest.fn(),
     update: jest.fn(),
@@ -21,12 +20,14 @@ jest.mock("./db_client.js", () => ({
   tag: {
     deleteMany: jest.fn(),
   },
-}));
+};
+
+jest.mock("./db_client.js", () => () => mockDbClient);
 
 describe("RecipeRepository", () => {
   describe("store", () => {
     it("should store an ONLINE recipe in the database", async () => {
-      dbClient.recipe.create.mockResolvedValue();
+      mockDbClient.recipe.create.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipe = newRecipe({
         recipeId: "recipe-111",
@@ -48,7 +49,7 @@ describe("RecipeRepository", () => {
 
       await recipeRepository.store(recipe);
 
-      expect(dbClient.recipe.create).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.create).toHaveBeenCalledWith({
         data: {
           recipeId: "recipe-111",
           name: "Grilled cheese",
@@ -74,7 +75,7 @@ describe("RecipeRepository", () => {
     });
 
     it("should store an OFFLINE recipe in the database", async () => {
-      dbClient.recipe.create.mockResolvedValue();
+      mockDbClient.recipe.create.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipe = newRecipe({
         recipeId: "recipe-111",
@@ -90,14 +91,14 @@ describe("RecipeRepository", () => {
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
-          page: "123",
+          page: 123,
         }),
         tags: [],
       });
 
       await recipeRepository.store(recipe);
 
-      expect(dbClient.recipe.create).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.create).toHaveBeenCalledWith({
         data: {
           recipeId: "recipe-111",
           name: "Grilled cheese",
@@ -106,7 +107,7 @@ describe("RecipeRepository", () => {
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
-          offlineSourcePage: "123",
+          offlineSourcePage: 123,
           onlineSourceUrl: null,
           seasonsSpring: false,
           seasonsSummer: false,
@@ -125,7 +126,7 @@ describe("RecipeRepository", () => {
 
         await recipeRepository.store(newRecipe());
 
-        expect(dbClient.recipe.create).not.toHaveBeenCalled();
+        expect(mockDbClient.recipe.create).not.toHaveBeenCalled();
       });
 
       it("should track calls", async () => {
@@ -142,7 +143,7 @@ describe("RecipeRepository", () => {
 
   describe("update", () => {
     it("should update the given ONLINE recipe with the new values", async () => {
-      dbClient.recipe.update.mockResolvedValue();
+      mockDbClient.recipe.update.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipeId = "recipe-111";
       const recipeInput = newRecipeInput({
@@ -164,7 +165,7 @@ describe("RecipeRepository", () => {
 
       await recipeRepository.update(recipeId, recipeInput);
 
-      expect(dbClient.recipe.update).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.update).toHaveBeenCalledWith({
         where: { recipeId },
         data: {
           name: "Grilled cheese",
@@ -191,7 +192,7 @@ describe("RecipeRepository", () => {
     });
 
     it("should update the given OFFLINE recipe with the new values", async () => {
-      dbClient.recipe.update.mockResolvedValue();
+      mockDbClient.recipe.update.mockResolvedValue();
       const recipeRepository = RecipeRepository.create();
       const recipeId = "recipe-111";
       const recipeInput = newRecipeInput({
@@ -207,14 +208,14 @@ describe("RecipeRepository", () => {
         notes: "American cheese melts best",
         source: newRecipeOfflineSource({
           title: "My Recipe Collection",
-          page: "123",
+          page: 123,
         }),
         tags: [],
       });
 
       await recipeRepository.update(recipeId, recipeInput);
 
-      expect(dbClient.recipe.update).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.update).toHaveBeenCalledWith({
         where: { recipeId },
         data: {
           name: "Grilled cheese",
@@ -223,7 +224,7 @@ describe("RecipeRepository", () => {
           notes: "American cheese melts best",
           sourceType: sourceTypes.OFFLINE,
           offlineSourceTitle: "My Recipe Collection",
-          offlineSourcePage: "123",
+          offlineSourcePage: 123,
           onlineSourceUrl: null,
           seasonsSpring: true,
           seasonsSummer: false,
@@ -244,7 +245,7 @@ describe("RecipeRepository", () => {
 
       await recipeRepository.update(recipeId, recipeInput);
 
-      expect(dbClient.tag.deleteMany).toHaveBeenCalledWith({
+      expect(mockDbClient.tag.deleteMany).toHaveBeenCalledWith({
         where: { recipes: { none: {} } },
       });
     });
@@ -255,7 +256,7 @@ describe("RecipeRepository", () => {
 
         await recipeRepository.update("irrelevant-id", newRecipe());
 
-        expect(dbClient.recipe.update).not.toHaveBeenCalled();
+        expect(mockDbClient.recipe.update).not.toHaveBeenCalled();
       });
 
       it("should track calls", async () => {
@@ -298,7 +299,7 @@ describe("RecipeRepository", () => {
         tags: ["Cheese", "Bread"],
       });
 
-      dbClient.recipe.findUnique.mockResolvedValue(
+      mockDbClient.recipe.findUnique.mockResolvedValue(
         RecipeRepository.recipeToRecord(recipe)
       );
       const recipeRepository = RecipeRepository.create();
@@ -306,7 +307,7 @@ describe("RecipeRepository", () => {
       const result = await recipeRepository.findById(recipeId);
 
       expect(result).toEqual(recipe);
-      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.findUnique).toHaveBeenCalledWith({
         select: RecipeRepository.selectRecipeProps,
         where: { recipeId },
       });
@@ -319,7 +320,7 @@ describe("RecipeRepository", () => {
         source: newRecipeOfflineSource(),
       });
 
-      dbClient.recipe.findUnique.mockResolvedValue(
+      mockDbClient.recipe.findUnique.mockResolvedValue(
         RecipeRepository.recipeToRecord(recipe)
       );
       const recipeRepository = RecipeRepository.create();
@@ -327,7 +328,7 @@ describe("RecipeRepository", () => {
       const result = await recipeRepository.findById(recipeId);
 
       expect(result).toEqual(recipe);
-      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.findUnique).toHaveBeenCalledWith({
         select: RecipeRepository.selectRecipeProps,
         where: { recipeId },
       });
@@ -340,7 +341,7 @@ describe("RecipeRepository", () => {
       });
       recipe.source = undefined;
 
-      dbClient.recipe.findUnique.mockResolvedValue(
+      mockDbClient.recipe.findUnique.mockResolvedValue(
         RecipeRepository.recipeToRecord(recipe)
       );
       const recipeRepository = RecipeRepository.create();
@@ -348,7 +349,7 @@ describe("RecipeRepository", () => {
       const result = await recipeRepository.findById(recipeId);
 
       expect(result).toEqual(recipe);
-      expect(dbClient.recipe.findUnique).toHaveBeenCalledWith({
+      expect(mockDbClient.recipe.findUnique).toHaveBeenCalledWith({
         select: RecipeRepository.selectRecipeProps,
         where: { recipeId },
       });
@@ -388,7 +389,7 @@ describe("RecipeRepository", () => {
 
   describe("find", () => {
     it("should return all recipes when no filter is given", async () => {
-      dbClient.recipe.findMany.mockResolvedValue([
+      mockDbClient.recipe.findMany.mockResolvedValue([
         RecipeRepository.recipeToRecord(
           newRecipe({ recipeId: "recipe-111", source: newRecipeOnlineSource() })
         ),
@@ -416,7 +417,7 @@ describe("RecipeRepository", () => {
           type: sourceTypes.OFFLINE,
         },
       });
-      expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+      expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           select: RecipeRepository.selectRecipeProps,
           where: { AND: [] },
@@ -427,7 +428,7 @@ describe("RecipeRepository", () => {
 
     describe("name", () => {
       it("should filter by name", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -437,7 +438,7 @@ describe("RecipeRepository", () => {
         const result = await recipeRepository.find({ name: "pizza" });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -449,20 +450,20 @@ describe("RecipeRepository", () => {
       });
 
       it("should not pass in a name filter string when it's blank", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([]);
+        mockDbClient.recipe.findMany.mockResolvedValue([]);
         const recipeRepository = RecipeRepository.create();
 
         await recipeRepository.find({ name: "" });
 
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+          mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ name: {} });
       });
     });
 
     describe("maxDiet", () => {
       it("should return vegan recipes when maxDiet is `VEGAN`", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -472,7 +473,7 @@ describe("RecipeRepository", () => {
         const result = await recipeRepository.find({ maxDiet: diets.VEGAN });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -484,7 +485,7 @@ describe("RecipeRepository", () => {
       });
 
       it("should return vegetarian and vegan recipes when maxDiet is `VEGETARIAN`", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -496,7 +497,7 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -510,7 +511,7 @@ describe("RecipeRepository", () => {
       });
 
       it("should return all recipes when maxDiet is `OMNIVORE`", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -523,14 +524,14 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+          mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ diet: {} });
       });
     });
 
     describe("maxPrepTime", () => {
       it("should return recipes w/ prepTime 'UNDER_30_MINUTES' when maxPrepTime is 'UNDER_30_MINUTES'", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -542,7 +543,7 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -556,7 +557,7 @@ describe("RecipeRepository", () => {
       });
 
       it("should return recipes w/ prepTime up to '60_TO_120_MINUTES' when maxPrepTime is '60_TO_120_MINUTES'", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -568,7 +569,7 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -590,7 +591,7 @@ describe("RecipeRepository", () => {
       });
 
       it("should return all recipes when maxPrepTime is `OVER_120_MINUTES`", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -603,14 +604,14 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+          mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ prepTime: {} });
       });
     });
 
     describe("tags", () => {
       it("should return recipes that contain all given tags", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -622,7 +623,7 @@ describe("RecipeRepository", () => {
         });
 
         expect(result.data).toHaveLength(1);
-        expect(dbClient.recipe.findMany).toHaveBeenCalledWith(
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
             where: {
@@ -638,7 +639,7 @@ describe("RecipeRepository", () => {
       });
 
       it("should return all recipes when tags list is empty", async () => {
-        dbClient.recipe.findMany.mockResolvedValue([
+        mockDbClient.recipe.findMany.mockResolvedValue([
           RecipeRepository.recipeToRecord(
             newRecipe({ recipeId: "recipe-111" })
           ),
@@ -649,7 +650,7 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(
-          dbClient.recipe.findMany.mock.calls[0][0].where.AND
+          mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ tags: {} });
       });
     });

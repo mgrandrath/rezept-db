@@ -2,4 +2,12 @@
 
 const { PrismaClient } = require("@prisma/client");
 
-module.exports = new PrismaClient();
+let dbClient;
+
+module.exports = () => {
+  if (!dbClient) {
+    dbClient = new PrismaClient();
+  }
+
+  return dbClient;
+};
