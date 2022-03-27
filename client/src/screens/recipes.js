@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import {
@@ -6,8 +7,10 @@ import {
   Col,
   Form,
   ListGroup,
+  OverlayTrigger,
   Row,
   Stack,
+  Tooltip,
 } from "react-bootstrap";
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
@@ -68,6 +71,91 @@ const RecipesFilter = (props) => {
   );
 };
 
+const Circle = (props) => {
+  const { className, color } = props;
+
+  const style = {
+    width: "1em",
+    height: "1em",
+    backgroundColor: color,
+  };
+
+  return (
+    <div
+      className={classNames(
+        className,
+        "d-inline-block align-text-bottom rounded-circle"
+      )}
+      style={style}
+    />
+  );
+};
+
+const PrepTime = (props) => {
+  const { children } = props;
+
+  const filled = "#2e3236";
+  const empty = "#d1d1d1";
+
+  const circles = (...colors) =>
+    colors.map((color, index) => (
+      <Circle key={index} className="me-1" color={color} />
+    ));
+
+  const prepTime = (text, circleStates) => (
+    <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
+      <div className="d-inline-block">{circles(...circleStates)}</div>
+    </OverlayTrigger>
+  );
+
+  switch (children) {
+    case prepTimes.UNDER_30_MINUTES:
+      return prepTime("under 30 minutes", [filled, empty, empty, empty]);
+
+    case prepTimes["30_TO_60_MINUTES"]:
+      return prepTime("30—60 minutes", [filled, filled, empty, empty]);
+
+    case prepTimes["60_TO_120_MINUTES"]:
+      return prepTime("60—120 minutes", [filled, filled, filled, empty]);
+
+    case prepTimes.OVER_120_MINUTES:
+      return prepTime("over 120 minutes", [filled, filled, filled, filled]);
+
+    default:
+      return null;
+  }
+};
+
+const Diet = (props) => {
+  const { children } = props;
+
+  switch (children) {
+    case diets.VEGAN:
+      return (
+        <div>
+          Vegan <Circle color="#34a853" />
+        </div>
+      );
+
+    case diets.VEGETARIAN:
+      return (
+        <div>
+          Vegetarian <Circle color="#fbbc04" />
+        </div>
+      );
+
+    case diets.OMNIVORE:
+      return (
+        <div>
+          Omnivore <Circle color="#ea4335" />
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
+
 const RecipesList = (props) => {
   const { filter } = props;
   const recipesQuery = useRecipes(filter);
@@ -90,14 +178,24 @@ const RecipesList = (props) => {
 
   return (
     <ListGroup variant="flush">
-      {recipesQuery.data.map(({ recipeId, name }) => (
+      {recipesQuery.data.map((recipe) => (
         <ListGroup.Item
-          key={recipeId}
+          key={recipe.recipeId}
           className="p-3"
+          action
           as={Link}
-          to={safeGeneratePath(paths.recipe, { recipeId })}
+          to={safeGeneratePath(paths.recipe, { recipeId: recipe.recipeId })}
         >
-          <div className="fs-5">{name}</div>
+          <div className="fs-4 mb-2">{recipe.name}</div>
+          <Stack direction="horizontal" className="text-muted">
+            <div>
+              <span className="me-1">Prep time:</span>{" "}
+              <PrepTime>{recipe.prepTime}</PrepTime>
+            </div>
+            <div className="ms-auto">
+              <Diet>{recipe.diet}</Diet>
+            </div>
+          </Stack>
         </ListGroup.Item>
       ))}
     </ListGroup>
@@ -105,17 +203,17 @@ const RecipesList = (props) => {
 };
 
 const Recipes = () => {
-  const defaultValues = {
+  const defaultFilter = {
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
     tags: [],
   };
   const [formKey, rerenderForm] = useRerenderChild();
-  const [filter, setFilter] = useUrlState(defaultValues);
+  const [filter, setFilter] = useUrlState(defaultFilter);
 
   const resetFilter = () => {
-    setFilter(defaultValues);
+    setFilter(defaultFilter);
     rerenderForm();
   };
 
