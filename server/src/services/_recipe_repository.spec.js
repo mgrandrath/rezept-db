@@ -18,6 +18,9 @@ jest.mock("./db_client.js", () => ({
     findUnique: jest.fn(),
     findMany: jest.fn(),
   },
+  tag: {
+    deleteMany: jest.fn(),
+  },
 }));
 
 describe("RecipeRepository", () => {
@@ -231,6 +234,18 @@ describe("RecipeRepository", () => {
             connectOrCreate: [],
           },
         },
+      });
+    });
+
+    it("should delete unused tags after update", async () => {
+      const recipeRepository = RecipeRepository.create();
+      const recipeId = "recipe-111";
+      const recipeInput = newRecipeInput();
+
+      await recipeRepository.update(recipeId, recipeInput);
+
+      expect(dbClient.tag.deleteMany).toHaveBeenCalledWith({
+        where: { recipes: { none: {} } },
       });
     });
 

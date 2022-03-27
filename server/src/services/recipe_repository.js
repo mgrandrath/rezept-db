@@ -239,6 +239,7 @@ module.exports = class RecipeRepository {
       where: { recipeId },
       data: RecipeRepository.recipeToPrismaUpdate(recipeInput),
     });
+    await this._dbClient.tag.deleteMany({ where: { recipes: { none: {} } } });
   }
 
   async findById(recipeId) {
@@ -299,5 +300,9 @@ const newNullDbClient = (options) => ({
 
       return Promise.resolve(match.response);
     },
+  },
+
+  tag: {
+    deleteMany: () => Promise.resolve(),
   },
 });
