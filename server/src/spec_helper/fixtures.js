@@ -22,7 +22,7 @@ exports.newRecipeOnlineSource = factory(() => ({
 exports.newRecipeOfflineSource = factory(() => ({
   type: sourceTypes.OFFLINE,
   title: "My Fixture Collection",
-  page: "42",
+  page: 42,
 }));
 
 exports.newRecipeSeasons = factory(() => ({
