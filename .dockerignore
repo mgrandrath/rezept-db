@@ -5,3 +5,4 @@ server/db
 server/.env
 server/.env.*
 build
+.git
