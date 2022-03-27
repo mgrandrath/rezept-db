@@ -1,5 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
 
+html {
+  overflow-y: scroll;
+}
+
 .app__toast-wrapper {
   z-index: 1;
 }
