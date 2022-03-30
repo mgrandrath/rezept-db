@@ -1,18 +1,16 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useId } from "react";
 import classNames from "classnames";
 import { Button, Form, ListGroup, Stack } from "react-bootstrap";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
 import { useAutocomplete } from "../api.js";
 import { useField } from "formik";
 
-const randomId = () => Math.random().toString(36).substring(2);
-
 const removeDuplicates = (array) => Array.from(new Set(array));
 
 export const TextInput = (props) => {
   const { className, label, labelClass = "fw-bold", ...inputProps } = props;
 
-  const idRef = useRef(`text-input-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField(inputProps);
   const defaultInputProps = {
     autoComplete: "off",
@@ -21,7 +19,7 @@ export const TextInput = (props) => {
 
   return (
     <Form.Group
-      controlId={idRef.current}
+      controlId={id}
       className={classNames(className, "position-relative")}
     >
       <Form.Label className={labelClass}>{label}</Form.Label>
@@ -37,7 +35,7 @@ export const Autocomplete = forwardRef((props, forwardedRef) => {
   const { acAttribute, ...inputProps } = props;
 
   const autocompleteQuery = useAutocomplete(acAttribute);
-  const datalistIdRef = useRef(`autocomplete-${randomId()}`);
+  const datalistId = useId();
   const defaultInputProps = {
     type: "text",
     autoComplete: "off",
@@ -48,10 +46,10 @@ export const Autocomplete = forwardRef((props, forwardedRef) => {
       <Form.Control
         {...defaultInputProps}
         {...inputProps}
-        list={datalistIdRef.current}
+        list={datalistId}
         ref={forwardedRef}
       />
-      <datalist id={datalistIdRef.current}>
+      <datalist id={datalistId}>
         {autocompleteQuery.data?.map?.((option) => (
           <option key={option} value={option} />
         ))}
@@ -69,7 +67,7 @@ export const TextInputAutocomplete = (props) => {
     ...inputProps
   } = props;
 
-  const idRef = useRef(`text-input-autocomplete-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField(inputProps);
   const defaultInputProps = {
     autoComplete: "off",
@@ -79,7 +77,7 @@ export const TextInputAutocomplete = (props) => {
 
   return (
     <Form.Group
-      controlId={idRef.current}
+      controlId={id}
       className={classNames(className, "position-relative")}
     >
       <Form.Label className={labelClass}>{label}</Form.Label>
@@ -94,7 +92,7 @@ export const TextInputAutocomplete = (props) => {
 export const TextArea = (props) => {
   const { className, label, ...inputProps } = props;
 
-  const idRef = useRef(`textarea-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField(inputProps);
   const defaultInputProps = {
     as: "textarea",
@@ -102,7 +100,7 @@ export const TextArea = (props) => {
   };
 
   return (
-    <Form.Group controlId={idRef.current}>
+    <Form.Group controlId={id}>
       <Form.Label className="fw-bold">{label}</Form.Label>
       <Form.Control {...defaultInputProps} {...inputProps} {...formikProps} />
       <Form.Control.Feedback tooltip type="invalid">
@@ -115,7 +113,7 @@ export const TextArea = (props) => {
 export const SelectInput = (props) => {
   const { label, children, className, ...inputProps } = props;
 
-  const idRef = useRef(`select-input-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField(inputProps);
   const defaultInputProps = {
     isInvalid: meta.touched && meta.error,
@@ -123,7 +121,7 @@ export const SelectInput = (props) => {
 
   return (
     <Form.Group
-      controlId={idRef.current}
+      controlId={id}
       className={classNames(className, "position-relative")}
     >
       <Form.Label className="fw-bold">{label}</Form.Label>
@@ -138,7 +136,7 @@ export const SelectInput = (props) => {
 };
 
 export const RadioButton = (props) => {
-  const idRef = useRef(`radio-button-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField({ ...props, type: "radio" });
   const defaultInputProps = {
     type: "radio",
@@ -146,7 +144,7 @@ export const RadioButton = (props) => {
   };
 
   return (
-    <Form.Group controlId={idRef.current}>
+    <Form.Group controlId={id}>
       <Form.Check {...defaultInputProps} {...props} {...formikProps} />
     </Form.Group>
   );
@@ -155,7 +153,7 @@ export const RadioButton = (props) => {
 export const Checkbox = (props) => {
   const { label, labelAddition, ...inputProps } = props;
 
-  const idRef = useRef(`checkbox-${randomId()}`);
+  const id = useId();
   const [formikProps, meta] = useField({ ...props, type: "checkbox" });
   const defaultInputProps = {
     type: "checkbox",
@@ -163,7 +161,7 @@ export const Checkbox = (props) => {
   };
 
   return (
-    <Form.Group controlId={idRef.current}>
+    <Form.Group controlId={id}>
       <Form.Check>
         <Form.Check.Input
           {...defaultInputProps}
@@ -186,7 +184,7 @@ export const TagsInput = (props) => {
   const { value, onChange } = formikProps;
 
   const inputRef = useRef();
-  const formIdRef = useRef(`tags-input-${randomId()}`);
+  const formId = useId();
 
   const nameRef = useRef();
   nameRef.current = name;
@@ -219,14 +217,14 @@ export const TagsInput = (props) => {
       input.value = "";
     };
     const form = document.createElement("form");
-    form.setAttribute("id", formIdRef.current);
+    form.setAttribute("id", formId);
     form.addEventListener("submit", handleSubmit);
     document.body.appendChild(form);
 
     return () => {
       form.remove();
     };
-  }, []);
+  }, [formId]);
 
   const handleKeyDown = (event) => {
     // Add tag to list when ',' key is pressed
@@ -271,14 +269,14 @@ export const TagsInput = (props) => {
           ref={inputRef}
           className="me-auto"
           name="tag"
-          form={formIdRef.current}
+          form={formId}
           acAttribute="tag"
           onKeyDown={handleKeyDown}
         />
         <Button
           type="submit"
           variant="outline-primary"
-          form={formIdRef.current}
+          form={formId}
           className="text-nowrap"
         >
           Add tag
