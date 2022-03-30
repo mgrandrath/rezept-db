@@ -1,21 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
-export const useOnlyWhenMounted = () => {
-  const isMountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
-  return (f) => {
-    if (isMountedRef.current) {
-      f();
-    }
-  };
-};
 
 const ARRAY_MARKER = "[]";
 

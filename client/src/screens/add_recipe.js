@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
 import { seasons, sourceTypes } from "../constants.js";
 import { paths } from "../paths.js";
 import { useToast } from "../toast.js";
-import { useOnlyWhenMounted } from "../util/react.js";
+import { useRerenderChild } from "../util/react.js";
 
 const AddRecipe = () => {
   const addRecipe = useAddRecipe();
   const { addToast } = useToast();
-  const [counter, setCounter] = useState(1);
-  const onlyWhenMounted = useOnlyWhenMounted();
+  const [formKey, rerenderForm] = useRerenderChild();
   const recipeInput = {
     name: "",
     diet: "",
@@ -34,13 +32,8 @@ const AddRecipe = () => {
           heading: "Success",
           message: "Recipe has been added",
         });
+        rerenderForm();
       },
-    });
-
-    onlyWhenMounted(() => {
-      // Increasing the counter creates a new `key` for the <RecipeInputForm>
-      // which forces a re-render and thus resets the form values.
-      setCounter((c) => c + 1);
     });
   };
 
@@ -61,7 +54,7 @@ const AddRecipe = () => {
       <Row>
         <Col md={10} lg={6} xxl={5}>
           <RecipeInputForm
-            key={`submit-${counter}`}
+            key={formKey}
             recipeInput={recipeInput}
             onSubmit={onSubmit}
             backLink={paths.recipes}

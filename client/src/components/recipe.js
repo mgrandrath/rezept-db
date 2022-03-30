@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import { Button, Form, OverlayTrigger, Popover, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
-import { useOnlyWhenMounted } from "../util/react.js";
 import {
   Checkbox,
   RadioButton,
@@ -128,18 +127,12 @@ const cleanupRecipeInput = (formValues) => {
 
 export const RecipeInputForm = (props) => {
   const { recipeInput, onSubmit, backLink } = props;
-  const onlyWhenMounted = useOnlyWhenMounted();
 
   const handleSubmit = async (recipeInput, { setSubmitting }) => {
     try {
       await onSubmit(cleanupRecipeInput(recipeInput));
     } finally {
-      // Only update Formik's `submitting` state if this component is still
-      // mounted. Otherwise this will result in the error message "Can't perform
-      // a React state update on an unmounted component".
-      onlyWhenMounted(() => {
-        setSubmitting(false);
-      });
+      setSubmitting(false);
     }
   };
 
