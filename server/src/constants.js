@@ -24,3 +24,8 @@ exports.seasons = {
   FALL: "FALL",
   WINTER: "WINTER",
 };
+
+exports.sortOrders = {
+  NAME: "name",
+  CREATED_AT: "createdAt",
+};

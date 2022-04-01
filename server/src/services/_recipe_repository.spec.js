@@ -8,7 +8,13 @@ const {
   newRecipeOfflineSource,
   newRecipeSeasons,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
+const {
+  sourceTypes,
+  diets,
+  prepTimes,
+  seasons,
+  sortOrders,
+} = require("../constants.js");
 
 const mockDbClient = {
   recipe: {
@@ -429,9 +435,7 @@ describe("RecipeRepository", () => {
     describe("name", () => {
       it("should filter by name", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -464,9 +468,7 @@ describe("RecipeRepository", () => {
     describe("maxDiet", () => {
       it("should return vegan recipes when maxDiet is `VEGAN`", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -486,9 +488,7 @@ describe("RecipeRepository", () => {
 
       it("should return vegetarian and vegan recipes when maxDiet is `VEGETARIAN`", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -512,9 +512,7 @@ describe("RecipeRepository", () => {
 
       it("should return all recipes when maxDiet is `OMNIVORE`", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -532,9 +530,7 @@ describe("RecipeRepository", () => {
     describe("maxPrepTime", () => {
       it("should return recipes w/ prepTime 'UNDER_30_MINUTES' when maxPrepTime is 'UNDER_30_MINUTES'", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -558,9 +554,7 @@ describe("RecipeRepository", () => {
 
       it("should return recipes w/ prepTime up to '60_TO_120_MINUTES' when maxPrepTime is '60_TO_120_MINUTES'", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -592,9 +586,7 @@ describe("RecipeRepository", () => {
 
       it("should return all recipes when maxPrepTime is `OVER_120_MINUTES`", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -612,9 +604,7 @@ describe("RecipeRepository", () => {
     describe("tags", () => {
       it("should return recipes that contain all given tags", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -640,9 +630,7 @@ describe("RecipeRepository", () => {
 
       it("should return all recipes when tags list is empty", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([
-          RecipeRepository.recipeToRecord(
-            newRecipe({ recipeId: "recipe-111" })
-          ),
+          RecipeRepository.recipeToRecord(newRecipe()),
         ]);
         const recipeRepository = RecipeRepository.create();
 
@@ -652,6 +640,60 @@ describe("RecipeRepository", () => {
         expect(
           mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ tags: {} });
+      });
+    });
+
+    describe("sortBy", () => {
+      it("should sort results by name when sortBy is not present", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({});
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should sort results by name when sortBy is 'name'", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          sortBy: sortOrders.NAME,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should sort results by createdAt (newest first) when sortBy is 'createdAt'", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          sortBy: sortOrders.CREATED_AT,
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            orderBy: { createdAt: "desc" },
+          })
+        );
       });
     });
 
@@ -694,6 +736,12 @@ describe("RecipeRepository", () => {
                 data: [newRecipe({ recipeId: "recipe-555" })],
               },
             },
+            {
+              params: { sortBy: sortOrders.CREATED_AT },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-666" })],
+              },
+            },
           ],
         });
 
@@ -713,6 +761,11 @@ describe("RecipeRepository", () => {
 
         const result4 = await recipeRepository.find({ tags: ["ONE", "TWO"] });
         expect(result4.data).toMatchObject([{ recipeId: "recipe-555" }]);
+
+        const result5 = await recipeRepository.find({
+          sortBy: sortOrders.CREATED_AT,
+        });
+        expect(result5.data).toMatchObject([{ recipeId: "recipe-666" }]);
       });
     });
   });

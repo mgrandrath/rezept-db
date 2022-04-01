@@ -6,6 +6,7 @@ const {
   diets,
   prepTimes,
   seasons: { SPRING, SUMMER, FALL, WINTER },
+  sortOrders,
 } = require("../constants.js");
 const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
@@ -40,7 +41,7 @@ module.exports = class RecipeRepository {
         params: {
           select: RecipeRepository.selectRecipeProps,
           where: RecipeRepository.filterToWhereClause(params),
-          orderBy: { name: "asc" },
+          orderBy: RecipeRepository.filterToOrderClause(params),
         },
         response: response.data.map(RecipeRepository.recipeToRecord),
       })),
@@ -97,6 +98,20 @@ module.exports = class RecipeRepository {
     });
 
     return { AND };
+  }
+
+  static filterToOrderClause(filter = {}) {
+    const orderBy = {};
+    switch (filter.sortBy ?? sortOrders.NAME) {
+      case sortOrders.NAME:
+        orderBy.name = "asc";
+        break;
+
+      case sortOrders.CREATED_AT:
+        orderBy.createdAt = "desc";
+        break;
+    }
+    return orderBy;
   }
 
   static recordToRecipe(record) {
@@ -254,7 +269,7 @@ module.exports = class RecipeRepository {
     const recipes = await this._dbClient.recipe.findMany({
       select: RecipeRepository.selectRecipeProps,
       where: RecipeRepository.filterToWhereClause(filter),
-      orderBy: { name: "asc" },
+      orderBy: RecipeRepository.filterToOrderClause(filter),
     });
     return {
       data: recipes.map(RecipeRepository.recordToRecipe),
