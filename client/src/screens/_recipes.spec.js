@@ -6,7 +6,7 @@ import {
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes } from "../constants.js";
+import { diets, prepTimes, sortOrders } from "../constants.js";
 import {
   clickButton,
   enterTextValue,
@@ -68,6 +68,7 @@ describe("<Recipes>", () => {
         maxDiet: diets.OMNIVORE,
         maxPrepTime: prepTimes["30_TO_60_MINUTES"],
         tags: ["delicious", "brunch"],
+        sortBy: sortOrders.NAME,
       })
       .reply(200, {
         recipes: [

@@ -9,25 +9,22 @@ import {
   ListGroup,
   OverlayTrigger,
   Row,
+  Spinner,
   Stack,
   Tooltip,
 } from "react-bootstrap";
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
-import { diets, prepTimes } from "../constants.js";
+import { diets, prepTimes, sortOrders } from "../constants.js";
 import { useUrlState, useRerenderChild } from "../util/react.js";
 import { SelectInput, TagsInput, TextInput } from "../components/form.js";
 
 const RecipesFilter = (props) => {
-  const { initialValues, onSubmit, onReset } = props;
+  const { filter, onSubmit, onReset } = props;
 
   return (
-    <Formik
-      enableReinitialize
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
+    <Formik enableReinitialize initialValues={filter} onSubmit={onSubmit}>
       {(formik) => (
         <Form onSubmit={formik.handleSubmit}>
           <Stack gap={3}>
@@ -156,12 +153,18 @@ const Diet = (props) => {
   }
 };
 
-const RecipesList = (props) => {
+const RecipeItems = (props) => {
   const { filter } = props;
   const recipesQuery = useRecipes(filter);
 
   if (recipesQuery.isLoading) {
-    return <div>Loading…</div>;
+    return (
+      <div className="d-flex justify-content-center p-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading…</span>
+        </Spinner>
+      </div>
+    );
   }
 
   if (recipesQuery.isError) {
@@ -202,18 +205,55 @@ const RecipesList = (props) => {
   );
 };
 
+const RecipesList = (props) => {
+  const { filter, onSubmit } = props;
+
+  return (
+    <>
+      <Stack direction="horizontal" className="mb-1">
+        <Formik enableReinitialize initialValues={filter} onSubmit={onSubmit}>
+          {(formik) => (
+            <Form className="ms-auto" onSubmit={formik.handleSubmit}>
+              <Form.Group controlId="sortBy">
+                <Form.Label className="me-2">Sort order</Form.Label>
+                <Form.Select
+                  value={formik.values.sortBy}
+                  className="w-auto d-inline-block"
+                  onChange={(event) => {
+                    formik.handleChange(event);
+                    formik.submitForm();
+                  }}
+                >
+                  <option value={sortOrders.NAME}>Alphabetically</option>
+                  <option value={sortOrders.CREATED_AT}>Newest first</option>
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          )}
+        </Formik>
+      </Stack>
+
+      <RecipeItems filter={filter} />
+    </>
+  );
+};
+
 const Recipes = () => {
   const defaultFilter = {
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
     tags: [],
+    sortBy: sortOrders.NAME,
   };
   const [formKey, rerenderForm] = useRerenderChild();
   const [filter, setFilter] = useUrlState(defaultFilter);
 
   const resetFilter = () => {
-    setFilter(defaultFilter);
+    setFilter((currentFilter) => ({
+      ...defaultFilter,
+      sortBy: currentFilter.sortBy,
+    }));
     rerenderForm();
   };
 
@@ -224,13 +264,13 @@ const Recipes = () => {
         <Col xs={12} md={5} lg={4}>
           <RecipesFilter
             key={formKey}
-            initialValues={filter}
+            filter={filter}
             onSubmit={setFilter}
             onReset={resetFilter}
           />
         </Col>
         <Col md={{ offset: 1 }}>
-          <RecipesList filter={filter} />
+          <RecipesList filter={filter} onSubmit={setFilter} />
         </Col>
       </Row>
     </div>

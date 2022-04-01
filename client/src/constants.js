@@ -22,3 +22,8 @@ export const seasons = {
   FALL: "FALL",
   WINTER: "WINTER",
 };
+
+export const sortOrders = {
+  NAME: "name",
+  CREATED_AT: "createdAt",
+};

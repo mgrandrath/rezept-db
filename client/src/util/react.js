@@ -37,7 +37,11 @@ export const useUrlState = (defaultValues) => {
     objectToSearchParams(defaultValues)
   );
   const state = searchParamsToObject(queryParams);
-  const setState = (newState) => {
+  const setState = (newStateOrFunction) => {
+    const newState =
+      typeof newStateOrFunction === "function"
+        ? newStateOrFunction(state)
+        : newStateOrFunction;
     setQueryParams(objectToSearchParams(newState));
   };
 
