@@ -11,7 +11,13 @@ const {
   newRecipeOfflineSource,
   newRecipeSeasons,
 } = require("../spec_helper/fixtures.js");
-const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
+const {
+  sourceTypes,
+  diets,
+  prepTimes,
+  seasons,
+  sortOrders,
+} = require("../constants.js");
 
 describe("recipes", () => {
   describe("index", () => {
@@ -51,6 +57,7 @@ describe("recipes", () => {
                 maxDiet: diets.VEGETARIAN,
                 maxPrepTime: prepTimes["30_TO_60_MINUTES"],
                 tags: ["cheese", "peperoni"],
+                sortBy: sortOrders.CREATED_AT,
               },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
@@ -65,6 +72,7 @@ describe("recipes", () => {
           maxDiet: diets.VEGETARIAN,
           maxPrepTime: prepTimes["30_TO_60_MINUTES"],
           tags: ["cheese", "peperoni"],
+          sortBy: sortOrders.CREATED_AT,
         },
       });
 
