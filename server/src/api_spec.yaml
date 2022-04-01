@@ -76,6 +76,18 @@ paths:
           description: |
             If present only recipes that contain all given tags will be
             returned.
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum:
+              - name
+              - createdAt
+            example: name
+          required: false
+          description: |
+            Sort results alphabetically by name (default) or creation date with
+            newest entries first.
       responses:
         '200':
           description: |
