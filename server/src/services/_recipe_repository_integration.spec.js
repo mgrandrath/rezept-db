@@ -25,7 +25,7 @@ const createTempFile = promisify(tmp.file).bind(null, {
 });
 
 const initializeDbSchema = (path) => {
-  return promisify(exec)("prisma migrate dev", {
+  return promisify(exec)("prisma migrate deploy", {
     env: { ...process.env, DATABASE_URL: `file:${path}` },
   });
 };
