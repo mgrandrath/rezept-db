@@ -128,6 +128,26 @@ describe("sendRequest", () => {
 
     expect(rawQuery).toEqual("someArray=one&someArray=two&someArray=three");
   });
+
+  it("should conform to style 'deepObject' when serializing object values", async () => {
+    server.setResponse({
+      status: 200,
+    });
+
+    await sendRequest({
+      method: "GET",
+      url: `http://localhost:${server.port}/my/path`,
+      query: {
+        someObject: { one: "eins", two: "zwei" },
+      },
+    });
+
+    const rawQuery = server.lastRequest.rawQuery;
+
+    expect(decodeURIComponent(rawQuery)).toEqual(
+      "someObject[one]=eins&someObject[two]=zwei"
+    );
+  });
 });
 
 class SpyServer {

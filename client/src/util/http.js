@@ -1,9 +1,18 @@
 import axios from "axios";
 import { stringify as stringifyQuery } from "query-string";
 
-const removeEmptyStrings = (params) =>
+const flattenNestedValues = (params) =>
   Object.fromEntries(
-    Object.entries(params).filter(([key, value]) => value !== "")
+    Object.entries(params).flatMap(([key, value]) => {
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        return Object.entries(value).map(([nestedKey, nestedValue]) => [
+          `${key}[${nestedKey}]`,
+          nestedValue,
+        ]);
+      }
+
+      return [[key, value]];
+    })
   );
 
 export const contentTypes = {
@@ -27,7 +36,8 @@ export const sendRequest = async (request) => {
       ...request.headers,
       ...contentType.headers,
     },
-    paramsSerializer: (params) => stringifyQuery(removeEmptyStrings(params)),
+    paramsSerializer: (params) =>
+      stringifyQuery(flattenNestedValues(params), { skipEmptyString: true }),
     params: request.query,
     data: contentType.stringify(request.data),
   });
