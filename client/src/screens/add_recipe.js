@@ -30,7 +30,7 @@ const AddRecipe = () => {
       onSuccess: () => {
         addToast({
           heading: "Success",
-          message: "Recipe has been added",
+          message: `Recipe "${recipeInput.name}" has been added`,
         });
         rerenderForm();
       },
