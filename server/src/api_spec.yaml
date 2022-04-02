@@ -67,6 +67,17 @@ paths:
             If present only recipes that have a preperation time shorter than
             the given value (in minutes) will be returned.
         - in: query
+          name: seasons
+          schema:
+            $ref: '#/components/schemas/Seasons'
+          style: deepObject
+          explode: true
+          required: false
+          description: |
+            If present only recipes that are in one or more of the given seasons
+            will be returned. Be aware that you will receive an empty result
+            list when all seasons are set to `false`.
+        - in: query
           name: tags
           schema:
             $ref: '#/components/schemas/Tags'
