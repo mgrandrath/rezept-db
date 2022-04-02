@@ -33,6 +33,7 @@ const AddRecipe = () => {
           message: `Recipe "${recipeInput.name}" has been added`,
         });
         rerenderForm();
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       },
     });
   };
