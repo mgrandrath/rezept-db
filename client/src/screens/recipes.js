@@ -45,10 +45,7 @@ const RecipesFilter = (props) => {
               <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
             </SelectInput>
 
-            <Form.Group controlId="tags">
-              <Form.Label className="fw-bold">Tags</Form.Label>
-              <TagsInput name="tags" />
-            </Form.Group>
+            <TagsInput name="tags" label="Tags" />
 
             <Stack direction="horizontal" gap={3} className="mt-1">
               <Button

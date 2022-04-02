@@ -178,13 +178,13 @@ export const Checkbox = (props) => {
 };
 
 export const TagsInput = (props) => {
-  const { name } = props;
+  const { name, label } = props;
 
-  const [formikProps] = useField(props);
-  const { value, onChange } = formikProps;
+  const [{ value, onChange }] = useField(props);
 
-  const inputRef = useRef();
+  const controlId = useId();
   const formId = useId();
+  const inputRef = useRef();
 
   const nameRef = useRef();
   nameRef.current = name;
@@ -248,40 +248,47 @@ export const TagsInput = (props) => {
   };
 
   return (
-    <Stack gap={3}>
-      {value?.length > 0 && (
-        <ListGroup>
-          {value.map((tag) => (
-            <ListGroup.Item key={tag}>
-              <Stack direction="horizontal" gap={3}>
-                <span className="me-auto">{tag}</span>
-                <Button type="button" variant="light" onClick={removeTag(tag)}>
-                  <DeleteIcon />
-                  <span className="visually-hidden">Remove</span>
-                </Button>
-              </Stack>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      )}
-      <Stack direction="horizontal" gap={3}>
-        <Autocomplete
-          ref={inputRef}
-          className="me-auto"
-          name="tag"
-          form={formId}
-          acAttribute="tag"
-          onKeyDown={handleKeyDown}
-        />
-        <Button
-          type="submit"
-          variant="outline-primary"
-          form={formId}
-          className="text-nowrap"
-        >
-          Add tag
-        </Button>
+    <Form.Group controlId={controlId}>
+      <Form.Label className="fw-bold">{label}</Form.Label>
+      <Stack gap={3}>
+        {value?.length > 0 && (
+          <ListGroup>
+            {value.map((tag) => (
+              <ListGroup.Item key={tag}>
+                <Stack direction="horizontal" gap={3}>
+                  <span className="me-auto">{tag}</span>
+                  <Button
+                    type="button"
+                    variant="light"
+                    onClick={removeTag(tag)}
+                  >
+                    <DeleteIcon />
+                    <span className="visually-hidden">Remove</span>
+                  </Button>
+                </Stack>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
+        <Stack direction="horizontal" gap={3}>
+          <Autocomplete
+            ref={inputRef}
+            className="me-auto"
+            name="tag"
+            form={formId}
+            acAttribute="tag"
+            onKeyDown={handleKeyDown}
+          />
+          <Button
+            type="submit"
+            variant="outline-primary"
+            form={formId}
+            className="text-nowrap"
+          >
+            Add tag
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </Form.Group>
   );
 };
