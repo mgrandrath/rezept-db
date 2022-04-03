@@ -236,22 +236,22 @@ export const RecipeInputForm = (props) => {
                 <Checkbox
                   name={`seasons.${seasons.SPRING}`}
                   label="Spring"
-                  labelAddition="Mar, Apr, May"
+                  labelAddition="Mar—May"
                 />
                 <Checkbox
                   name={`seasons.${seasons.SUMMER}`}
                   label="Summer"
-                  labelAddition="Jun, Jul, Aug"
+                  labelAddition="Jun—Aug"
                 />
                 <Checkbox
                   name={`seasons.${seasons.FALL}`}
                   label="Fall"
-                  labelAddition="Sep, Oct, Nov"
+                  labelAddition="Sep—Nov"
                 />
                 <Checkbox
                   name={`seasons.${seasons.WINTER}`}
                   label="Winter"
-                  labelAddition="Dec, Jan, Feb"
+                  labelAddition="Dec—Feb"
                 />
               </Stack>
               {(formik.touched.seasons?.[seasons.SPRING] ||
