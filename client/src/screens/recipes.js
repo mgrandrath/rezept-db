@@ -314,7 +314,7 @@ const Recipes = () => {
     <div className="mb-5">
       <h1 className="mb-5">Find recipe</h1>
       <Row className="g-5">
-        <Col xs={12} md={5} lg={4}>
+        <Col xs={12} md={8} lg={5} xxl={4}>
           <RecipesFilter
             key={formKey}
             filter={filter}
@@ -322,7 +322,7 @@ const Recipes = () => {
             onReset={resetFilter}
           />
         </Col>
-        <Col md={{ offset: 1 }}>
+        <Col md={12} lg={7} xxl={{ offset: 1 }}>
           <RecipesList filter={filter} onSubmit={setFilter} />
         </Col>
       </Row>
