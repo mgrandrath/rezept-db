@@ -6,11 +6,12 @@ import {
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes, sortOrders } from "../constants.js";
+import { diets, prepTimes, seasons, sortOrders } from "../constants.js";
 import {
   clickButton,
   enterTextValue,
   selectOption,
+  setCheckbox,
 } from "../spec_helper/dom.js";
 import { newRecipe } from "../spec_helper/fixtures.js";
 import Recipes from "./recipes.js";
@@ -68,6 +69,12 @@ describe("<Recipes>", () => {
         maxDiet: diets.OMNIVORE,
         maxPrepTime: prepTimes["30_TO_60_MINUTES"],
         tags: ["delicious", "brunch"],
+        seasons: {
+          [seasons.SPRING]: false,
+          [seasons.SUMMER]: true,
+          [seasons.FALL]: true,
+          [seasons.WINTER]: false,
+        },
         sortBy: sortOrders.NAME,
       })
       .reply(200, {
@@ -91,6 +98,10 @@ describe("<Recipes>", () => {
     enterTextValue("Name", "eggs");
     selectOption("Diet", "Omnivore");
     selectOption("Maximum preperation time", "60 minutes");
+    setCheckbox("Spring", false);
+    setCheckbox("Summer", true);
+    setCheckbox("Fall", true);
+    setCheckbox("Winter", false);
 
     enterTextValue("Tags", "delicious");
     clickButton("Add tag");

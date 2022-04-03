@@ -9,27 +9,52 @@ const removeArrayMarker = (key) =>
 const hasArrayMarker = (key) => key.endsWith(ARRAY_MARKER);
 
 const searchParamsToObject = (urlSearchParams) =>
-  [...urlSearchParams.entries()].reduce(
-    (entries, [key, value]) =>
-      hasArrayMarker(key)
-        ? {
-            ...entries,
-            [removeArrayMarker(key)]: (
-              entries[removeArrayMarker(key)] ?? []
-            ).concat([value]),
-          }
-        : {
-            ...entries,
-            [key]: value,
-          },
-    {}
-  );
+  [...urlSearchParams.entries()].reduce((entries, [key, value]) => {
+    if (value === "true" || value === "false") {
+      value = JSON.parse(value);
+    }
+
+    if (hasArrayMarker(key)) {
+      return {
+        ...entries,
+        [removeArrayMarker(key)]: (
+          entries[removeArrayMarker(key)] ?? []
+        ).concat([value]),
+      };
+    }
+
+    const nestedKey = /^(.*)\[(.*)\]$/.exec(key);
+    if (nestedKey) {
+      return {
+        ...entries,
+        [nestedKey[1]]: {
+          ...entries[nestedKey[1]],
+          [nestedKey[2]]: value,
+        },
+      };
+    }
+
+    return {
+      ...entries,
+      [key]: value,
+    };
+  }, {});
 
 const objectToSearchParams = (object) =>
   Object.fromEntries(
-    Object.entries(object).map(([key, value]) =>
-      Array.isArray(value) ? [addArrayMarker(key), value] : [key, value]
-    )
+    Object.entries(object).flatMap(([key, value]) => {
+      if (Array.isArray(value)) {
+        return [[addArrayMarker(key), value]];
+      }
+      if (value && typeof value === "object") {
+        return Object.entries(value).map(([innerKey, innerValue]) => [
+          `${key}[${innerKey}]`,
+          innerValue,
+        ]);
+      }
+
+      return [[key, value]];
+    })
   );
 
 export const useUrlState = (defaultValues) => {

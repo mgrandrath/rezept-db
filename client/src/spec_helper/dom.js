@@ -44,6 +44,13 @@ export const clickCheckbox = (label) => {
   fireEvent.click(checkbox);
 };
 
+export const setCheckbox = (label, checked) => {
+  const checkbox = screen.getByRole("checkbox", { name: label });
+  if (checkbox.checked !== checked) {
+    fireEvent.click(checkbox);
+  }
+};
+
 export const clickButton = (label) => {
   const button = screen.getByRole("button", { name: label });
   fireEvent.click(button);

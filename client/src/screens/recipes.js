@@ -16,9 +16,14 @@ import {
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
-import { diets, prepTimes, sortOrders } from "../constants.js";
+import { diets, prepTimes, seasons, sortOrders } from "../constants.js";
 import { useUrlState, useRerenderChild } from "../util/react.js";
-import { SelectInput, TagsInput, TextInput } from "../components/form.js";
+import {
+  Checkbox,
+  SelectInput,
+  TagsInput,
+  TextInput,
+} from "../components/form.js";
 
 const RecipesFilter = (props) => {
   const { filter, onSubmit, onReset } = props;
@@ -44,6 +49,35 @@ const RecipesFilter = (props) => {
               <option value={prepTimes["30_TO_60_MINUTES"]}>60 minutes</option>
               <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
             </SelectInput>
+
+            <div>
+              <div className="fw-bold form-label">Seasons</div>
+              <Stack
+                direction="horizontal"
+                className="justify-content-between align-items-start"
+              >
+                <Checkbox
+                  name={`seasons.${seasons.SPRING}`}
+                  label="Spring"
+                  labelAddition="Mar—May"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.SUMMER}`}
+                  label="Summer"
+                  labelAddition="Jun—Aug"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.FALL}`}
+                  label="Fall"
+                  labelAddition="Sep—Nov"
+                />
+                <Checkbox
+                  name={`seasons.${seasons.WINTER}`}
+                  label="Winter"
+                  labelAddition="Dec—Feb"
+                />
+              </Stack>
+            </div>
 
             <TagsInput name="tags" label="Tags" />
 
@@ -241,6 +275,12 @@ const Recipes = () => {
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
     tags: [],
+    seasons: {
+      [seasons.SPRING]: true,
+      [seasons.SUMMER]: true,
+      [seasons.FALL]: true,
+      [seasons.WINTER]: true,
+    },
     sortBy: sortOrders.NAME,
   };
   const [formKey, rerenderForm] = useRerenderChild();
