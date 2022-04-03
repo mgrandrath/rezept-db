@@ -426,7 +426,7 @@ describe("RecipeRepository", () => {
       expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           select: RecipeRepository.selectRecipeProps,
-          where: { AND: [] },
+          where: { AND: [], OR: [] },
           orderBy: { name: "asc" },
         })
       );
@@ -445,9 +445,9 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([{ name: { contains: "pizza" } }]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -478,9 +478,9 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([{ diet: { in: [diets.VEGAN] } }]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -500,11 +500,11 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([
                 { diet: { in: [diets.VEGAN, diets.VEGETARIAN] } },
               ]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -542,11 +542,11 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([
                 { prepTime: { in: [prepTimes.UNDER_30_MINUTES] } },
               ]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -566,7 +566,7 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([
                 {
                   prepTime: {
@@ -578,7 +578,7 @@ describe("RecipeRepository", () => {
                   },
                 },
               ]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -616,13 +616,13 @@ describe("RecipeRepository", () => {
         expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
           expect.objectContaining({
             select: RecipeRepository.selectRecipeProps,
-            where: {
+            where: expect.objectContaining({
               AND: expect.arrayContaining([
                 { tags: { some: { name: "Indian" } } },
                 { tags: { some: { name: "Lamb" } } },
                 { tags: { some: { name: "Curry" } } },
               ]),
-            },
+            }),
             orderBy: { name: "asc" },
           })
         );
@@ -640,6 +640,77 @@ describe("RecipeRepository", () => {
         expect(
           mockDbClient.recipe.findMany.mock.calls[0][0].where.AND
         ).not.toContainMatchingObject({ tags: {} });
+      });
+    });
+
+    describe("seasons", () => {
+      it("should return recipes that contain any given seasons", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          seasons: {
+            [seasons.SPRING]: true,
+            [seasons.SUMMER]: true,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: false,
+          },
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            select: RecipeRepository.selectRecipeProps,
+            where: expect.objectContaining({
+              OR: [{ seasonsSpring: true }, { seasonsSummer: true }],
+            }),
+            orderBy: { name: "asc" },
+          })
+        );
+      });
+
+      it("should return all recipes when no season is selected", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          seasons: {
+            [seasons.SPRING]: false,
+            [seasons.SUMMER]: false,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: false,
+          },
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany.mock.calls[0][0].where.OR).toEqual(
+          []
+        );
+      });
+
+      it("should return all recipes when all seasons are selected", async () => {
+        mockDbClient.recipe.findMany.mockResolvedValue([
+          RecipeRepository.recipeToRecord(newRecipe()),
+        ]);
+        const recipeRepository = RecipeRepository.create();
+
+        const result = await recipeRepository.find({
+          seasons: {
+            [seasons.SPRING]: true,
+            [seasons.SUMMER]: true,
+            [seasons.FALL]: true,
+            [seasons.WINTER]: true,
+          },
+        });
+
+        expect(result.data).toHaveLength(1);
+        expect(mockDbClient.recipe.findMany.mock.calls[0][0].where.OR).toEqual(
+          []
+        );
       });
     });
 

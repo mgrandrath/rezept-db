@@ -7,10 +7,19 @@ const {
   prepTimes,
   seasons: { SPRING, SUMMER, FALL, WINTER },
   sortOrders,
+  seasons,
 } = require("../constants.js");
 const { equals } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
+
+const seasonToColName = ([season]) =>
+  ({
+    [seasons.SPRING]: "seasonsSpring",
+    [seasons.SUMMER]: "seasonsSummer",
+    [seasons.FALL]: "seasonsFall",
+    [seasons.WINTER]: "seasonsWinter",
+  }[season]);
 
 module.exports = class RecipeRepository {
   static create() {
@@ -76,6 +85,7 @@ module.exports = class RecipeRepository {
       prepTimes["60_TO_120_MINUTES"],
     ];
     const AND = [];
+    const OR = [];
 
     if (filter.name) {
       AND.push({ name: { contains: filter.name } });
@@ -97,7 +107,16 @@ module.exports = class RecipeRepository {
       AND.push({ tags: { some: { name } } });
     });
 
-    return { AND };
+    const selectedSeasonCols = Object.entries(filter.seasons ?? {})
+      .filter(([, isSelected]) => isSelected)
+      .map(seasonToColName);
+    if (selectedSeasonCols.length > 0 && selectedSeasonCols.length < 4) {
+      selectedSeasonCols.forEach((col) => {
+        OR.push({ [col]: true });
+      });
+    }
+
+    return { AND, OR };
   }
 
   static filterToOrderClause(filter = {}) {
