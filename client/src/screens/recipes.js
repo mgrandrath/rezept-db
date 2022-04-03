@@ -7,11 +7,9 @@ import {
   Col,
   Form,
   ListGroup,
-  OverlayTrigger,
   Row,
   Spinner,
   Stack,
-  Tooltip,
 } from "react-bootstrap";
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
@@ -146,9 +144,9 @@ const PrepTime = (props) => {
     ));
 
   const prepTime = (text, circleStates) => (
-    <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
-      <div className="d-inline-block">{circles(...circleStates)}</div>
-    </OverlayTrigger>
+    <div>
+      {circles(...circleStates)} {text}
+    </div>
   );
 
   switch (children) {
@@ -170,26 +168,26 @@ const PrepTime = (props) => {
 };
 
 const Diet = (props) => {
-  const { children } = props;
+  const { className, children } = props;
 
   switch (children) {
     case diets.VEGAN:
       return (
-        <div>
+        <div className={className}>
           Vegan <Circle color="#34a853" />
         </div>
       );
 
     case diets.VEGETARIAN:
       return (
-        <div>
+        <div className={className}>
           Vegetarian <Circle color="#fbbc04" />
         </div>
       );
 
     case diets.OMNIVORE:
       return (
-        <div>
+        <div className={className}>
           Omnivore <Circle color="#ea4335" />
         </div>
       );
@@ -228,22 +226,16 @@ const RecipeItems = (props) => {
   return (
     <ListGroup variant="flush">
       {recipesQuery.data.map((recipe) => (
-        <ListGroup.Item
-          key={recipe.recipeId}
-          className="p-3"
-          action
-          as={Link}
-          to={safeGeneratePath(paths.recipe, { recipeId: recipe.recipeId })}
-        >
-          <div className="fs-4 mb-2">{recipe.name}</div>
+        <ListGroup.Item key={recipe.recipeId} className="p-3" action as="div">
+          <Link
+            className="d-block fs-4 mb-2 text-reset text-decoration-none stretched-link"
+            to={safeGeneratePath(paths.recipe, { recipeId: recipe.recipeId })}
+          >
+            {recipe.name}
+          </Link>
           <Stack direction="horizontal" className="text-muted">
-            <div>
-              <span className="me-1">Prep time:</span>{" "}
-              <PrepTime>{recipe.prepTime}</PrepTime>
-            </div>
-            <div className="ms-auto">
-              <Diet>{recipe.diet}</Diet>
-            </div>
+            <PrepTime>{recipe.prepTime}</PrepTime>
+            <Diet className="ms-auto">{recipe.diet}</Diet>
           </Stack>
         </ListGroup.Item>
       ))}
