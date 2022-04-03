@@ -51,7 +51,22 @@ const RecipesFilter = (props) => {
             </SelectInput>
 
             <div>
-              <div className="fw-bold form-label">Seasons</div>
+              <Stack
+                direction="horizontal"
+                className="form-label justify-content-between"
+              >
+                <div className="fw-bold">Seasons</div>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    Object.keys(seasons).forEach((season) => {
+                      formik.setFieldValue(`seasons.${season}`, true);
+                    });
+                  }}
+                >
+                  Select all
+                </Button>
+              </Stack>
               <Stack
                 direction="horizontal"
                 className="justify-content-between align-items-start"
