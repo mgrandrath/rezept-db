@@ -270,16 +270,17 @@ const RecipesList = (props) => {
 };
 
 const Recipes = () => {
+  const currentMonth = new Date().getMonth() + 1;
   const defaultFilter = {
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
     tags: [],
     seasons: {
-      [seasons.SPRING]: true,
-      [seasons.SUMMER]: true,
-      [seasons.FALL]: true,
-      [seasons.WINTER]: true,
+      [seasons.SPRING]: [3, 4, 5].includes(currentMonth),
+      [seasons.SUMMER]: [6, 7, 8].includes(currentMonth),
+      [seasons.FALL]: [9, 10, 11].includes(currentMonth),
+      [seasons.WINTER]: [12, 1, 2].includes(currentMonth),
     },
     sortBy: sortOrders.NAME,
   };
