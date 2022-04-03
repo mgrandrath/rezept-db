@@ -57,6 +57,12 @@ describe("recipes", () => {
                 maxDiet: diets.VEGETARIAN,
                 maxPrepTime: prepTimes["30_TO_60_MINUTES"],
                 tags: ["cheese", "peperoni"],
+                seasons: {
+                  [seasons.SPRING]: true,
+                  [seasons.SUMMER]: true,
+                  [seasons.FALL]: false,
+                  [seasons.WINTER]: false,
+                },
                 sortBy: sortOrders.CREATED_AT,
               },
               response: {
@@ -72,6 +78,12 @@ describe("recipes", () => {
           maxDiet: diets.VEGETARIAN,
           maxPrepTime: prepTimes["30_TO_60_MINUTES"],
           tags: ["cheese", "peperoni"],
+          seasons: {
+            [seasons.SPRING]: true,
+            [seasons.SUMMER]: true,
+            [seasons.FALL]: false,
+            [seasons.WINTER]: false,
+          },
           sortBy: sortOrders.CREATED_AT,
         },
       });
