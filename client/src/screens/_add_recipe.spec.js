@@ -9,7 +9,7 @@ import {
   enterNumberValue,
   selectOption,
   enterTextValue,
-  clickCheckbox,
+  setCheckbox,
 } from "../spec_helper/dom.js";
 import {
   newRecipeInput,
@@ -61,8 +61,10 @@ describe("<AddRecipe>", () => {
     enterTextValue("URL", expectedRecipeInput.source.url);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "60—120 minutes");
-    clickCheckbox("Fall");
-    clickCheckbox("Winter");
+    setCheckbox("Spring", true);
+    setCheckbox("Summer", true);
+    setCheckbox("Fall", false);
+    setCheckbox("Winter", false);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
@@ -119,7 +121,10 @@ describe("<AddRecipe>", () => {
     enterNumberValue("Page", expectedRecipeInput.source.page);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "under 30 minutes");
-    clickCheckbox("Spring");
+    setCheckbox("Spring", false);
+    setCheckbox("Summer", true);
+    setCheckbox("Fall", true);
+    setCheckbox("Winter", true);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");

@@ -8,7 +8,7 @@ import {
   clickButton,
   selectOptionValue,
   enterTextValue,
-  clickCheckbox,
+  setCheckbox,
 } from "../spec_helper/dom.js";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast.js";
@@ -74,8 +74,10 @@ describe("<EditRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     selectOptionValue("Diet", expectedRecipeInput.diet);
     selectOptionValue("Preperation time", expectedRecipeInput.prepTime);
-    clickCheckbox("Spring");
-    clickCheckbox("Summer");
+    setCheckbox("Spring", true);
+    setCheckbox("Summer", true);
+    setCheckbox("Fall", false);
+    setCheckbox("Winter", false);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
