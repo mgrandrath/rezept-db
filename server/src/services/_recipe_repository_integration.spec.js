@@ -106,6 +106,20 @@ describe("RecipeRepository integration", () => {
     });
   });
 
+  it("should find all recipes", async () => {
+    const recipeRepository = RecipeRepository.create();
+
+    await recipeRepository.store(newRecipe({ name: "Recipe 1" }));
+    await recipeRepository.store(newRecipe({ name: "Recipe 2" }));
+    await recipeRepository.store(newRecipe({ name: "Recipe 3" }));
+
+    const result = await recipeRepository.find();
+
+    expect(result).toMatchObject({
+      data: [{ name: "Recipe 1" }, { name: "Recipe 2" }, { name: "Recipe 3" }],
+    });
+  });
+
   it("should find recipes that match filter criteria", async () => {
     const filter = {
       name: "egg",

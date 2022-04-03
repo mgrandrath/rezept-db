@@ -116,7 +116,7 @@ module.exports = class RecipeRepository {
       });
     }
 
-    return { AND, OR };
+    return { AND, OR: OR.length > 0 ? OR : undefined };
   }
 
   static filterToOrderClause(filter = {}) {

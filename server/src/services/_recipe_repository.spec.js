@@ -426,7 +426,7 @@ describe("RecipeRepository", () => {
       expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           select: RecipeRepository.selectRecipeProps,
-          where: { AND: [], OR: [] },
+          where: { AND: [], OR: undefined },
           orderBy: { name: "asc" },
         })
       );
@@ -688,7 +688,7 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(mockDbClient.recipe.findMany.mock.calls[0][0].where.OR).toEqual(
-          []
+          undefined
         );
       });
 
@@ -709,7 +709,7 @@ describe("RecipeRepository", () => {
 
         expect(result.data).toHaveLength(1);
         expect(mockDbClient.recipe.findMany.mock.calls[0][0].where.OR).toEqual(
-          []
+          undefined
         );
       });
     });
