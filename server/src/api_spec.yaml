@@ -75,8 +75,9 @@ paths:
           required: false
           description: |
             If present only recipes that are in one or more of the given seasons
-            will be returned. Be aware that you will receive an empty result
-            list when all seasons are set to `false`.
+            will be returned. Selecting none of the seasons yields the same
+            result as selecting all of them. In these cases all recipes are
+            returned.
         - in: query
           name: tags
           schema:
