@@ -3,7 +3,15 @@ import { useEffect, useRef } from "react";
 import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
 import Markdown from "react-markdown";
 import { Link } from "react-router-dom";
-import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
+import {
+  dietLabels,
+  diets,
+  prepTimeLabels,
+  prepTimes,
+  seasonLabels,
+  seasons,
+  sourceTypes,
+} from "../constants.js";
 import {
   Checkbox,
   RadioButton,
@@ -206,24 +214,24 @@ export const RecipeInputForm = (props) => {
 
             <SelectInput name="diet" label="Diet">
               <option value="">Please select</option>
-              <option value={diets.VEGAN}>Vegan</option>
-              <option value={diets.VEGETARIAN}>Vegetarian</option>
-              <option value={diets.OMNIVORE}>Omnivore</option>
+              <option value={diets.VEGAN}>{dietLabels.VEGAN}</option>
+              <option value={diets.VEGETARIAN}>{dietLabels.VEGETARIAN}</option>
+              <option value={diets.OMNIVORE}>{dietLabels.OMNIVORE}</option>
             </SelectInput>
 
             <SelectInput name="prepTime" label="Preperation time">
               <option value="">Please select</option>
               <option value={prepTimes.UNDER_30_MINUTES}>
-                under 30 minutes
+                {prepTimeLabels.UNDER_30_MINUTES}
               </option>
               <option value={prepTimes["30_TO_60_MINUTES"]}>
-                30—60 minutes
+                {prepTimeLabels["30_TO_60_MINUTES"]}
               </option>
               <option value={prepTimes["60_TO_120_MINUTES"]}>
-                60—120 minutes
+                {prepTimeLabels["60_TO_120_MINUTES"]}
               </option>
               <option value={prepTimes.OVER_120_MINUTES}>
-                over 120 minutes
+                {prepTimeLabels.OVER_120_MINUTES}
               </option>
             </SelectInput>
 
@@ -235,22 +243,22 @@ export const RecipeInputForm = (props) => {
               >
                 <Checkbox
                   name={`seasons.${seasons.SPRING}`}
-                  label="Spring"
+                  label={seasonLabels.SPRING}
                   labelAddition="Mar—May"
                 />
                 <Checkbox
                   name={`seasons.${seasons.SUMMER}`}
-                  label="Summer"
+                  label={seasonLabels.SUMMER}
                   labelAddition="Jun—Aug"
                 />
                 <Checkbox
                   name={`seasons.${seasons.FALL}`}
-                  label="Fall"
+                  label={seasonLabels.FALL}
                   labelAddition="Sep—Nov"
                 />
                 <Checkbox
                   name={`seasons.${seasons.WINTER}`}
-                  label="Winter"
+                  label={seasonLabels.WINTER}
                   labelAddition="Dec—Feb"
                 />
               </Stack>

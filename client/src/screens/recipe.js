@@ -2,9 +2,18 @@ import { Alert, Card, Stack } from "react-bootstrap";
 import Markdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api.js";
-import { sourceTypes } from "../constants.js";
+import {
+  dietLabels,
+  prepTimeLabels,
+  seasonLabels,
+  sourceTypes,
+} from "../constants.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
+
+const Label = (props) => {
+  return <div className="form-label fw-bold">{props.children}</div>;
+};
 
 const Recipe = () => {
   const { recipeId } = useParams();
@@ -25,8 +34,7 @@ const Recipe = () => {
 
       <Stack gap={3}>
         <div>
-          <div>Source</div>
-          <div>Type: {recipe.source?.type}</div>
+          <Label>Source</Label>
           {recipe.source?.type === sourceTypes.ONLINE && (
             <>
               <div>
@@ -49,23 +57,29 @@ const Recipe = () => {
           )}
         </div>
 
-        <div>Diet: {recipe.diet}</div>
-
-        <div>Preperation time: {recipe.prepTime}</div>
+        <div>
+          <Label>Diet</Label>
+          {dietLabels[recipe.diet]}
+        </div>
 
         <div>
-          Seasons:
+          <Label>Preperation time</Label>
+          {prepTimeLabels[recipe.prepTime]}
+        </div>
+
+        <div>
+          <Label>Seasons</Label>
           <ul>
             {Object.entries(recipe.seasons)
-              .filter(([, value]) => value)
-              .map(([key]) => (
-                <li key={key}>{key}</li>
+              .filter(([, isChecked]) => isChecked)
+              .map(([season]) => (
+                <li key={season}>{seasonLabels[season]}</li>
               ))}
           </ul>
         </div>
 
         <div>
-          Tags:
+          <Label>Tags</Label>
           <ul>
             {recipe.tags.map((tag) => (
               <li key={tag}>{tag}</li>
@@ -74,7 +88,7 @@ const Recipe = () => {
         </div>
 
         <div>
-          <div>Notes</div>
+          <Label>Notes</Label>
           <Card>
             <Card.Body>
               <Markdown>{recipe.notes}</Markdown>

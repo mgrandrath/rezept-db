@@ -14,7 +14,14 @@ import {
 import { useRecipes } from "../api.js";
 import { paths } from "../paths.js";
 import { safeGeneratePath } from "../util/url.js";
-import { diets, prepTimes, seasons, sortOrders } from "../constants.js";
+import {
+  dietLabels,
+  diets,
+  prepTimes,
+  seasonLabels,
+  seasons,
+  sortOrders,
+} from "../constants.js";
 import { useUrlState, useRerenderChild } from "../util/react.js";
 import {
   Checkbox,
@@ -34,9 +41,9 @@ const RecipesFilter = (props) => {
             <TextInput name="name" label="Name" />
 
             <SelectInput name="maxDiet" label="Diet">
-              <option value={diets.OMNIVORE}>Omnivore</option>
-              <option value={diets.VEGETARIAN}>Vegetarian</option>
-              <option value={diets.VEGAN}>Vegan</option>
+              <option value={diets.OMNIVORE}>{dietLabels.OMNIVORE}</option>
+              <option value={diets.VEGETARIAN}>{dietLabels.VEGETARIAN}</option>
+              <option value={diets.VEGAN}>{dietLabels.VEGAN}</option>
             </SelectInput>
 
             <SelectInput name="maxPrepTime" label="Maximum preperation time">
@@ -71,22 +78,22 @@ const RecipesFilter = (props) => {
               >
                 <Checkbox
                   name={`seasons.${seasons.SPRING}`}
-                  label="Spring"
+                  label={seasonLabels.SPRING}
                   labelAddition="Mar—May"
                 />
                 <Checkbox
                   name={`seasons.${seasons.SUMMER}`}
-                  label="Summer"
+                  label={seasonLabels.SUMMER}
                   labelAddition="Jun—Aug"
                 />
                 <Checkbox
                   name={`seasons.${seasons.FALL}`}
-                  label="Fall"
+                  label={seasonLabels.FALL}
                   labelAddition="Sep—Nov"
                 />
                 <Checkbox
                   name={`seasons.${seasons.WINTER}`}
-                  label="Winter"
+                  label={seasonLabels.WINTER}
                   labelAddition="Dec—Feb"
                 />
               </Stack>
