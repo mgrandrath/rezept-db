@@ -1,4 +1,5 @@
 import { Alert, Card, Stack } from "react-bootstrap";
+import Markdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api.js";
 import { sourceTypes } from "../constants.js";
@@ -75,7 +76,9 @@ const Recipe = () => {
         <div>
           <div>Notes</div>
           <Card>
-            <Card.Body>{recipe.notes}</Card.Body>
+            <Card.Body>
+              <Markdown>{recipe.notes}</Markdown>
+            </Card.Body>
           </Card>
         </div>
 

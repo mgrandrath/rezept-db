@@ -1,6 +1,7 @@
 import { Formik, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
-import { Button, Form, Stack } from "react-bootstrap";
+import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
+import Markdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
 import {
@@ -8,7 +9,6 @@ import {
   RadioButton,
   SelectInput,
   TagsInput,
-  TextArea,
   TextInput,
   TextInputAutocomplete,
 } from "./form.js";
@@ -267,7 +267,44 @@ export const RecipeInputForm = (props) => {
 
             <TagsInput name="tags" label="Tags" />
 
-            <TextArea name="notes" label="Notes" />
+            <Form.Group controlId="notes">
+              <Form.Label className="fw-bold">Notes</Form.Label>
+              <Tabs
+                defaultActiveKey="notes-edit"
+                className="mb-2"
+                variant="pills"
+              >
+                <Tab eventKey="notes-edit" title="Edit">
+                  <Form.Control
+                    as="textarea"
+                    rows={8}
+                    isInvalid={formik.touched.notes && formik.errors.notes}
+                    {...formik.getFieldProps("notes")}
+                  />
+                  <Form.Control.Feedback tooltip type="invalid">
+                    {formik.errors.notes}
+                  </Form.Control.Feedback>
+                  <Form.Text muted>
+                    You can use{" "}
+                    <a
+                      href="https://www.markdownguide.org/cheat-sheet/"
+                      rel="external noopener noreferrer"
+                      target="_blank"
+                    >
+                      markdown
+                    </a>{" "}
+                    to format your notes
+                  </Form.Text>
+                </Tab>
+                <Tab eventKey="notes-preview" title="Preview">
+                  <Card>
+                    <Card.Body>
+                      <Markdown>{formik.values.notes}</Markdown>
+                    </Card.Body>
+                  </Card>
+                </Tab>
+              </Tabs>
+            </Form.Group>
 
             <Stack direction="horizontal" className="gap-3 justify-content-end">
               <Button type="submit" className="order-2">
