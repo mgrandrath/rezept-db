@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 
 const ExternalLink = ({ node, children, ...props }) => {
   return (
@@ -13,6 +14,7 @@ export const Markdown = (props) => {
 
   return (
     <ReactMarkdown
+      remarkPlugins={[gfm]}
       components={{
         a: ExternalLink,
       }}
