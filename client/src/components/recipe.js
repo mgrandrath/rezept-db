@@ -1,7 +1,6 @@
 import { Formik, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
-import Markdown from "react-markdown";
 import { Link } from "react-router-dom";
 import {
   dietLabels,
@@ -20,6 +19,7 @@ import {
   TextInput,
   TextInputAutocomplete,
 } from "./form.js";
+import { Markdown } from "./markdown.js";
 
 const isValidUrl = (candidate) => {
   try {

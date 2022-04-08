@@ -1,7 +1,7 @@
 import { Alert, Card, Stack } from "react-bootstrap";
-import Markdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api.js";
+import { Markdown } from "../components/markdown.js";
 import {
   dietLabels,
   prepTimeLabels,
