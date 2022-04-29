@@ -129,6 +129,8 @@ paths:
                     items:
                       $ref: '#/components/schemas/Recipe'
                 required:
+                  - pagination
+                  - filter
                   - recipes
 
     post:
@@ -451,6 +453,9 @@ components:
           type: integer
           minimum: 0
           example: 5
+      required:
+        - currentPage
+        - numberOfPages
 
     FilterMeta:
       description: |
@@ -470,6 +475,9 @@ components:
           type: integer
           minimum: 0
           example: 42
+      required:
+        - numberOfItems
+        - numberOfMatches
 
     SystemStatus:
       type: object
