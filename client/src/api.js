@@ -10,7 +10,7 @@ export const useRecipes = (filter = {}) => {
       query: filter,
     });
 
-    return response.data.recipes;
+    return response.data;
   });
 };
 

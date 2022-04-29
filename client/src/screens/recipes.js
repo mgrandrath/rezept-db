@@ -7,6 +7,7 @@ import {
   Col,
   Form,
   ListGroup,
+  Pagination,
   Row,
   Spinner,
   Stack,
@@ -31,10 +32,14 @@ import {
 } from "../components/form.js";
 
 const RecipesFilter = (props) => {
-  const { filter, onSubmit, onReset } = props;
+  const { filter, setFilter, onReset } = props;
 
   return (
-    <Formik enableReinitialize initialValues={filter} onSubmit={onSubmit}>
+    <Formik
+      enableReinitialize
+      initialValues={{ ...filter, page: 1 }}
+      onSubmit={setFilter}
+    >
       {(formik) => (
         <Form onSubmit={formik.handleSubmit}>
           <Stack gap={3}>
@@ -222,7 +227,7 @@ const RecipeItems = (props) => {
     return <Alert variant="danger">Error: {recipesQuery.error.message}</Alert>;
   }
 
-  if (recipesQuery.data.length === 0) {
+  if (recipesQuery.data.recipes.length === 0) {
     return (
       <Alert variant="info">
         Your filter settings did not yield any matching recipes
@@ -232,7 +237,7 @@ const RecipeItems = (props) => {
 
   return (
     <ListGroup variant="flush">
-      {recipesQuery.data.map((recipe) => (
+      {recipesQuery.data.recipes.map((recipe) => (
         <ListGroup.Item key={recipe.recipeId} className="p-3" action as="div">
           <Link
             className="d-block fs-4 mb-2 text-reset text-decoration-none stretched-link"
@@ -250,35 +255,95 @@ const RecipeItems = (props) => {
   );
 };
 
+const RecipeSortSelection = (props) => {
+  const { className, filter, setFilter } = props;
+
+  return (
+    <Stack className={className} direction="horizontal">
+      <Formik
+        enableReinitialize
+        initialValues={{ ...filter, page: 1 }}
+        onSubmit={setFilter}
+      >
+        {(formik) => (
+          <Form className="ms-auto" onSubmit={formik.handleSubmit}>
+            <Form.Group controlId="sortBy">
+              <Form.Label className="me-2">Sort order</Form.Label>
+              <Form.Select
+                value={formik.values.sortBy}
+                className="w-auto d-inline-block"
+                onChange={(event) => {
+                  formik.handleChange(event);
+                  formik.submitForm();
+                }}
+              >
+                <option value={sortOrders.NAME}>Alphabetically</option>
+                <option value={sortOrders.CREATED_AT}>Newest first</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        )}
+      </Formik>
+    </Stack>
+  );
+};
+
+const RecipePagination = (props) => {
+  const { filter, setFilter } = props;
+  const recipesQuery = useRecipes(filter);
+
+  if (recipesQuery.isLoading || recipesQuery.isError) {
+    return null;
+  }
+
+  const {
+    pagination: { currentPage, numberOfPages },
+  } = recipesQuery.data;
+
+  if (numberOfPages < 2) {
+    return null;
+  }
+
+  const pages = Array.from(new Array(numberOfPages))
+    .map((value, index) => ({ page: index + 1 }))
+    .map(({ page }) => ({ page, isActive: page === currentPage }))
+    .map(({ page, isActive }) => (
+      <li key={page} className={classNames("page-item", { active: isActive })}>
+        {isActive ? (
+          <span className="page-link">{page}</span>
+        ) : (
+          <Button
+            className="page-link"
+            onClick={() => {
+              setFilter({ ...filter, page });
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+            }}
+          >
+            {page}
+          </Button>
+        )}
+      </li>
+    ));
+
+  return (
+    <div className="mt-5 d-flex justify-content-center">
+      <Pagination>{pages}</Pagination>
+    </div>
+  );
+};
+
 const RecipesList = (props) => {
-  const { filter, onSubmit } = props;
+  const { filter, setFilter } = props;
 
   return (
     <>
-      <Stack direction="horizontal" className="mb-1">
-        <Formik enableReinitialize initialValues={filter} onSubmit={onSubmit}>
-          {(formik) => (
-            <Form className="ms-auto" onSubmit={formik.handleSubmit}>
-              <Form.Group controlId="sortBy">
-                <Form.Label className="me-2">Sort order</Form.Label>
-                <Form.Select
-                  value={formik.values.sortBy}
-                  className="w-auto d-inline-block"
-                  onChange={(event) => {
-                    formik.handleChange(event);
-                    formik.submitForm();
-                  }}
-                >
-                  <option value={sortOrders.NAME}>Alphabetically</option>
-                  <option value={sortOrders.CREATED_AT}>Newest first</option>
-                </Form.Select>
-              </Form.Group>
-            </Form>
-          )}
-        </Formik>
-      </Stack>
-
+      <RecipeSortSelection
+        className="mb-1"
+        filter={filter}
+        setFilter={setFilter}
+      />
       <RecipeItems filter={filter} />
+      <RecipePagination filter={filter} setFilter={setFilter} />
     </>
   );
 };
@@ -286,6 +351,7 @@ const RecipesList = (props) => {
 const Recipes = () => {
   const currentMonth = new Date().getMonth() + 1;
   const defaultFilter = {
+    page: 1,
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
@@ -317,12 +383,12 @@ const Recipes = () => {
           <RecipesFilter
             key={formKey}
             filter={filter}
-            onSubmit={setFilter}
+            setFilter={setFilter}
             onReset={resetFilter}
           />
         </Col>
         <Col md={12} lg={7} xxl={{ offset: 1 }}>
-          <RecipesList filter={filter} onSubmit={setFilter} />
+          <RecipesList filter={filter} setFilter={setFilter} />
         </Col>
       </Row>
     </div>

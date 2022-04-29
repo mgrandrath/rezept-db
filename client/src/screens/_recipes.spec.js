@@ -26,6 +26,14 @@ describe("<Recipes>", () => {
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
+        pagination: {
+          currentPage: 1,
+          numberOfPages: 1,
+        },
+        filter: {
+          numberOfItems: 1,
+          numberOfMatches: 1,
+        },
         recipes: [
           newRecipe({
             name: "Eggs Benedict",
@@ -53,6 +61,14 @@ describe("<Recipes>", () => {
       .get("/api/recipes")
       .query(true) // ignore actual query
       .reply(200, {
+        pagination: {
+          currentPage: 1,
+          numberOfPages: 1,
+        },
+        filter: {
+          numberOfItems: 10,
+          numberOfMatches: 2,
+        },
         recipes: [
           newRecipe({
             name: "Eggs Benedict",
@@ -65,6 +81,7 @@ describe("<Recipes>", () => {
       //
       .get("/api/recipes")
       .query({
+        page: 1,
         name: "eggs",
         maxDiet: diets.OMNIVORE,
         maxPrepTime: prepTimes["30_TO_60_MINUTES"],
@@ -78,6 +95,14 @@ describe("<Recipes>", () => {
         sortBy: sortOrders.NAME,
       })
       .reply(200, {
+        pagination: {
+          currentPage: 1,
+          numberOfPages: 1,
+        },
+        filter: {
+          numberOfItems: 10,
+          numberOfMatches: 1,
+        },
         recipes: [
           newRecipe({
             name: "Eggs Benedict",
