@@ -34,6 +34,63 @@ describe("equals", () => {
   });
 });
 
+describe("contains", () => {
+  it("should return true when passed two equal primitives", () => {
+    expect(object.contains("a", "a")).toEqual(true);
+    expect(object.contains(42, 42)).toEqual(true);
+    expect(object.contains(false, false)).toEqual(true);
+    expect(object.contains(undefined, undefined)).toEqual(true);
+    expect(object.contains(null, null)).toEqual(true);
+    expect(object.contains(Number.NaN, Number.NaN)).toEqual(true);
+  });
+
+  it("should return true when passed two equal objects", () => {
+    expect(object.contains({}, {})).toEqual(true);
+    expect(object.contains({ foo: "bar" }, { foo: "bar" })).toEqual(true);
+  });
+
+  it("should return true when passed two equal arrays", () => {
+    expect(object.contains([], [])).toEqual(true);
+    expect(object.contains([1, 2, 3], [1, 2, 3])).toEqual(true);
+  });
+
+  it("should return true when second object is a subset of first object", () => {
+    expect(object.contains({ a: 1, b: 2 }, { a: 1 })).toEqual(true);
+  });
+
+  it("should return true when second array contains subsets of objects in first array", () => {
+    expect(
+      object.contains(
+        [
+          { a: 1, b: 2 },
+          { c: 3, d: 4 },
+        ],
+        [{ a: 1 }, { d: 4 }]
+      )
+    ).toEqual(true);
+  });
+
+  it("should return false when passed two different primitives", () => {
+    expect(object.contains("a", "b")).toEqual(false);
+    expect(object.contains(23, 42)).toEqual(false);
+    expect(object.contains(true, false)).toEqual(false);
+    expect(object.contains(undefined, null)).toEqual(false);
+  });
+
+  it("should return false when second object contains properties that the first one doesn't", () => {
+    expect(object.contains({ a: 1 }, { a: 1, b: 2 })).toEqual(false);
+  });
+
+  it("should return false when second array contains elements that the first one doesn't", () => {
+    expect(object.contains([1, 2], [1, 2, 3])).toEqual(false);
+  });
+
+  it("should return false when one argument is `null`", () => {
+    expect(object.contains(null, {})).toEqual(false);
+    expect(object.contains({}, null)).toEqual(false);
+  });
+});
+
 describe("deepmerge", () => {
   it("should return an object when called without arguments", () => {
     expect(object.deepmerge()).toEqual({});

@@ -9,7 +9,7 @@ const {
   sortOrders,
   seasons,
 } = require("../constants.js");
-const { equals, removeUndefinedValues } = require("../util/object.js");
+const { removeUndefinedValues, contains } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
 
@@ -46,14 +46,18 @@ module.exports = class RecipeRepository {
         response: RecipeRepository.recipeToRecord(response),
       })),
 
-      findMany: (options.find ?? []).map(({ params, response }) => ({
-        params: {
-          select: RecipeRepository.selectRecipeProps,
-          where: RecipeRepository.filterToWhereClause(params),
-          orderBy: RecipeRepository.filterToOrderClause(params),
-        },
-        response: response.data.map(RecipeRepository.recipeToRecord),
-      })),
+      findMany: (options.find ?? []).map(
+        ({ params: { offset, limit, ...filter } = {}, response }) => ({
+          params: removeUndefinedValues({
+            select: RecipeRepository.selectRecipeProps,
+            where: RecipeRepository.filterToWhereClause(filter),
+            orderBy: RecipeRepository.filterToOrderClause(filter),
+            skip: offset,
+            take: limit,
+          }),
+          response: response.data.map(RecipeRepository.recipeToRecord),
+        })
+      ),
 
       count: (options.count ?? []).map(({ params, response }) => ({
         params: {
@@ -317,9 +321,8 @@ module.exports = class RecipeRepository {
 };
 
 const findResponse = (params, responses, defaultResponse) =>
-  responses.find((response) =>
-    equals(response.params, removeUndefinedValues(params))
-  ) ?? defaultResponse;
+  responses.find((response) => contains(params, response.params)) ??
+  defaultResponse;
 
 const newNullDbClient = (options) => ({
   recipe: {

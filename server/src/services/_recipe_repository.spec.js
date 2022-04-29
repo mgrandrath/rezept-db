@@ -810,15 +810,6 @@ describe("RecipeRepository", () => {
         const recipeRepository = RecipeRepository.createNull({
           find: [
             {
-              params: {},
-              response: {
-                data: [
-                  newRecipe({ recipeId: "recipe-111" }),
-                  newRecipe({ recipeId: "recipe-222" }),
-                ],
-              },
-            },
-            {
               params: { name: "pizza" },
               response: {
                 data: [newRecipe({ recipeId: "recipe-333" })],
@@ -840,6 +831,21 @@ describe("RecipeRepository", () => {
               params: { sortBy: sortOrders.CREATED_AT },
               response: {
                 data: [newRecipe({ recipeId: "recipe-666" })],
+              },
+            },
+            {
+              params: { offset: 5, limit: 7 },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-777" })],
+              },
+            },
+            {
+              params: {}, // least specific match must succeed more specific ones
+              response: {
+                data: [
+                  newRecipe({ recipeId: "recipe-111" }),
+                  newRecipe({ recipeId: "recipe-222" }),
+                ],
               },
             },
           ],
@@ -866,6 +872,12 @@ describe("RecipeRepository", () => {
           sortBy: sortOrders.CREATED_AT,
         });
         expect(result5.data).toMatchObject([{ recipeId: "recipe-666" }]);
+
+        const result6 = await recipeRepository.find({
+          offset: 5,
+          limit: 7,
+        });
+        expect(result6.data).toMatchObject([{ recipeId: "recipe-777" }]);
       });
     });
   });
