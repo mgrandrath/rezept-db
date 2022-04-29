@@ -1,21 +1,41 @@
 "use strict";
 
+const { PAGE_SIZE } = require("../constants.js");
+
 exports.index = async (services, request) => {
   const {
-    query: { name, maxDiet, maxPrepTime, tags, seasons, sortBy },
+    query: { page, name, maxDiet, maxPrepTime, tags, seasons, sortBy },
   } = request;
 
-  const result = await services.recipeRepository.find({
+  const filter = {
     name,
     maxDiet,
     maxPrepTime,
     tags,
     seasons,
     sortBy,
-  });
+  };
+
+  const currentPage = page;
+  const limit = PAGE_SIZE;
+  const offset = PAGE_SIZE * (currentPage - 1);
+  const [numberOfItems, numberOfMatches, result] = await Promise.all([
+    services.recipeRepository.count(),
+    services.recipeRepository.count(filter),
+    services.recipeRepository.find({ limit, offset, ...filter }),
+  ]);
+  const numberOfPages = Math.ceil(numberOfMatches / PAGE_SIZE);
 
   return {
     data: {
+      pagination: {
+        currentPage,
+        numberOfPages,
+      },
+      filter: {
+        numberOfItems,
+        numberOfMatches,
+      },
       recipes: result.data,
     },
   };

@@ -36,7 +36,7 @@ describe("recipes", () => {
           ],
         }),
       });
-      const request = newRequest();
+      const request = newRequest({ query: { page: 1 } });
 
       const response = await recipes.index(services, request);
 
@@ -74,6 +74,7 @@ describe("recipes", () => {
       });
       const request = newRequest({
         query: {
+          page: 1,
           name: "pizza",
           maxDiet: diets.VEGETARIAN,
           maxPrepTime: prepTimes["30_TO_60_MINUTES"],
@@ -94,6 +95,60 @@ describe("recipes", () => {
         data: {
           recipes: [{ recipeId: "recipe-111" }],
         },
+      });
+    });
+
+    it("should paginate the result", async () => {
+      const numberOfItems = 150;
+      const numberOfMatches = 120;
+      const numberOfPages = 5; // numberOfMatches / PAGE_SIZE
+      const currentPage = 3;
+      const expectedOffset = 50; // PAGE_SIZE * (page - 1)
+      const expectedLimit = 25; // PAGE_SIZE
+
+      const services = Services.createNull({
+        recipeRepository: RecipeRepository.createNull({
+          count: [
+            {
+              params: { name: "pizza" },
+              response: numberOfMatches,
+            },
+            {
+              params: {},
+              response: numberOfItems,
+            },
+          ],
+
+          find: [
+            {
+              params: {
+                name: "pizza",
+                offset: expectedOffset,
+                limit: expectedLimit,
+              },
+              response: {
+                data: [newRecipe({ recipeId: "recipe-111" })],
+              },
+            },
+          ],
+        }),
+      });
+      const request = newRequest({
+        query: { page: currentPage, name: "pizza" },
+      });
+
+      const response = await recipes.index(services, request);
+
+      expect(response.data).toMatchObject({
+        pagination: {
+          currentPage,
+          numberOfPages,
+        },
+        filter: {
+          numberOfItems,
+          numberOfMatches,
+        },
+        recipes: [{ recipeId: "recipe-111" }],
       });
     });
   });

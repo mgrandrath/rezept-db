@@ -1,5 +1,7 @@
 "use strict";
 
+exports.PAGE_SIZE = 25;
+
 exports.sourceTypes = {
   ONLINE: "ONLINE",
   OFFLINE: "OFFLINE",
