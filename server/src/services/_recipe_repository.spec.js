@@ -22,6 +22,7 @@ const mockDbClient = {
     update: jest.fn(),
     findUnique: jest.fn(),
     findMany: jest.fn(),
+    count: jest.fn(),
   },
   tag: {
     deleteMany: jest.fn(),
@@ -865,6 +866,69 @@ describe("RecipeRepository", () => {
           sortBy: sortOrders.CREATED_AT,
         });
         expect(result5.data).toMatchObject([{ recipeId: "recipe-666" }]);
+      });
+    });
+  });
+
+  describe("count", () => {
+    it("should count all recipes when no filter is given", async () => {
+      mockDbClient.recipe.count.mockResolvedValue(7);
+      const recipeRepository = RecipeRepository.create();
+
+      const result = await recipeRepository.count();
+
+      expect(result).toEqual(7);
+      expect(mockDbClient.recipe.count).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { AND: [], OR: undefined },
+        })
+      );
+    });
+
+    describe("null instance", () => {
+      it("should return a default response", async () => {
+        const recipeRepository = RecipeRepository.createNull();
+
+        const result = await recipeRepository.count();
+
+        expect(result).toEqual(0);
+      });
+
+      it("should return a configurable response", async () => {
+        const recipeRepository = RecipeRepository.createNull({
+          count: [
+            {
+              params: {},
+              response: 1,
+            },
+            {
+              params: { name: "pizza" },
+              response: 2,
+            },
+            {
+              params: { maxDiet: diets.VEGETARIAN },
+              response: 3,
+            },
+            {
+              params: { tags: ["ONE", "TWO"] },
+              response: 4,
+            },
+          ],
+        });
+
+        const result1 = await recipeRepository.count();
+        expect(result1).toEqual(1);
+
+        const result2 = await recipeRepository.count({ name: "pizza" });
+        expect(result2).toEqual(2);
+
+        const result3 = await recipeRepository.count({
+          maxDiet: diets.VEGETARIAN,
+        });
+        expect(result3).toEqual(3);
+
+        const result4 = await recipeRepository.count({ tags: ["ONE", "TWO"] });
+        expect(result4).toEqual(4);
       });
     });
   });

@@ -205,6 +205,76 @@ describe("RecipeRepository integration", () => {
     expect(result).toMatchObject({ data: [{ name: "Eggs Benedict" }] });
   });
 
+  it("should count recipes that match filter criteria", async () => {
+    const filter = {
+      name: "egg",
+      maxDiet: diets.VEGETARIAN,
+      maxPrepTime: prepTimes.UNDER_30_MINUTES,
+      tags: ["Eggs"],
+      seasons: {
+        [seasons.SPRING]: true,
+        [seasons.SUMMER]: false,
+        [seasons.FALL]: false,
+        [seasons.WINTER]: true,
+      },
+    };
+    const matchingRecipeProps = {
+      name: "Eggs Benedict",
+      diet: diets.VEGAN,
+      prepTime: prepTimes.UNDER_30_MINUTES,
+      tags: ["Eggs", "English Muffins"],
+      seasons: {
+        [seasons.SPRING]: true,
+        [seasons.SUMMER]: true,
+        [seasons.FALL]: false,
+        [seasons.WINTER]: false,
+      },
+    };
+
+    const recipeRepository = RecipeRepository.create();
+
+    await recipeRepository.store(newRecipe(matchingRecipeProps));
+    await recipeRepository.store(
+      newRecipe({
+        ...matchingRecipeProps,
+        name: "Sunny side up",
+      })
+    );
+    await recipeRepository.store(
+      newRecipe({
+        ...matchingRecipeProps,
+        diet: diets.OMNIVORE,
+      })
+    );
+    await recipeRepository.store(
+      newRecipe({
+        ...matchingRecipeProps,
+        prepTime: prepTimes["60_TO_120_MINUTES"],
+      })
+    );
+    await recipeRepository.store(
+      newRecipe({
+        ...matchingRecipeProps,
+        tags: [],
+      })
+    );
+    await recipeRepository.store(
+      newRecipe({
+        ...matchingRecipeProps,
+        seasons: {
+          [seasons.SPRING]: false,
+          [seasons.SUMMER]: true,
+          [seasons.FALL]: true,
+          [seasons.WINTER]: false,
+        },
+      })
+    );
+
+    const result = await recipeRepository.count(filter);
+
+    expect(result).toEqual(1);
+  });
+
   it("should update a recipe with the new values", async () => {
     const recipeRepository = RecipeRepository.create();
 

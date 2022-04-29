@@ -54,6 +54,13 @@ module.exports = class RecipeRepository {
         },
         response: response.data.map(RecipeRepository.recipeToRecord),
       })),
+
+      count: (options.count ?? []).map(({ params, response }) => ({
+        params: {
+          where: RecipeRepository.filterToWhereClause(params),
+        },
+        response,
+      })),
     };
     return new RecipeRepository(newNullDbClient(clientOptions));
   }
@@ -298,6 +305,12 @@ module.exports = class RecipeRepository {
     };
   }
 
+  async count(filter) {
+    return await this._dbClient.recipe.count({
+      where: RecipeRepository.filterToWhereClause(filter),
+    });
+  }
+
   trackCalls(methodName) {
     return trackEvents(this._emitter, methodName);
   }
@@ -331,6 +344,14 @@ const newNullDbClient = (options) => ({
     findMany: (params) => {
       const match = findResponse(params, options.findMany, {
         response: [],
+      });
+
+      return Promise.resolve(match.response);
+    },
+
+    count: (params) => {
+      const match = findResponse(params, options.count, {
+        response: 0,
       });
 
       return Promise.resolve(match.response);
