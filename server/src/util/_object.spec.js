@@ -112,3 +112,24 @@ describe("mapValues", () => {
     });
   });
 });
+
+describe("removeUndefinedValues", () => {
+  it("should remove entries with undefined values", () => {
+    const input = {
+      a: 0,
+      b: undefined,
+      c: null,
+      d: false,
+      e: "",
+      f: Number.NaN,
+    };
+
+    expect(object.removeUndefinedValues(input)).toStrictEqual({
+      a: 0,
+      c: null,
+      d: false,
+      e: "",
+      f: Number.NaN,
+    });
+  });
+});

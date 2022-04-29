@@ -432,6 +432,34 @@ describe("RecipeRepository", () => {
       );
     });
 
+    describe("offset / limit", () => {
+      it("should return all results by default", async () => {
+        const recipeRepository = RecipeRepository.create();
+
+        await recipeRepository.find();
+
+        expect(mockDbClient.recipe.findMany.mock.calls[0][0].skip).toEqual(
+          undefined
+        );
+        expect(mockDbClient.recipe.findMany.mock.calls[0][0].take).toEqual(
+          undefined
+        );
+      });
+
+      it("should skip / take given amounts of result", async () => {
+        const recipeRepository = RecipeRepository.create();
+
+        await recipeRepository.find({ offset: 5, limit: 7 });
+
+        expect(mockDbClient.recipe.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            skip: 5,
+            take: 7,
+          })
+        );
+      });
+    });
+
     describe("name", () => {
       it("should filter by name", async () => {
         mockDbClient.recipe.findMany.mockResolvedValue([

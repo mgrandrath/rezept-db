@@ -18,3 +18,8 @@ exports.mapValues = (object, f) =>
   Object.fromEntries(
     Object.entries(object).map(([key, value]) => [key, f(value)])
   );
+
+exports.removeUndefinedValues = (object) =>
+  Object.fromEntries(
+    Object.entries(object).filter(([key, value]) => value !== undefined)
+  );

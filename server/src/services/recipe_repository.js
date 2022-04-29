@@ -9,7 +9,7 @@ const {
   sortOrders,
   seasons,
 } = require("../constants.js");
-const { equals } = require("../util/object.js");
+const { equals, removeUndefinedValues } = require("../util/object.js");
 const { trackEvents } = require("../util/track_events.js");
 const realDbClient = require("./db_client.js");
 
@@ -284,11 +284,14 @@ module.exports = class RecipeRepository {
     return record ? RecipeRepository.recordToRecipe(record) : null;
   }
 
-  async find(filter = {}) {
+  async find(params = {}) {
+    const { limit, offset, ...filter } = params;
     const recipes = await this._dbClient.recipe.findMany({
       select: RecipeRepository.selectRecipeProps,
       where: RecipeRepository.filterToWhereClause(filter),
       orderBy: RecipeRepository.filterToOrderClause(filter),
+      skip: offset,
+      take: limit,
     });
     return {
       data: recipes.map(RecipeRepository.recordToRecipe),
@@ -300,15 +303,17 @@ module.exports = class RecipeRepository {
   }
 };
 
+const findResponse = (params, responses, defaultResponse) =>
+  responses.find((response) =>
+    equals(response.params, removeUndefinedValues(params))
+  ) ?? defaultResponse;
+
 const newNullDbClient = (options) => ({
   recipe: {
     create: () => Promise.resolve(),
 
     update: (params) => {
-      const responses = options.update;
-      const match = responses.find((response) =>
-        equals(response.params, params)
-      ) ?? { response: null };
+      const match = findResponse(params, options.update, { response: null });
 
       return match.response instanceof Error
         ? Promise.reject(match.response)
@@ -316,21 +321,17 @@ const newNullDbClient = (options) => ({
     },
 
     findUnique: (params) => {
-      const responses = options.findUnique;
-      const match = responses.find((response) =>
-        equals(response.params, params)
-      ) ?? { response: null };
+      const match = findResponse(params, options.findUnique, {
+        response: null,
+      });
 
       return Promise.resolve(match.response);
     },
 
     findMany: (params) => {
-      const responses = options.findMany;
-      const match = responses.find((response) =>
-        equals(response.params, params)
-      ) ?? {
+      const match = findResponse(params, options.findMany, {
         response: [],
-      };
+      });
 
       return Promise.resolve(match.response);
     },
