@@ -41,6 +41,16 @@ paths:
       operationId: recipes.index
       parameters:
         - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 3
+          required: false
+          description: |
+            Request specific page of the result set. Count starts with `1`.
+        - in: query
           name: name
           schema:
             type: string
@@ -110,6 +120,10 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+                  filter:
+                    $ref: '#/components/schemas/FilterMeta'
                   recipes:
                     type: array
                     items:
@@ -412,12 +426,50 @@ components:
 
     Autocomplete:
       description: |
-        todo
+        A list of autocomplete values.
       type: array
       items:
         type: string
       uniqueItems: true
       example: ['Foo', 'Bar', 'Baz']
+
+    PaginationMeta:
+      description: |
+        Pagination metadata containing the current page and the total number of
+        pages.
+      type: object
+      properties:
+        currentPage:
+          description: |
+            The current page starting with `1`.
+          type: integer
+          minimum: 1
+          example: 3
+        numberOfPages:
+          description: |
+            The total number of pages available.
+          type: integer
+          minimum: 1
+          example: 5
+
+    FilterMeta:
+      description: |
+        Filter metadata containing the total number of items and
+        the total number of filter matches.
+      type: object
+      properties:
+        numberOfItems:
+          description: |
+            The total number of items.
+          type: integer
+          minimum: 0
+          example: 123
+        numberOfMatches:
+          description: |
+            The number of items matching the given filter.
+          type: integer
+          minimum: 0
+          example: 42
 
     SystemStatus:
       type: object
