@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecipe, useUpdateRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
 import { paths } from "../paths.js";
-import { useToast } from "../toast.js";
+import { useToast } from "../toast";
 import { safeGeneratePath } from "../util/url.js";
 
 const EditRecipe = () => {

@@ -11,7 +11,7 @@ import {
   setCheckbox,
 } from "../spec_helper/dom.js";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
-import { ToastContextProvider } from "../toast.js";
+import { ToastContextProvider } from "../toast";
 import { safeGeneratePath } from "../util/url.js";
 import EditRecipe from "./edit_recipe.js";
 

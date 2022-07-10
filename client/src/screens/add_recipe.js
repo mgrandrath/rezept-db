@@ -3,7 +3,7 @@ import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
 import { seasons, sourceTypes } from "../constants.js";
 import { paths } from "../paths.js";
-import { useToast } from "../toast.js";
+import { useToast } from "../toast";
 import { useRerenderChild } from "../util/react.js";
 
 const AddRecipe = () => {

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Container, Toast, ToastContainer } from "react-bootstrap";
-import { useToast } from "./toast.js";
+import { useToast } from "./toast";
 import { AppHeader } from "./components/screen.js";
 
 import "./app.scss";
