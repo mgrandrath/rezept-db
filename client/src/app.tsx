@@ -16,7 +16,9 @@ export const App = () => {
           {toasts.map((toast) => (
             <Toast
               key={toast.id}
-              onClose={() => removeToast(toast.id)}
+              onClose={() => {
+                removeToast(toast.id);
+              }}
               autohide
               delay={3000}
             >
