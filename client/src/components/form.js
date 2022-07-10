@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useRef, useId } from "react";
 import classNames from "classnames";
 import { Button, Form, ListGroup, Stack } from "react-bootstrap";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
-import { useAutocomplete } from "../api.js";
+import { useAutocomplete } from "../api";
 import { useField } from "formik";
 
 const removeDuplicates = (array) => Array.from(new Set(array));

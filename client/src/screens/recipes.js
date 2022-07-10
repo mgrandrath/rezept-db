@@ -12,7 +12,7 @@ import {
   Spinner,
   Stack,
 } from "react-bootstrap";
-import { useRecipes } from "../api.js";
+import { useRecipes } from "../api";
 import { paths } from "../paths";
 import { safeGeneratePath } from "../util/url.js";
 import {

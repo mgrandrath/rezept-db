@@ -1,6 +1,6 @@
 import { Alert, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecipe, useUpdateRecipe } from "../api.js";
+import { useRecipe, useUpdateRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe.js";
 import { paths } from "../paths";
 import { useToast } from "../toast";

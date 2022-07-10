@@ -1,5 +1,5 @@
 import { Alert, Col, Row } from "react-bootstrap";
-import { useAddRecipe } from "../api.js";
+import { useAddRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe.js";
 import { seasons, sourceTypes } from "../constants";
 import { paths } from "../paths";
