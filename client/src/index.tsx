@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Router } from "./router.js";
+import { Router } from "./router";
 import { ToastContextProvider } from "./toast.js";
 
 const queryClient = new QueryClient();
