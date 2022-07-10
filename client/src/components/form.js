@@ -193,7 +193,11 @@ export const TagsInput = (props) => {
   valueRef.current = value ?? [];
 
   const onChangeRef = useRef();
-  onChangeRef.current = onChange ?? (() => {});
+  onChangeRef.current =
+    onChange ??
+    (() => {
+      /* noop default */
+    });
 
   useEffect(() => {
     const handleSubmit = (event) => {

@@ -70,7 +70,7 @@ const validateRecipeInput = (recipeInput) => {
   return errors;
 };
 
-const UpdateSource = (props) => {
+const UpdateSource = (/* props */) => {
   const {
     values: { source: { type } = {} },
     setFieldValue,
