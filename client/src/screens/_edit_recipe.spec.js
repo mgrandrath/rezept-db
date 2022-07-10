@@ -2,8 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { seasons } from "../constants.js";
-import { paths } from "../paths.js";
+import { seasons } from "../constants";
+import { paths } from "../paths";
 import {
   clickButton,
   selectOptionValue,

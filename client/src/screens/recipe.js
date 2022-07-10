@@ -7,8 +7,8 @@ import {
   prepTimeLabels,
   seasonLabels,
   sourceTypes,
-} from "../constants.js";
-import { paths } from "../paths.js";
+} from "../constants";
+import { paths } from "../paths";
 import { safeGeneratePath } from "../util/url.js";
 
 const Label = (props) => {

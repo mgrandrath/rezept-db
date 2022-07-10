@@ -2,7 +2,7 @@ import { render, waitFor } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes, seasons } from "../constants.js";
+import { diets, prepTimes, seasons } from "../constants";
 import {
   clickButton,
   clickRadioButton,

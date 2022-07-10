@@ -1,8 +1,8 @@
 import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api.js";
 import { RecipeInputForm } from "../components/recipe.js";
-import { seasons, sourceTypes } from "../constants.js";
-import { paths } from "../paths.js";
+import { seasons, sourceTypes } from "../constants";
+import { paths } from "../paths";
 import { useToast } from "../toast";
 import { useRerenderChild } from "../util/react.js";
 

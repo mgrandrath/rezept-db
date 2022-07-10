@@ -10,7 +10,7 @@ import {
   seasonLabels,
   seasons,
   sourceTypes,
-} from "../constants.js";
+} from "../constants";
 import {
   Checkbox,
   RadioButton,

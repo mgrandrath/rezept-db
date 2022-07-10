@@ -3,4 +3,4 @@ export const paths = {
   recipes: "/recipes",
   recipe: "/recipes/:recipeId",
   editRecipe: "/recipes/:recipeId/edit",
-};
+} as const;

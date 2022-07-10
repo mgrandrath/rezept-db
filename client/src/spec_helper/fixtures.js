@@ -1,4 +1,4 @@
-import { diets, prepTimes, seasons, sourceTypes } from "../constants.js";
+import { diets, prepTimes, seasons, sourceTypes } from "../constants";
 import { deepmerge } from "../util/object.js";
 
 const factory =

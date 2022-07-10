@@ -4,7 +4,7 @@ import {
   Search as FindIcon,
   PlusCircle as AddIcon,
 } from "bootstrap-icons-react";
-import { paths } from "../paths.js";
+import { paths } from "../paths";
 
 const NavLink = (props) => {
   const { to, end, ...linkProps } = props;

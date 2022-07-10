@@ -13,7 +13,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import { useRecipes } from "../api.js";
-import { paths } from "../paths.js";
+import { paths } from "../paths";
 import { safeGeneratePath } from "../util/url.js";
 import {
   dietLabels,
@@ -22,7 +22,7 @@ import {
   seasonLabels,
   seasons,
   sortOrders,
-} from "../constants.js";
+} from "../constants";
 import { useUrlState, useRerenderChild } from "../util/react.js";
 import {
   Checkbox,

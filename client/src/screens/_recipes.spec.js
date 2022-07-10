@@ -6,7 +6,7 @@ import {
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes, seasons, sortOrders } from "../constants.js";
+import { diets, prepTimes, seasons, sortOrders } from "../constants";
 import {
   clickButton,
   enterTextValue,

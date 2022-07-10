@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { paths } from "../paths.js";
+import { paths } from "../paths";
 import { newRecipe } from "../spec_helper/fixtures.js";
 import { safeGeneratePath } from "../util/url.js";
 import Recipe from "./recipe.js";
