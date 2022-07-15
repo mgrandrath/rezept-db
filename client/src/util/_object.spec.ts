@@ -1,4 +1,4 @@
-import * as object from "./object.js";
+import * as object from "./object";
 
 describe("deepmerge", () => {
   it("should return an object when called without arguments", () => {
