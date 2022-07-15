@@ -9,7 +9,7 @@ import {
   sourceTypes,
 } from "../constants";
 import { paths } from "../paths";
-import { safeGeneratePath } from "../util/url.js";
+import { safeGeneratePath } from "../util/url";
 
 const Label = (props) => {
   return <div className="form-label fw-bold">{props.children}</div>;

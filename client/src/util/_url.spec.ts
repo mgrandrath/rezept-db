@@ -1,4 +1,4 @@
-import * as url from "./url.js";
+import * as url from "./url";
 
 describe("urlPath", () => {
   it("should escape path params", () => {

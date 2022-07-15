@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { type AutocompleteAttribute, type RecipeId } from "./types.js";
 import { contentTypes, sendRequest } from "./util/http.js";
-import { urlPath } from "./util/url.js";
+import { urlPath } from "./util/url";
 
 export const useRecipes = (filter = {}) => {
   return useQuery(["recipes", filter], async () => {

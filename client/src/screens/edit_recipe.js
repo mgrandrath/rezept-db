@@ -4,7 +4,7 @@ import { useRecipe, useUpdateRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe.js";
 import { paths } from "../paths";
 import { useToast } from "../toast";
-import { safeGeneratePath } from "../util/url.js";
+import { safeGeneratePath } from "../util/url";
 
 const EditRecipe = () => {
   const navigate = useNavigate();

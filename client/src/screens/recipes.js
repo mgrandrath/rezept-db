@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { useRecipes } from "../api";
 import { paths } from "../paths";
-import { safeGeneratePath } from "../util/url.js";
+import { safeGeneratePath } from "../util/url";
 import {
   dietLabels,
   diets,
