@@ -15,7 +15,7 @@ import {
   newRecipeInput,
   newRecipeOfflineSource,
   newRecipeOnlineSource,
-} from "../spec_helper/fixtures.js";
+} from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
 import AddRecipe from "./add_recipe.js";
 

@@ -38,6 +38,17 @@ export interface RecipeInput {
   diet: Diet;
   prepTime: PrepTime;
   seasons: Seasons;
-  notes: RecipeNotes;
   tags: Tags;
+  notes?: RecipeNotes;
+}
+
+export interface Recipe {
+  recipeId: RecipeId;
+  name: RecipeName;
+  source: RecipeSource;
+  diet: Diet;
+  prepTime: PrepTime;
+  seasons: Seasons;
+  tags: Tags;
+  notes?: RecipeNotes;
 }

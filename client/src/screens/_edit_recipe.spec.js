@@ -10,7 +10,7 @@ import {
   enterTextValue,
   setCheckbox,
 } from "../spec_helper/dom";
-import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
+import { newRecipe, newRecipeInput } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
 import { safeGeneratePath } from "../util/url";
 import EditRecipe from "./edit_recipe.js";

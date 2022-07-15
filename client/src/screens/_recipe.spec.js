@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { paths } from "../paths";
-import { newRecipe } from "../spec_helper/fixtures.js";
+import { newRecipe } from "../spec_helper/fixtures";
 import { safeGeneratePath } from "../util/url";
 import Recipe from "./recipe.js";
 
