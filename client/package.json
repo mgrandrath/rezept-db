@@ -12,7 +12,8 @@
     "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",
     "lint": "eslint .",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
