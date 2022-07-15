@@ -23,7 +23,7 @@ import {
   seasons,
   sortOrders,
 } from "../constants";
-import { useUrlState, useRerenderChild } from "../util/react.js";
+import { useUrlState, useRerenderChild } from "../util/react";
 import {
   Checkbox,
   SelectInput,

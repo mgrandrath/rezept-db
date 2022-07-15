@@ -4,7 +4,7 @@ import { RecipeInputForm } from "../components/recipe.js";
 import { seasons, sourceTypes } from "../constants";
 import { paths } from "../paths";
 import { useToast } from "../toast";
-import { useRerenderChild } from "../util/react.js";
+import { useRerenderChild } from "../util/react";
 
 const AddRecipe = () => {
   const addRecipe = useAddRecipe();

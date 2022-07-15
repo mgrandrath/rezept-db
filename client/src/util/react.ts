@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-const objectToSearchParams = (object) =>
+type State = Readonly<Record<string, any>>;
+type StateUpdater = (a: State) => State;
+
+const objectToSearchParams = (object: State) =>
   Object.fromEntries(
     Object.entries(object).map(([key, value]) => [key, JSON.stringify(value)])
   );
 
-const searchParamsToObject = (searchParams) =>
+const searchParamsToObject = (searchParams: Readonly<URLSearchParams>) =>
   Object.fromEntries(
     [...searchParams.entries()].map(([key, value]) => [key, JSON.parse(value)])
   );
 
-export const useUrlState = (defaultValues) => {
+export const useUrlState = (defaultValues: State) => {
   const [queryParams, setQueryParams] = useSearchParams(
     objectToSearchParams(defaultValues)
   );
   const state = searchParamsToObject(queryParams);
-  const setState = (newStateOrFunction) => {
+  const setState = (newStateOrFunction: State | StateUpdater) => {
     const newState =
       typeof newStateOrFunction === "function"
         ? newStateOrFunction(state)
