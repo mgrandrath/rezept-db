@@ -12,7 +12,7 @@ import {
   enterTextValue,
   selectOption,
   setCheckbox,
-} from "../spec_helper/dom.js";
+} from "../spec_helper/dom";
 import { newRecipe } from "../spec_helper/fixtures.js";
 import Recipes from "./recipes.js";
 

@@ -10,7 +10,7 @@ import {
   selectOption,
   enterTextValue,
   setCheckbox,
-} from "../spec_helper/dom.js";
+} from "../spec_helper/dom";
 import {
   newRecipeInput,
   newRecipeOfflineSource,

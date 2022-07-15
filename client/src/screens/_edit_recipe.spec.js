@@ -9,7 +9,7 @@ import {
   selectOptionValue,
   enterTextValue,
   setCheckbox,
-} from "../spec_helper/dom.js";
+} from "../spec_helper/dom";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures.js";
 import { ToastContextProvider } from "../toast";
 import { safeGeneratePath } from "../util/url";
