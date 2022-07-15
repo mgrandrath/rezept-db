@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { type AutocompleteAttribute, type RecipeId } from "./types.js";
-import { contentTypes, sendRequest } from "./util/http.js";
+import {
+  type RecipeInput,
+  type AutocompleteAttribute,
+  type RecipeId,
+} from "./types.js";
+import { contentTypes, sendRequest } from "./util/http";
 import { urlPath } from "./util/url";
 
 export const useRecipes = (filter = {}) => {
@@ -29,7 +33,7 @@ export const useRecipe = (recipeId: RecipeId) => {
 export const useAddRecipe = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useMutation<void, unknown, RecipeInput, unknown>(
     async (recipeInput) => {
       await sendRequest({
         method: "POST",
@@ -50,7 +54,7 @@ export const useAddRecipe = () => {
 export const useUpdateRecipe = (recipeId: RecipeId) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useMutation<void, unknown, RecipeInput, unknown>(
     async (recipeInput) => {
       await sendRequest({
         method: "PUT",

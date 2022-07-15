@@ -1,7 +1,9 @@
 import axios from "axios";
 import { stringify as stringifyQuery } from "query-string";
 
-const flattenNestedValues = (params) =>
+const flattenNestedValues = (
+  params: Readonly<Record<string, string | object | Array<any>>>
+) =>
   Object.fromEntries(
     Object.entries(params).flatMap(([key, value]) => {
       if (value && typeof value === "object" && !Array.isArray(value)) {
@@ -15,18 +17,38 @@ const flattenNestedValues = (params) =>
     })
   );
 
-export const contentTypes = {
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+type Headers = Record<string, string>;
+
+type ContentType = "JSON" | "NONE";
+
+interface ContentTypeImpl {
+  headers: Readonly<Headers>;
+  stringify: (body: any) => string;
+}
+
+export const contentTypes: Readonly<Record<ContentType, ContentTypeImpl>> = {
   JSON: {
     headers: { "Content-Type": "application/json;charset=utf-8" },
     stringify: JSON.stringify,
   },
   NONE: {
     headers: {},
-    stringify: (body) => body,
+    stringify: (body: any) => body,
   },
 };
 
-export const sendRequest = async (request) => {
+interface Request {
+  method: HttpMethod;
+  url: string;
+  headers?: Readonly<Headers>;
+  contentType?: ContentTypeImpl;
+  query?: object;
+  data?: object;
+}
+
+export const sendRequest = async (request: Request) => {
   const contentType = request.contentType ?? contentTypes.NONE;
 
   const response = await axios.request({

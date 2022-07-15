@@ -1,9 +1,9 @@
 import http from "node:http";
 import express from "express";
-import { contentTypes, sendRequest } from "./http.js";
+import { contentTypes, sendRequest } from "./http";
 
 describe("sendRequest", () => {
-  let server;
+  let server: SpyServer;
 
   beforeAll(async () => {
     server = new SpyServer();
@@ -85,8 +85,8 @@ describe("sendRequest", () => {
       },
     });
 
-    const rawQuery = server.lastRequest.rawQuery;
-    const queryParts = rawQuery.split("&");
+    const rawQuery = server.lastRequest?.rawQuery;
+    const queryParts = rawQuery?.split("&");
 
     expect(queryParts).toHaveLength(2);
     expect(queryParts).toContain("some%20param=some%20value");
@@ -106,7 +106,7 @@ describe("sendRequest", () => {
       },
     });
 
-    const query = server.lastRequest.query;
+    const query = server.lastRequest?.query;
 
     expect(query).toEqual({});
   });
@@ -124,7 +124,7 @@ describe("sendRequest", () => {
       },
     });
 
-    const rawQuery = server.lastRequest.rawQuery;
+    const rawQuery = server.lastRequest?.rawQuery;
 
     expect(rawQuery).toEqual("someArray=one&someArray=two&someArray=three");
   });
@@ -142,15 +142,35 @@ describe("sendRequest", () => {
       },
     });
 
-    const rawQuery = server.lastRequest.rawQuery;
+    const rawQuery = server.lastRequest?.rawQuery;
 
-    expect(decodeURIComponent(rawQuery)).toEqual(
+    expect(decodeURIComponent(String(rawQuery))).toEqual(
       "someObject[one]=eins&someObject[two]=zwei"
     );
   });
 });
 
+interface SpyRequest {
+  method: string;
+  path: string;
+  query: object;
+  rawQuery: string;
+  headers: object;
+  body: string;
+}
+
+interface SpyResponse {
+  status?: number;
+  headers?: object;
+  body?: string;
+}
+
 class SpyServer {
+  lastRequest: SpyRequest | undefined;
+  _nextResponse!: SpyResponse;
+  _expressServer: express.Express | undefined;
+  _httpServer: http.Server | undefined;
+
   constructor() {
     this.reset();
   }
@@ -178,7 +198,7 @@ class SpyServer {
       };
 
       httpResponse
-        .status(this._nextResponse.status)
+        .status(this._nextResponse.status ?? 200)
         .header({
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers": "*",
@@ -187,7 +207,7 @@ class SpyServer {
         .send(this._nextResponse.body);
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       // Listening on port '0' lets the OS choose a random available port
       const port = 0;
 
@@ -198,22 +218,37 @@ class SpyServer {
   }
 
   stop() {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
+      if (!this._httpServer) {
+        resolve();
+        return;
+      }
+
       this._httpServer.close((error) => {
         if (error) {
           reject(error);
         } else {
           resolve();
         }
+        this._httpServer = undefined;
       });
     });
   }
 
   get port() {
-    return this._httpServer.address().port;
+    const address = this._httpServer?.address();
+    if (!address) {
+      throw new Error("Failed to determine server address");
+    } else if (typeof address === "string") {
+      throw new Error(
+        "Server unexpectedly seems to be connected to a socket instead of a network interface"
+      );
+    } else {
+      return address.port;
+    }
   }
 
-  setResponse(response) {
+  setResponse(response: SpyResponse) {
     this._nextResponse = response;
   }
 }
