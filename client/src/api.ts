@@ -3,6 +3,7 @@ import {
   type RecipeInput,
   type AutocompleteAttribute,
   type RecipeId,
+  type Recipe,
 } from "./types.js";
 import { contentTypes, sendRequest } from "./util/http";
 import { urlPath } from "./util/url";
@@ -19,15 +20,21 @@ export const useRecipes = (filter = {}) => {
   });
 };
 
-export const useRecipe = (recipeId: RecipeId) => {
-  return useQuery(["recipe", recipeId], async () => {
-    const response = await sendRequest({
-      method: "GET",
-      url: urlPath`/api/recipes/${recipeId}`,
-    });
+export const useRecipe = (recipeId: RecipeId | undefined) => {
+  return useQuery<void, Error, Recipe, string[]>(
+    ["recipe", recipeId as string],
+    async () => {
+      const response = await sendRequest({
+        method: "GET",
+        url: urlPath`/api/recipes/${recipeId as string}`,
+      });
 
-    return response.data;
-  });
+      return response.data;
+    },
+    {
+      enabled: recipeId !== undefined,
+    }
+  );
 };
 
 export const useAddRecipe = () => {

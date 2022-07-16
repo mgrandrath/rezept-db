@@ -17,11 +17,11 @@ const ExternalLink = (props: ExternalLinkProps) => {
 };
 
 interface MarkdownProps {
-  children: string;
+  children: string | undefined;
 }
 
 export const Markdown = (props: MarkdownProps) => {
-  const { children } = props;
+  const { children = "" } = props;
 
   return (
     <ReactMarkdown

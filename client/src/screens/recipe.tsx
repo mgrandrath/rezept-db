@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { Alert, Card, Stack } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../api";
@@ -9,16 +10,20 @@ import {
   sourceTypes,
 } from "../constants";
 import { paths } from "../paths";
+import { Season, type Recipe as RecipeT } from "../types";
 import { safeGeneratePath } from "../util/url";
 
-const Label = (props) => {
+interface LabelProps {
+  children?: ReactNode;
+}
+
+const Label = (props: LabelProps) => {
   return <div className="form-label fw-bold">{props.children}</div>;
 };
 
 const Recipe = () => {
   const { recipeId } = useParams();
   const recipeQuery = useRecipe(recipeId);
-  const recipe = recipeQuery.data;
 
   if (recipeQuery.isLoading) {
     return <div>Loading…</div>;
@@ -27,6 +32,9 @@ const Recipe = () => {
   if (recipeQuery.isError) {
     return <Alert variant="danger">Error: {recipeQuery.error.message}</Alert>;
   }
+
+  // `recipe` should be defined after checking `isLoading` and `isError`
+  const recipe = recipeQuery.data as RecipeT;
 
   return (
     <div>
@@ -73,7 +81,7 @@ const Recipe = () => {
             {Object.entries(recipe.seasons)
               .filter(([, isChecked]) => isChecked)
               .map(([season]) => (
-                <li key={season}>{seasonLabels[season]}</li>
+                <li key={season}>{seasonLabels[season as Season]}</li>
               ))}
           </ul>
         </div>
@@ -96,7 +104,13 @@ const Recipe = () => {
           </Card>
         </div>
 
-        <Link to={safeGeneratePath(paths.editRecipe, { recipeId })}>Edit</Link>
+        <Link
+          to={safeGeneratePath(paths.editRecipe, {
+            recipeId: recipeId as string, // when this screen is rendered there should be a recipeId URL param
+          })}
+        >
+          Edit
+        </Link>
       </Stack>
     </div>
   );

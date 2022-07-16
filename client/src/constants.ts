@@ -1,3 +1,5 @@
+import { Season } from "./types";
+
 export const sourceTypes = {
   ONLINE: "ONLINE",
   OFFLINE: "OFFLINE",
@@ -36,12 +38,12 @@ export const seasons = {
   WINTER: "WINTER",
 } as const;
 
-export const seasonLabels = {
+export const seasonLabels: Readonly<Record<Season, string>> = {
   SPRING: "Spring",
   SUMMER: "Summer",
   FALL: "Fall",
   WINTER: "Winter",
-} as const;
+};
 
 export const sortOrders = {
   NAME: "name",

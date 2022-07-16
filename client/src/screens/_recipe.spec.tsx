@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { paths } from "../paths";
 import { newRecipe } from "../spec_helper/fixtures";
 import { safeGeneratePath } from "../util/url";
-import Recipe from "./recipe.js";
+import Recipe from "./recipe";
 
 describe("<Recipe>", () => {
   it("should display recipe details", async () => {
