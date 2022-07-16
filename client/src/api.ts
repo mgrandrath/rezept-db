@@ -73,12 +73,15 @@ export const useUpdateRecipe = (recipeId: RecipeId) => {
 };
 
 export const useAutocomplete = (attribute: AutocompleteAttribute) => {
-  return useQuery(["autocomplete", attribute], async () => {
-    const response = await sendRequest({
-      method: "GET",
-      url: urlPath`/api/autocomplete/${attribute}`,
-    });
+  return useQuery<void, unknown, string[], string[]>(
+    ["autocomplete", attribute],
+    async () => {
+      const response = await sendRequest({
+        method: "GET",
+        url: urlPath`/api/autocomplete/${attribute}`,
+      });
 
-    return response.data;
-  });
+      return response.data;
+    }
+  );
 };

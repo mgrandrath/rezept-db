@@ -18,7 +18,7 @@ import {
   TagsInput,
   TextInput,
   TextInputAutocomplete,
-} from "./form.js";
+} from "./form";
 import { Markdown } from "./markdown.js";
 
 const isValidUrl = (candidate) => {

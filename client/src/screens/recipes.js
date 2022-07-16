@@ -29,7 +29,7 @@ import {
   SelectInput,
   TagsInput,
   TextInput,
-} from "../components/form.js";
+} from "../components/form";
 
 const RecipesFilter = (props) => {
   const { filter, setFilter, onReset } = props;
