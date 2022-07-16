@@ -3,7 +3,7 @@ FROM node:16.13.0-alpine3.14 AS build-client
 COPY client /client
 WORKDIR /client
 RUN yarn install --offline --frozen-lockfile
-RUN yarn run build
+RUN yarn run all
 
 
 FROM node:16.13.0-alpine3.14

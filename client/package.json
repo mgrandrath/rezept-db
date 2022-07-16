@@ -13,7 +13,10 @@
     "test:watch": "react-scripts test",
     "lint": "eslint .",
     "prettier": "prettier --write .",
-    "tsc": "tsc"
+    "prettier:check": "prettier --check .",
+    "tsc": "tsc",
+    "qa": "yarn run prettier:check && yarn run lint && yarn run tsc && yarn run test",
+    "all": "yarn run qa && yarn run build"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
