@@ -1,7 +1,7 @@
-import { Formik, useFormikContext } from "formik";
+import { Formik, type FormikHelpers, useFormikContext } from "formik";
 import { useEffect, useRef } from "react";
 import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, type To } from "react-router-dom";
 import {
   dietLabels,
   diets,
@@ -12,6 +12,16 @@ import {
   sourceTypes,
 } from "../constants";
 import {
+  type RecipeInput,
+  type Tags,
+  type Diet,
+  type PrepTime,
+  type RecipeName,
+  type Seasons,
+  type SourceType,
+  RecipeNotes,
+} from "../types";
+import {
   Checkbox,
   RadioButton,
   SelectInput,
@@ -21,7 +31,7 @@ import {
 } from "./form";
 import { Markdown } from "./markdown";
 
-const isValidUrl = (candidate) => {
+const isValidUrl = (candidate: string) => {
   try {
     const url = new URL(candidate);
     return url.protocol === "http:" || url.protocol === "https:";
@@ -30,8 +40,36 @@ const isValidUrl = (candidate) => {
   }
 };
 
-const validateRecipeInput = (recipeInput) => {
-  const errors = {};
+interface FormValues {
+  name: RecipeName;
+  source: {
+    type: SourceType;
+    url: string;
+    title: string;
+    page: number;
+  };
+  diet: Diet;
+  prepTime: PrepTime;
+  seasons: Seasons;
+  tags: Tags;
+  notes: RecipeNotes;
+}
+
+interface FormErrors {
+  name?: string;
+  source?: {
+    url?: string;
+    title?: string;
+    page?: string;
+  };
+  diet?: string;
+  prepTime?: string;
+  seasons?: string;
+  notes?: string;
+}
+
+const validateRecipeInput = (recipeInput: FormValues) => {
+  const errors: FormErrors = {};
 
   if (!recipeInput.name) {
     errors.name = "Please enter a name";
@@ -71,16 +109,19 @@ const validateRecipeInput = (recipeInput) => {
 };
 
 const UpdateSource = (/* props */) => {
+  type SetStringFieldValue = (field: string, value: string) => void;
+  type SetFieldTouched = (field: string, isTouched: boolean) => void;
+
   const {
     values: { source: { type } = {} },
     setFieldValue,
     setFieldTouched,
-  } = useFormikContext();
+  } = useFormikContext<FormValues>();
 
-  const setFieldValueRef = useRef();
+  const setFieldValueRef = useRef<SetStringFieldValue>(() => {});
   setFieldValueRef.current = setFieldValue;
 
-  const setFieldTouchedRef = useRef();
+  const setFieldTouchedRef = useRef<SetFieldTouched>(() => {});
   setFieldTouchedRef.current = setFieldTouched;
 
   useEffect(() => {
@@ -105,7 +146,7 @@ const UpdateSource = (/* props */) => {
   return null;
 };
 
-const cleanupRecipeInput = (formValues) => {
+const cleanupRecipeInput = (formValues: FormValues): RecipeInput => {
   let source;
   switch (formValues.source.type) {
     case sourceTypes.ONLINE:
@@ -122,9 +163,6 @@ const cleanupRecipeInput = (formValues) => {
         page: formValues.source.page,
       };
       break;
-
-    default:
-      source = null;
   }
 
   return {
@@ -133,10 +171,19 @@ const cleanupRecipeInput = (formValues) => {
   };
 };
 
-export const RecipeInputForm = (props) => {
+interface RecipeInputFormProps {
+  recipeInput: FormValues;
+  onSubmit: (recipeInput: RecipeInput) => Promise<void>;
+  backLink: To;
+}
+
+export const RecipeInputForm = (props: RecipeInputFormProps) => {
   const { recipeInput, onSubmit, backLink } = props;
 
-  const handleSubmit = async (recipeInput, { setSubmitting }) => {
+  const handleSubmit = async (
+    recipeInput: FormValues,
+    { setSubmitting }: FormikHelpers<FormValues>
+  ) => {
     try {
       await onSubmit(cleanupRecipeInput(recipeInput));
     } finally {
@@ -151,11 +198,7 @@ export const RecipeInputForm = (props) => {
       onSubmit={handleSubmit}
     >
       {(formik) => (
-        <Form
-          noValidate
-          onSubmit={formik.handleSubmit}
-          disabled={formik.isSubmitting}
-        >
+        <Form noValidate onSubmit={formik.handleSubmit}>
           <UpdateSource />
           <Stack gap={4}>
             <TextInput name="name" label="Name" size="lg" />
@@ -268,7 +311,7 @@ export const RecipeInputForm = (props) => {
                 formik.touched.seasons?.[seasons.WINTER]) &&
                 formik.errors.seasons && (
                   <div className="invalid-tooltip d-block">
-                    {formik.errors.seasons}
+                    {formik.errors.seasons as string | undefined}
                   </div>
                 )}
             </div>
@@ -286,7 +329,9 @@ export const RecipeInputForm = (props) => {
                   <Form.Control
                     as="textarea"
                     rows={8}
-                    isInvalid={formik.touched.notes && formik.errors.notes}
+                    isInvalid={Boolean(
+                      formik.touched.notes && formik.errors.notes
+                    )}
                     {...formik.getFieldProps("notes")}
                   />
                   <Form.Control.Feedback tooltip type="invalid">
@@ -315,18 +360,20 @@ export const RecipeInputForm = (props) => {
             </Form.Group>
 
             <Stack direction="horizontal" className="gap-3 justify-content-end">
-              <Button type="submit" className="order-2">
+              <Button
+                type="submit"
+                className="order-2"
+                disabled={formik.isSubmitting}
+              >
                 Save
               </Button>
               {backLink && (
-                <Button
-                  variant="outline-secondary"
-                  className="order-1"
-                  as={Link}
+                <Link
+                  className="btn btn-outline-secondary order-1"
                   to={backLink}
                 >
                   Cancel
-                </Button>
+                </Link>
               )}
             </Stack>
           </Stack>

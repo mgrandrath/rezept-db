@@ -11,6 +11,7 @@ export type PrepTime =
   | "60_TO_120_MINUTES"
   | "OVER_120_MINUTES";
 export type AutocompleteAttribute = "tag" | "offlineSourceTitle";
+export type SourceType = "ONLINE" | "OFFLINE";
 
 export interface OnlineSource {
   type: "ONLINE";

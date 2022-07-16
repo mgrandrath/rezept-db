@@ -31,7 +31,8 @@ type TextInputProps = {
   className?: string;
   label: ReactNode;
   labelClass?: string;
-} & FieldHookConfig<string>;
+} & FieldHookConfig<string> &
+  FormControlProps;
 
 export const TextInput = (props: TextInputProps) => {
   const { className, label, labelClass = "fw-bold", ...inputProps } = props;
@@ -204,7 +205,7 @@ export const SelectInput = (props: SelectInputProps) => {
   );
 };
 
-type RadioButtonProps = {} & FieldHookConfig<string>;
+type RadioButtonProps = {} & FieldHookConfig<string> & FormCheckProps;
 
 export const RadioButton = (props: RadioButtonProps) => {
   const id = useId();
