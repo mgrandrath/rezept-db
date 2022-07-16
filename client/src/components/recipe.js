@@ -19,7 +19,7 @@ import {
   TextInput,
   TextInputAutocomplete,
 } from "./form";
-import { Markdown } from "./markdown.js";
+import { Markdown } from "./markdown";
 
 const isValidUrl = (candidate) => {
   try {
