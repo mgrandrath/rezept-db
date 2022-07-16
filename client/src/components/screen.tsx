@@ -1,12 +1,21 @@
-import { Nav, Navbar } from "react-bootstrap";
-import { Link, useLocation, useResolvedPath } from "react-router-dom";
+import {
+  Nav,
+  Navbar,
+  type NavLinkProps as BsNavLinkProps,
+} from "react-bootstrap";
+import { Link, useLocation, useResolvedPath, type To } from "react-router-dom";
 import {
   Search as FindIcon,
   PlusCircle as AddIcon,
 } from "bootstrap-icons-react";
 import { paths } from "../paths";
 
-const NavLink = (props) => {
+interface NavLinkProps extends BsNavLinkProps {
+  to: To;
+  end?: boolean;
+}
+
+const NavLink = (props: NavLinkProps) => {
   const { to, end, ...linkProps } = props;
 
   const currentLocation = useLocation();
