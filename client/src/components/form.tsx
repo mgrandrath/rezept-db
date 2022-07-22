@@ -6,7 +6,6 @@ import {
   type ForwardedRef,
   type ReactNode,
   type KeyboardEvent,
-  type InputHTMLAttributes,
 } from "react";
 import classNames from "classnames";
 import {
@@ -20,25 +19,31 @@ import {
 } from "react-bootstrap";
 import { type FormCheckInputProps } from "react-bootstrap/esm/FormCheckInput";
 import { Trash as DeleteIcon } from "bootstrap-icons-react";
-import { type FieldHookConfig, useField } from "formik";
+import { useField } from "formik";
 import { useAutocomplete } from "../api";
 import { type AutocompleteAttribute } from "../types";
 
-const removeDuplicates = <T,>(array: Array<T>): Array<T> =>
+const removeDuplicates = <T,>(array: Readonly<Array<T>>): Array<T> =>
   Array.from(new Set(array));
 
-type TextInputProps = {
+interface TextInputProps extends FormControlProps {
   className?: string;
   label: ReactNode;
   labelClass?: string;
-} & FieldHookConfig<string> &
-  FormControlProps;
+  name: string;
+}
 
 export const TextInput = (props: TextInputProps) => {
-  const { className, label, labelClass = "fw-bold", ...inputProps } = props;
+  const {
+    name,
+    className,
+    label,
+    labelClass = "fw-bold",
+    ...inputProps
+  } = props;
 
   const id = useId();
-  const [formikProps, meta] = useField(inputProps);
+  const [formikProps, meta] = useField(name);
   const defaultInputProps = {
     autoComplete: "off",
     isInvalid: Boolean(meta.touched && meta.error),
@@ -47,7 +52,7 @@ export const TextInput = (props: TextInputProps) => {
     ...defaultInputProps,
     ...inputProps,
     ...formikProps,
-  } as FormControlProps;
+  };
 
   return (
     <Form.Group
@@ -63,10 +68,11 @@ export const TextInput = (props: TextInputProps) => {
   );
 };
 
-type AutocompleteProps = {
+interface AutocompleteProps extends FormControlProps {
+  name: string;
+  form?: string;
   acAttribute: AutocompleteAttribute;
-} & FormControlProps &
-  InputHTMLAttributes<HTMLInputElement>;
+}
 
 export const Autocomplete = forwardRef(
   (props: AutocompleteProps, forwardedRef: ForwardedRef<HTMLInputElement>) => {
@@ -97,34 +103,33 @@ export const Autocomplete = forwardRef(
   }
 );
 
-type TextInputAutocompleteProps = {
+interface TextInputAutocompleteProps extends AutocompleteProps {
+  name: string;
   className?: string;
   label: ReactNode;
   labelClass?: string;
-  acAttribute: AutocompleteAttribute;
-} & FieldHookConfig<string>;
+}
 
 export const TextInputAutocomplete = (props: TextInputAutocompleteProps) => {
   const {
+    name,
     className,
     label,
     labelClass = "fw-bold",
-    acAttribute,
     ...inputProps
   } = props;
 
   const id = useId();
-  const [formikProps, meta] = useField(inputProps);
+  const [formikProps, meta] = useField(name);
   const defaultInputProps = {
     autoComplete: "off",
     isInvalid: Boolean(meta.touched && meta.error),
-    acAttribute,
   };
   const autocompleteProps = {
     ...defaultInputProps,
     ...inputProps,
     ...formikProps,
-  } as AutocompleteProps;
+  };
 
   return (
     <Form.Group
@@ -140,16 +145,17 @@ export const TextInputAutocomplete = (props: TextInputAutocompleteProps) => {
   );
 };
 
-type TextAreaProps = {
+interface TextAreaProps extends FormControlProps {
+  name: string;
   className?: string;
   label: ReactNode;
-} & FieldHookConfig<string>;
+}
 
 export const TextArea = (props: TextAreaProps) => {
-  const { className, label, ...inputProps } = props;
+  const { name, className, label, ...inputProps } = props;
 
   const id = useId();
-  const [formikProps, meta] = useField(inputProps);
+  const [formikProps, meta] = useField(name);
   const defaultInputProps = {
     as: "textarea" as const,
     isInvalid: Boolean(meta.touched && meta.error),
@@ -158,7 +164,7 @@ export const TextArea = (props: TextAreaProps) => {
     ...defaultInputProps,
     ...inputProps,
     ...formikProps,
-  } as FormControlProps;
+  };
 
   return (
     <Form.Group controlId={id}>
@@ -171,17 +177,18 @@ export const TextArea = (props: TextAreaProps) => {
   );
 };
 
-type SelectInputProps = {
+interface SelectInputProps extends FormSelectProps {
+  name: string;
   className?: string;
   label: ReactNode;
   children: ReactNode;
-} & FieldHookConfig<string>;
+}
 
 export const SelectInput = (props: SelectInputProps) => {
-  const { label, children, className, ...inputProps } = props;
+  const { name, label, children, className, ...inputProps } = props;
 
   const id = useId();
-  const [formikProps, meta] = useField(inputProps);
+  const [formikProps, meta] = useField(name);
   const defaultInputProps = {
     isInvalid: Boolean(meta.touched && meta.error),
   };
@@ -189,7 +196,7 @@ export const SelectInput = (props: SelectInputProps) => {
     ...defaultInputProps,
     ...inputProps,
     ...formikProps,
-  } as FormSelectProps;
+  };
 
   return (
     <Form.Group
@@ -205,23 +212,25 @@ export const SelectInput = (props: SelectInputProps) => {
   );
 };
 
-type RadioButtonProps = {} & FieldHookConfig<string> & FormCheckProps;
+interface RadioButtonProps extends FormCheckProps {
+  name: string;
+}
 
 export const RadioButton = (props: RadioButtonProps) => {
+  const { name, value, ...inputProps } = props;
+  const type = "radio" as const;
+
   const id = useId();
-  const [formikProps, meta] = useField({
-    ...props,
-    type: "radio" as const,
-  });
+  const [formikProps, meta] = useField({ name, value, type });
   const defaultInputProps = {
-    type: "radio" as const,
+    type,
     isInvalid: Boolean(meta.touched && meta.error),
   };
   const radioProps = {
     ...defaultInputProps,
-    ...props,
+    ...inputProps,
     ...formikProps,
-  } as FormCheckProps;
+  };
 
   return (
     <Form.Group controlId={id}>
@@ -230,19 +239,18 @@ export const RadioButton = (props: RadioButtonProps) => {
   );
 };
 
-type CheckboxProps = {
+interface CheckboxProps extends FormCheckInputProps {
+  name: string;
   label: ReactNode;
-  labelAddition?: ReactNode;
-} & FieldHookConfig<string>;
+  labelAddition: ReactNode;
+}
 
 export const Checkbox = (props: CheckboxProps) => {
-  const { label, labelAddition, ...inputProps } = props;
+  const { name, value, label, labelAddition, ...inputProps } = props;
+  const type = "checkbox" as const;
 
   const id = useId();
-  const [formikProps, meta] = useField({
-    ...props,
-    type: "checkbox" as const,
-  });
+  const [formikProps, meta] = useField({ name, value, type });
   const defaultInputProps = {
     isInvalid: Boolean(meta.touched && meta.error),
   };
@@ -250,7 +258,7 @@ export const Checkbox = (props: CheckboxProps) => {
     ...defaultInputProps,
     ...inputProps,
     ...formikProps,
-  } as FormCheckInputProps;
+  };
 
   return (
     <Form.Group controlId={id}>
@@ -265,10 +273,10 @@ export const Checkbox = (props: CheckboxProps) => {
   );
 };
 
-type TagsInputProps = {
+interface TagsInputProps {
   name: string;
   label: ReactNode;
-};
+}
 
 export const TagsInput = (props: TagsInputProps) => {
   interface ChangeEvent {
@@ -277,7 +285,7 @@ export const TagsInput = (props: TagsInputProps) => {
 
   const { name, label } = props;
 
-  const [{ value, onChange }] = useField<string[]>(props);
+  const [{ value, onChange }] = useField<string[]>(name);
 
   const controlId = useId();
   const formId = useId();
