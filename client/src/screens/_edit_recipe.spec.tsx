@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import nock from "nock";
+import nock, { type DataMatcherMap } from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { seasons } from "../constants";
@@ -13,7 +13,7 @@ import {
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
 import { safeGeneratePath } from "../util/url";
-import EditRecipe from "./edit_recipe.js";
+import EditRecipe from "./edit_recipe";
 
 describe("<EditRecipe>", () => {
   it("should update a recipe's data", async () => {
@@ -47,7 +47,10 @@ describe("<EditRecipe>", () => {
         })
       )
       //
-      .put("/api/recipes/recipe-123", expectedRecipeInput)
+      .put(
+        "/api/recipes/recipe-123",
+        expectedRecipeInput as unknown as DataMatcherMap
+      )
       .reply(204);
 
     render(

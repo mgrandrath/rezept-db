@@ -4,16 +4,22 @@ import { useRecipe, useUpdateRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe";
 import { paths } from "../paths";
 import { useToast } from "../toast";
+import { RecipeInput } from "../types";
 import { safeGeneratePath } from "../util/url";
 
 const EditRecipe = () => {
   const navigate = useNavigate();
-  const { recipeId } = useParams();
+  const {
+    // We know that `recipeId` is set b/c it's a required path param. The
+    // default's purpose is only to convince tsc that `recipeId` is not
+    // `undefined`.
+    recipeId = "",
+  } = useParams();
   const { addToast } = useToast();
   const recipeQuery = useRecipe(recipeId);
   const updateRecipe = useUpdateRecipe(recipeId);
 
-  const onSubmit = async (recipeInput) => {
+  const onSubmit = async (recipeInput: RecipeInput) => {
     await updateRecipe.mutateAsync(recipeInput, {
       onSuccess: () => {
         addToast({
@@ -34,6 +40,10 @@ const EditRecipe = () => {
 
   if (recipeQuery.isError) {
     return <Alert variant="danger">Error: {recipeQuery.error.message}</Alert>;
+  }
+
+  if (!recipeQuery.isSuccess) {
+    return <Alert variant="danger">Failed to load recipe :-(</Alert>;
   }
 
   const recipe = recipeQuery.data;

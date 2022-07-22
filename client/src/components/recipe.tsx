@@ -31,7 +31,7 @@ import {
 } from "./form";
 import { Markdown } from "./markdown";
 
-const isValidUrl = (candidate: string) => {
+const isValidUrl = (candidate: string = "") => {
   try {
     const url = new URL(candidate);
     return url.protocol === "http:" || url.protocol === "https:";
@@ -44,9 +44,9 @@ interface RecipeFormValues {
   name: RecipeName;
   source: {
     type: SourceType;
-    url: string;
-    title: string;
-    page: number | null;
+    url?: string;
+    title?: string;
+    page?: number | null;
   };
   diet: Diet | "";
   prepTime: PrepTime | "";

@@ -1,6 +1,6 @@
 export type RecipeId = string;
 export type RecipeName = string;
-export type RecipeNotes = string;
+export type RecipeNotes = string | undefined;
 export type Tag = string;
 export type Tags = Tag[];
 
@@ -36,7 +36,7 @@ export interface RecipeInput {
   prepTime: PrepTime;
   seasons: Seasons;
   tags: Tags;
-  notes?: RecipeNotes;
+  notes: RecipeNotes;
 }
 
 export interface Recipe {

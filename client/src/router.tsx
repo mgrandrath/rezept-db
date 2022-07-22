@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { App } from "./app";
 import { paths } from "./paths";
 import AddRecipe from "./screens/add_recipe";
-import EditRecipe from "./screens/edit_recipe.js";
+import EditRecipe from "./screens/edit_recipe";
 import Recipe from "./screens/recipe";
 import Recipes from "./screens/recipes.js";
 
