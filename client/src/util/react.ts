@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type State = Readonly<Record<string, any>>;
-type StateUpdater = (a: State) => State;
+const isUpdaterFunction = (candidate: any): candidate is CallableFunction =>
+  typeof candidate === "function";
 
 const objectToSearchParams = (object: State) =>
   Object.fromEntries(
@@ -14,16 +15,17 @@ const searchParamsToObject = (searchParams: Readonly<URLSearchParams>) =>
     [...searchParams.entries()].map(([key, value]) => [key, JSON.parse(value)])
   );
 
-export const useUrlState = (defaultValues: State) => {
+export const useUrlState = <T = State>(
+  defaultValues: T
+): [T, (s: T | ((a: T) => T)) => void] => {
   const [queryParams, setQueryParams] = useSearchParams(
     objectToSearchParams(defaultValues)
   );
-  const state = searchParamsToObject(queryParams);
-  const setState = (newStateOrFunction: State | StateUpdater) => {
-    const newState =
-      typeof newStateOrFunction === "function"
-        ? newStateOrFunction(state)
-        : newStateOrFunction;
+  const state = searchParamsToObject(queryParams) as T;
+  const setState = (newStateOrFunction: T | ((a: T) => T)) => {
+    const newState = isUpdaterFunction(newStateOrFunction)
+      ? newStateOrFunction(state)
+      : newStateOrFunction;
     setQueryParams(objectToSearchParams(newState));
   };
 

@@ -49,3 +49,23 @@ export interface Recipe {
   tags: Tags;
   notes?: RecipeNotes;
 }
+
+export interface RecipeFilter {
+  page?: number;
+  name?: string;
+  maxDiet?: Diet;
+  maxPrepTime?: PrepTime;
+  seasons?: Seasons;
+  tags?: Tags;
+  sortBy?: "name" | "createdAt";
+}
+
+export interface FilterMeta {
+  numberOfItems: number;
+  numberOfMatches: number;
+}
+
+export interface PaginationMeta {
+  currentPage: number;
+  numberOfPages: number;
+}

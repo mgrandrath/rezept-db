@@ -4,7 +4,7 @@ import { paths } from "./paths";
 import AddRecipe from "./screens/add_recipe";
 import EditRecipe from "./screens/edit_recipe";
 import Recipe from "./screens/recipe";
-import Recipes from "./screens/recipes.js";
+import Recipes from "./screens/recipes";
 
 export const Router = () => {
   return (

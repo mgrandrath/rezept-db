@@ -30,8 +30,19 @@ import {
   TagsInput,
   TextInput,
 } from "../components/form";
+import {
+  type RecipeFilter,
+  type Diet as TDiet,
+  type PrepTime as TPrepTime,
+} from "../types";
 
-const RecipesFilter = (props) => {
+interface RecipesFilterProps {
+  filter: RecipeFilter;
+  setFilter: (filter: RecipeFilter) => void;
+  onReset: () => void;
+}
+
+const RecipesFilter = (props: RecipesFilterProps) => {
   const { filter, setFilter, onReset } = props;
 
   return (
@@ -124,7 +135,12 @@ const RecipesFilter = (props) => {
   );
 };
 
-const Circle = (props) => {
+interface CircleProps {
+  className?: string;
+  color: string;
+}
+
+const Circle = (props: CircleProps) => {
   const { className, color } = props;
 
   const style = {
@@ -144,18 +160,22 @@ const Circle = (props) => {
   );
 };
 
-const PrepTime = (props) => {
+interface PrepTimeProps {
+  children: TPrepTime;
+}
+
+const PrepTime = (props: PrepTimeProps) => {
   const { children } = props;
 
   const filled = "#2e3236";
   const empty = "#d1d1d1";
 
-  const circles = (...colors) =>
+  const circles = (...colors: string[]) =>
     colors.map((color, index) => (
       <Circle key={index} className="me-1" color={color} />
     ));
 
-  const prepTime = (text, circleStates) => (
+  const prepTime = (text: string, circleStates: string[]) => (
     <div>
       {circles(...circleStates)} {text}
     </div>
@@ -179,7 +199,12 @@ const PrepTime = (props) => {
   }
 };
 
-const Diet = (props) => {
+interface DietProps {
+  className?: string;
+  children: TDiet;
+}
+
+const Diet = (props: DietProps) => {
   const { className, children } = props;
 
   switch (children) {
@@ -209,7 +234,11 @@ const Diet = (props) => {
   }
 };
 
-const RecipeItems = (props) => {
+interface RecipeItemsProps {
+  filter: RecipeFilter;
+}
+
+const RecipeItems = (props: RecipeItemsProps) => {
   const { filter } = props;
   const recipesQuery = useRecipes(filter);
 
@@ -225,6 +254,10 @@ const RecipeItems = (props) => {
 
   if (recipesQuery.isError) {
     return <Alert variant="danger">Error: {recipesQuery.error.message}</Alert>;
+  }
+
+  if (!recipesQuery.isSuccess) {
+    return <Alert variant="danger">Failed to load recipes :-(</Alert>;
   }
 
   const {
@@ -268,7 +301,13 @@ const RecipeItems = (props) => {
   );
 };
 
-const RecipeSortSelection = (props) => {
+interface RecipeSortSelectionProps {
+  className?: string;
+  filter: RecipeFilter;
+  setFilter: (filter: RecipeFilter) => void;
+}
+
+const RecipeSortSelection = (props: RecipeSortSelectionProps) => {
   const { className, filter, setFilter } = props;
 
   return (
@@ -301,11 +340,20 @@ const RecipeSortSelection = (props) => {
   );
 };
 
-const RecipePagination = (props) => {
+interface RecipePaginationProps {
+  filter: RecipeFilter;
+  setFilter: (filter: RecipeFilter) => void;
+}
+
+const RecipePagination = (props: RecipePaginationProps) => {
   const { filter, setFilter } = props;
   const recipesQuery = useRecipes(filter);
 
-  if (recipesQuery.isLoading || recipesQuery.isError) {
+  if (
+    recipesQuery.isLoading ||
+    recipesQuery.isError ||
+    !recipesQuery.isSuccess
+  ) {
     return null;
   }
 
@@ -345,7 +393,12 @@ const RecipePagination = (props) => {
   );
 };
 
-const RecipesList = (props) => {
+interface RecipesListProps {
+  filter: RecipeFilter;
+  setFilter: (filter: RecipeFilter) => void;
+}
+
+const RecipesList = (props: RecipesListProps) => {
   const { filter, setFilter } = props;
 
   return (
@@ -363,7 +416,7 @@ const RecipesList = (props) => {
 
 const Recipes = () => {
   const currentMonth = new Date().getMonth() + 1;
-  const defaultFilter = {
+  const defaultFilter: RecipeFilter = {
     page: 1,
     name: "",
     maxDiet: diets.OMNIVORE,
@@ -399,6 +452,7 @@ const Recipes = () => {
             setFilter={setFilter}
             onReset={resetFilter}
           />
+          8{" "}
         </Col>
         <Col md={12} lg={7} xxl={{ offset: 1 }}>
           <RecipesList filter={filter} setFilter={setFilter} />

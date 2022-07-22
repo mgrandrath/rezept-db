@@ -4,12 +4,21 @@ import {
   type AutocompleteAttribute,
   type RecipeId,
   type Recipe,
+  type RecipeFilter,
+  type FilterMeta,
+  type PaginationMeta,
 } from "./types.js";
 import { contentTypes, sendRequest } from "./util/http";
 import { urlPath } from "./util/url";
 
-export const useRecipes = (filter = {}) => {
-  return useQuery(["recipes", filter], async () => {
+interface RecipesResponse {
+  filter: FilterMeta;
+  pagination: PaginationMeta;
+  recipes: Recipe[];
+}
+
+export const useRecipes = (filter: RecipeFilter = {}) => {
+  return useQuery<RecipesResponse, Error>(["recipes", filter], async () => {
     const response = await sendRequest({
       method: "GET",
       url: "/api/recipes",
@@ -80,15 +89,12 @@ export const useUpdateRecipe = (recipeId: RecipeId) => {
 };
 
 export const useAutocomplete = (attribute: AutocompleteAttribute) => {
-  return useQuery<void, unknown, string[], string[]>(
-    ["autocomplete", attribute],
-    async () => {
-      const response = await sendRequest({
-        method: "GET",
-        url: urlPath`/api/autocomplete/${attribute}`,
-      });
+  return useQuery<string[], Error>(["autocomplete", attribute], async () => {
+    const response = await sendRequest({
+      method: "GET",
+      url: urlPath`/api/autocomplete/${attribute}`,
+    });
 
-      return response.data;
-    }
-  );
+    return response.data;
+  });
 };
