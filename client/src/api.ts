@@ -21,7 +21,7 @@ export const useRecipes = (filter = {}) => {
 };
 
 export const useRecipe = (recipeId: RecipeId | undefined) => {
-  return useQuery<void, Error, Recipe, string[]>(
+  return useQuery<Recipe, Error>(
     ["recipe", recipeId as string],
     async () => {
       const response = await sendRequest({
@@ -40,7 +40,7 @@ export const useRecipe = (recipeId: RecipeId | undefined) => {
 export const useAddRecipe = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, RecipeInput, unknown>(
+  return useMutation<void, Error, RecipeInput>(
     async (recipeInput) => {
       await sendRequest({
         method: "POST",
@@ -61,7 +61,7 @@ export const useAddRecipe = () => {
 export const useUpdateRecipe = (recipeId: RecipeId) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, RecipeInput, unknown>(
+  return useMutation<void, Error, RecipeInput>(
     async (recipeInput) => {
       await sendRequest({
         method: "PUT",

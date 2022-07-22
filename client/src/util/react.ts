@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type State = Readonly<Record<string, any>>;
@@ -32,11 +32,11 @@ export const useUrlState = (defaultValues: State) => {
 
 const randomString = () => Math.random().toString(36).substring(2);
 
-export const useRerenderChild = () => {
+export const useRerenderChild = (): [string, () => void] => {
   const [key, setKey] = useState(randomString());
-  const rerenderChild = () => {
+  const rerenderChild = useCallback(() => {
     setKey(randomString());
-  };
+  }, []);
 
   return [key, rerenderChild];
 };

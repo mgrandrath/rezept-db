@@ -1,6 +1,6 @@
 import { fireEvent, screen, getByText } from "@testing-library/react";
 
-export const enterTextValue = (label: string, value: string) => {
+export const enterTextValue = (label: string, value: string = "") => {
   const input =
     screen.queryByRole("textbox", { name: label }) ||
     screen.queryByRole("combobox", { name: label });

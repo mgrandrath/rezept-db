@@ -10,7 +10,7 @@ import {
   sourceTypes,
 } from "../constants";
 import { paths } from "../paths";
-import { Season, type Recipe as RecipeT } from "../types";
+import { Season } from "../types";
 import { safeGeneratePath } from "../util/url";
 
 interface LabelProps {
@@ -33,8 +33,11 @@ const Recipe = () => {
     return <Alert variant="danger">Error: {recipeQuery.error.message}</Alert>;
   }
 
-  // `recipe` should be defined after checking `isLoading` and `isError`
-  const recipe = recipeQuery.data as RecipeT;
+  if (!recipeQuery.isSuccess) {
+    return <Alert variant="danger">Failed to load recipe :-(</Alert>;
+  }
+
+  const recipe = recipeQuery.data;
 
   return (
     <div>

@@ -19,7 +19,7 @@ import {
   type RecipeName,
   type Seasons,
   type SourceType,
-  RecipeNotes,
+  type RecipeNotes,
 } from "../types";
 import {
   Checkbox,
@@ -40,22 +40,22 @@ const isValidUrl = (candidate: string) => {
   }
 };
 
-interface FormValues {
+interface RecipeFormValues {
   name: RecipeName;
   source: {
     type: SourceType;
     url: string;
     title: string;
-    page: number;
+    page: number | null;
   };
-  diet: Diet;
-  prepTime: PrepTime;
+  diet: Diet | "";
+  prepTime: PrepTime | "";
   seasons: Seasons;
   tags: Tags;
   notes: RecipeNotes;
 }
 
-interface FormErrors {
+interface RecipeFormErrors {
   name?: string;
   source?: {
     url?: string;
@@ -68,8 +68,8 @@ interface FormErrors {
   notes?: string;
 }
 
-const validateRecipeInput = (recipeInput: FormValues) => {
-  const errors: FormErrors = {};
+const validateRecipeInput = (recipeInput: RecipeFormValues) => {
+  const errors: RecipeFormErrors = {};
 
   if (!recipeInput.name) {
     errors.name = "Please enter a name";
@@ -116,7 +116,7 @@ const UpdateSource = (/* props */) => {
     values: { source: { type } = {} },
     setFieldValue,
     setFieldTouched,
-  } = useFormikContext<FormValues>();
+  } = useFormikContext<RecipeFormValues>();
 
   const setFieldValueRef = useRef<SetStringFieldValue>(() => {});
   setFieldValueRef.current = setFieldValue;
@@ -146,7 +146,7 @@ const UpdateSource = (/* props */) => {
   return null;
 };
 
-const cleanupRecipeInput = (formValues: FormValues): RecipeInput => {
+const cleanupRecipeInput = (formValues: RecipeFormValues): RecipeInput => {
   let source;
   switch (formValues.source.type) {
     case sourceTypes.ONLINE:
@@ -160,7 +160,7 @@ const cleanupRecipeInput = (formValues: FormValues): RecipeInput => {
       source = {
         type: sourceTypes.OFFLINE,
         title: formValues.source.title,
-        page: formValues.source.page,
+        page: Number(formValues.source.page),
       };
       break;
   }
@@ -168,11 +168,11 @@ const cleanupRecipeInput = (formValues: FormValues): RecipeInput => {
   return {
     ...formValues,
     source,
-  };
+  } as RecipeInput;
 };
 
 interface RecipeInputFormProps {
-  recipeInput: FormValues;
+  recipeInput: RecipeFormValues;
   onSubmit: (recipeInput: RecipeInput) => Promise<void>;
   backLink: To;
 }
@@ -181,8 +181,8 @@ export const RecipeInputForm = (props: RecipeInputFormProps) => {
   const { recipeInput, onSubmit, backLink } = props;
 
   const handleSubmit = async (
-    recipeInput: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    recipeInput: RecipeFormValues,
+    { setSubmitting }: FormikHelpers<RecipeFormValues>
   ) => {
     try {
       await onSubmit(cleanupRecipeInput(recipeInput));

@@ -1,5 +1,5 @@
 import { render, waitFor } from "@testing-library/react";
-import nock from "nock";
+import nock, { type DataMatcherMap } from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import { diets, prepTimes, seasons } from "../constants";
@@ -17,18 +17,19 @@ import {
   newRecipeOnlineSource,
 } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
-import AddRecipe from "./add_recipe.js";
+import AddRecipe from "./add_recipe";
 
 describe("<AddRecipe>", () => {
   it("should save a new online recipe", async () => {
+    const onlineSource = newRecipeOnlineSource({
+      url: "https://example.com/my-recipe",
+    });
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       diet: diets.OMNIVORE,
       prepTime: prepTimes["60_TO_120_MINUTES"],
       notes: "Delicious!",
-      source: newRecipeOnlineSource({
-        url: "https://example.com/my-recipe",
-      }),
+      source: onlineSource,
       seasons: {
         [seasons.SPRING]: true,
         [seasons.SUMMER]: true,
@@ -44,7 +45,7 @@ describe("<AddRecipe>", () => {
       .optionally()
       .reply(200, [])
       //
-      .post("/api/recipes", expectedRecipeInput)
+      .post("/api/recipes", expectedRecipeInput as unknown as DataMatcherMap)
       .reply(201);
 
     render(
@@ -58,7 +59,7 @@ describe("<AddRecipe>", () => {
     );
 
     enterTextValue("Name", expectedRecipeInput.name);
-    enterTextValue("URL", expectedRecipeInput.source.url);
+    enterTextValue("URL", onlineSource.url);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "60—120 minutes");
     setCheckbox("Spring", true);
@@ -78,15 +79,16 @@ describe("<AddRecipe>", () => {
   });
 
   it("should save a new offline recipe", async () => {
+    const offlineSource = newRecipeOfflineSource({
+      title: "Cooking For Dummies",
+      page: 123,
+    });
     const expectedRecipeInput = newRecipeInput({
       name: "Eggs Benedict",
       diet: diets.OMNIVORE,
       prepTime: prepTimes.UNDER_30_MINUTES,
       notes: "Delicious!",
-      source: newRecipeOfflineSource({
-        title: "Cooking For Dummies",
-        page: 123,
-      }),
+      source: offlineSource,
       seasons: {
         [seasons.SPRING]: false,
         [seasons.SUMMER]: true,
@@ -102,7 +104,7 @@ describe("<AddRecipe>", () => {
       .optionally()
       .reply(200, [])
       //
-      .post("/api/recipes", expectedRecipeInput)
+      .post("/api/recipes", expectedRecipeInput as unknown as DataMatcherMap)
       .reply(201);
 
     render(
@@ -117,8 +119,8 @@ describe("<AddRecipe>", () => {
 
     enterTextValue("Name", expectedRecipeInput.name);
     clickRadioButton("Offline");
-    enterTextValue("Title", expectedRecipeInput.source.title);
-    enterNumberValue("Page", expectedRecipeInput.source.page);
+    enterTextValue("Title", offlineSource.title);
+    enterNumberValue("Page", offlineSource.page);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "under 30 minutes");
     setCheckbox("Spring", false);

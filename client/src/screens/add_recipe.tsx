@@ -4,6 +4,7 @@ import { RecipeInputForm } from "../components/recipe";
 import { seasons, sourceTypes } from "../constants";
 import { paths } from "../paths";
 import { useToast } from "../toast";
+import { RecipeInput } from "../types";
 import { useRerenderChild } from "../util/react";
 
 const AddRecipe = () => {
@@ -12,10 +13,10 @@ const AddRecipe = () => {
   const [formKey, rerenderForm] = useRerenderChild();
   const recipeInput = {
     name: "",
-    diet: "",
-    prepTime: "",
+    diet: "" as const,
+    prepTime: "" as const,
     notes: "",
-    source: { type: sourceTypes.ONLINE, url: "" },
+    source: { type: sourceTypes.ONLINE, url: "", title: "", page: null },
     seasons: {
       [seasons.SPRING]: true,
       [seasons.SUMMER]: true,
@@ -25,7 +26,7 @@ const AddRecipe = () => {
     tags: [],
   };
 
-  const onSubmit = async (recipeInput) => {
+  const onSubmit = async (recipeInput: RecipeInput) => {
     await addRecipe.mutateAsync(recipeInput, {
       onSuccess: () => {
         addToast({
