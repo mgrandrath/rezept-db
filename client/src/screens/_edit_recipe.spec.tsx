@@ -3,7 +3,7 @@ import nock, { type DataMatcherMap } from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { seasons } from "../constants";
-import { paths } from "../paths";
+import { editRecipeRoute, recipeRoute } from "../routes";
 import {
   clickButton,
   selectOptionValue,
@@ -12,7 +12,6 @@ import {
 } from "../spec_helper/dom";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
-import { safeGeneratePath } from "../util/url";
 import EditRecipe from "./edit_recipe";
 
 describe("<EditRecipe>", () => {
@@ -57,13 +56,11 @@ describe("<EditRecipe>", () => {
       <QueryClientProvider client={new QueryClient()}>
         <ToastContextProvider>
           <MemoryRouter
-            initialEntries={[
-              safeGeneratePath(paths.editRecipe, { recipeId: "recipe-123" }),
-            ]}
+            initialEntries={[editRecipeRoute.url({ recipeId: "recipe-123" })]}
           >
             <Routes>
-              <Route path={paths.recipe} element={<div />} />
-              <Route path={paths.editRecipe} element={<EditRecipe />} />
+              <Route path={recipeRoute.route} element={<div />} />
+              <Route path={editRecipeRoute.route} element={<EditRecipe />} />
             </Routes>
           </MemoryRouter>
         </ToastContextProvider>

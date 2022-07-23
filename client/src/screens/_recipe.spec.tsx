@@ -2,9 +2,8 @@ import { render, screen } from "@testing-library/react";
 import nock from "nock";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { paths } from "../paths";
+import { recipeRoute } from "../routes";
 import { newRecipe } from "../spec_helper/fixtures";
-import { safeGeneratePath } from "../util/url";
 import Recipe from "./recipe";
 
 describe("<Recipe>", () => {
@@ -23,12 +22,10 @@ describe("<Recipe>", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <MemoryRouter
-          initialEntries={[
-            safeGeneratePath(paths.recipe, { recipeId: "recipe-123" }),
-          ]}
+          initialEntries={[recipeRoute.url({ recipeId: "recipe-123" })]}
         >
           <Routes>
-            <Route path={paths.recipe} element={<Recipe />} />
+            <Route path={recipeRoute.route} element={<Recipe />} />
           </Routes>
         </MemoryRouter>
       </QueryClientProvider>

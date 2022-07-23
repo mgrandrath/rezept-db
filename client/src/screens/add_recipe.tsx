@@ -2,7 +2,7 @@ import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe";
 import { seasons, sourceTypes } from "../constants";
-import { paths } from "../paths";
+import { recipesRoute } from "../routes";
 import { useToast } from "../toast";
 import { RecipeInput } from "../types";
 import { useRerenderChild } from "../util/react";
@@ -59,7 +59,7 @@ const AddRecipe = () => {
             key={formKey}
             recipeInput={recipeInput}
             onSubmit={onSubmit}
-            backLink={paths.recipes}
+            backLink={recipesRoute.url({})}
           />
         </Col>
       </Row>

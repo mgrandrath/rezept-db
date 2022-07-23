@@ -1,6 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { App } from "./app";
-import { paths } from "./paths";
+import {
+  addRecipeRoute,
+  editRecipeRoute,
+  recipeRoute,
+  recipesRoute,
+} from "./routes";
 import AddRecipe from "./screens/add_recipe";
 import EditRecipe from "./screens/edit_recipe";
 import Recipe from "./screens/recipe";
@@ -11,11 +16,11 @@ export const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={<Navigate replace to={paths.recipes} />} />
-          <Route path={paths.addRecipe} element={<AddRecipe />} />
-          <Route path={paths.recipes} element={<Recipes />} />
-          <Route path={paths.recipe} element={<Recipe />} />
-          <Route path={paths.editRecipe} element={<EditRecipe />} />
+          <Route index element={<Navigate replace to={recipesRoute.route} />} />
+          <Route path={addRecipeRoute.route} element={<AddRecipe />} />
+          <Route path={recipesRoute.route} element={<Recipes />} />
+          <Route path={recipeRoute.route} element={<Recipe />} />
+          <Route path={editRecipeRoute.route} element={<EditRecipe />} />
           <Route path="*" element={<p>404 — Screen not found</p>} />
         </Route>
       </Routes>

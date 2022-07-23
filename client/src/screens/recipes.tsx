@@ -13,8 +13,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import { useRecipes } from "../api";
-import { paths } from "../paths";
-import { safeGeneratePath } from "../util/url";
+import { recipeRoute } from "../routes";
 import {
   dietLabels,
   diets,
@@ -286,7 +285,7 @@ const RecipeItems = (props: RecipeItemsProps) => {
           <ListGroup.Item key={recipe.recipeId} className="p-3" action as="div">
             <Link
               className="d-block fs-4 mb-2 text-reset text-decoration-none stretched-link"
-              to={safeGeneratePath(paths.recipe, { recipeId: recipe.recipeId })}
+              to={recipeRoute.url({ recipeId: recipe.recipeId })}
             >
               {recipe.name}
             </Link>

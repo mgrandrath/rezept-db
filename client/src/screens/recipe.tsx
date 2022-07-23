@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { Alert, Card, Stack } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRecipe } from "../api";
 import { Markdown } from "../components/markdown";
 import {
@@ -9,9 +9,8 @@ import {
   seasonLabels,
   sourceTypes,
 } from "../constants";
-import { paths } from "../paths";
+import { editRecipeRoute, recipeRoute } from "../routes";
 import { Season } from "../types";
-import { safeGeneratePath } from "../util/url";
 
 interface LabelProps {
   children?: ReactNode;
@@ -22,7 +21,7 @@ const Label = (props: LabelProps) => {
 };
 
 const Recipe = () => {
-  const { recipeId } = useParams();
+  const { recipeId } = recipeRoute.useParams();
   const recipeQuery = useRecipe(recipeId);
 
   if (recipeQuery.isLoading) {
@@ -107,13 +106,7 @@ const Recipe = () => {
           </Card>
         </div>
 
-        <Link
-          to={safeGeneratePath(paths.editRecipe, {
-            recipeId: recipeId as string, // when this screen is rendered there should be a recipeId URL param
-          })}
-        >
-          Edit
-        </Link>
+        <Link to={editRecipeRoute.url({ recipeId })}>Edit</Link>
       </Stack>
     </div>
   );
