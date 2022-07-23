@@ -7,16 +7,16 @@
   "private": true,
   "proxy": "http://localhost:9000",
   "scripts": {
-    "start": "react-scripts start",
+    "build:release": "yarn run qa && yarn run build",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "test:watch": "react-scripts test",
     "lint": "eslint .",
-    "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "tsc": "tsc",
-    "qa": "yarn run prettier:check && yarn run lint && yarn run tsc && yarn run test",
-    "all": "yarn run qa && yarn run build"
+    "prettier": "prettier --write .",
+    "qa": "yarn run prettier:check && yarn run lint && yarn run typecheck && yarn run test",
+    "start": "react-scripts start",
+    "test:watch": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
