@@ -5,6 +5,7 @@ import {
   type RecipeInput,
   type Seasons,
   type OnlineSource,
+  type RecipeId,
 } from "../types";
 import { deepmerge } from "../util/object";
 
@@ -43,7 +44,7 @@ export const newRecipeInput = factory<RecipeInput>((overrides) => ({
 
 let nextRecipeId = 1000000;
 export const newRecipe = factory<Recipe>((overrides) => ({
-  recipeId: `recipe-${nextRecipeId++}`,
+  recipeId: `recipe-${nextRecipeId++}` as RecipeId,
   name: "Default fixture name",
   diet: diets.VEGAN,
   prepTime: prepTimes["60_TO_120_MINUTES"],

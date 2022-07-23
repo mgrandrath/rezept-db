@@ -1,4 +1,4 @@
-export type RecipeId = string;
+export type RecipeId = string & { __type__: "RecipeId" };
 export type RecipeName = string;
 export type RecipeNotes = string | undefined;
 export type Tag = string;

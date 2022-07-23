@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { recipeRoute } from "../routes";
 import { newRecipe } from "../spec_helper/fixtures";
+import { type RecipeId } from "../types";
 import Recipe from "./recipe";
 
 describe("<Recipe>", () => {
@@ -13,7 +14,7 @@ describe("<Recipe>", () => {
       .reply(
         200,
         newRecipe({
-          recipeId: "recipe-123",
+          recipeId: "recipe-123" as RecipeId,
           name: "Grilled Cheese",
           notes: "American cheese melts best",
         })
@@ -22,7 +23,9 @@ describe("<Recipe>", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <MemoryRouter
-          initialEntries={[recipeRoute.url({ recipeId: "recipe-123" })]}
+          initialEntries={[
+            recipeRoute.url({ recipeId: "recipe-123" as RecipeId }),
+          ]}
         >
           <Routes>
             <Route path={recipeRoute.route} element={<Recipe />} />

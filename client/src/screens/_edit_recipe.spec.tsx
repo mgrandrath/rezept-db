@@ -12,6 +12,7 @@ import {
 } from "../spec_helper/dom";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
+import { type RecipeId } from "../types";
 import EditRecipe from "./edit_recipe";
 
 describe("<EditRecipe>", () => {
@@ -36,7 +37,7 @@ describe("<EditRecipe>", () => {
       .reply(
         200,
         newRecipe({
-          recipeId: "recipe-123",
+          recipeId: "recipe-123" as RecipeId,
           seasons: {
             [seasons.SPRING]: false,
             [seasons.SUMMER]: false,
@@ -56,7 +57,9 @@ describe("<EditRecipe>", () => {
       <QueryClientProvider client={new QueryClient()}>
         <ToastContextProvider>
           <MemoryRouter
-            initialEntries={[editRecipeRoute.url({ recipeId: "recipe-123" })]}
+            initialEntries={[
+              editRecipeRoute.url({ recipeId: "recipe-123" as RecipeId }),
+            ]}
           >
             <Routes>
               <Route path={recipeRoute.route} element={<div />} />
