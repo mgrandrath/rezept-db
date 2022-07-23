@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import nock from "nock";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { recipeRoute } from "../routes";
 import { newRecipe } from "../spec_helper/fixtures";

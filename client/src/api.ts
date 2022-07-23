@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   type RecipeInput,
   type AutocompleteAttribute,
@@ -60,8 +60,8 @@ export const useAddRecipe = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("recipes");
-        queryClient.invalidateQueries("autocomplete");
+        queryClient.invalidateQueries(["recipes"]);
+        queryClient.invalidateQueries(["autocomplete"]);
       },
     }
   );
@@ -82,7 +82,7 @@ export const useUpdateRecipe = (recipeId: RecipeId) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["recipe", recipeId]);
-        queryClient.invalidateQueries("autocomplete");
+        queryClient.invalidateQueries(["autocomplete"]);
       },
     }
   );
