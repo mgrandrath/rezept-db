@@ -328,8 +328,8 @@ const RecipeSortSelection = (props: RecipeSortSelectionProps) => {
                   formik.submitForm();
                 }}
               >
-                <option value={sortOrders.NAME}>Alphabetically</option>
-                <option value={sortOrders.CREATED_AT}>Newest first</option>
+                <option value={sortOrders.name}>Alphabetically</option>
+                <option value={sortOrders.createdAt}>Newest first</option>
               </Form.Select>
             </Form.Group>
           </Form>
@@ -427,7 +427,7 @@ const Recipes = () => {
       [seasons.FALL]: [9, 10, 11].includes(currentMonth),
       [seasons.WINTER]: [12, 1, 2].includes(currentMonth),
     },
-    sortBy: sortOrders.NAME,
+    sortBy: sortOrders.name,
   };
   const [formKey, rerenderForm] = useRerenderChild();
   const [filter, setFilter] = useUrlState(defaultFilter);

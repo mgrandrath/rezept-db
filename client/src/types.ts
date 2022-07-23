@@ -50,6 +50,8 @@ export interface Recipe {
   notes?: RecipeNotes;
 }
 
+export type RecipesSortOrder = "name" | "createdAt";
+
 export interface RecipeFilter {
   page?: number;
   name?: string;
@@ -57,7 +59,7 @@ export interface RecipeFilter {
   maxPrepTime?: PrepTime;
   seasons?: Seasons;
   tags?: Tags;
-  sortBy?: "name" | "createdAt";
+  sortBy?: RecipesSortOrder;
 }
 
 export interface FilterMeta {

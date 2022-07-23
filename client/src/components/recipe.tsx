@@ -20,6 +20,7 @@ import {
   type Seasons,
   type SourceType,
   type RecipeNotes,
+  type RecipeSource,
 } from "../types";
 import {
   Checkbox,
@@ -146,29 +147,36 @@ const UpdateSource = (/* props */) => {
   return null;
 };
 
-const cleanupRecipeInput = (formValues: RecipeFormValues): RecipeInput => {
-  let source;
-  switch (formValues.source.type) {
+const cleanupRecipeInput = (
+  validatedFormValues: RecipeFormValues
+): RecipeInput => {
+  let source: RecipeSource;
+  switch (validatedFormValues.source.type) {
     case sourceTypes.ONLINE:
       source = {
         type: sourceTypes.ONLINE,
-        url: formValues.source.url,
+        url: validatedFormValues.source.url as string,
       };
       break;
 
     case sourceTypes.OFFLINE:
       source = {
         type: sourceTypes.OFFLINE,
-        title: formValues.source.title,
-        page: Number(formValues.source.page),
+        title: validatedFormValues.source.title as string,
+        page: Number(validatedFormValues.source.page),
       };
       break;
   }
 
   return {
-    ...formValues,
+    name: validatedFormValues.name,
     source,
-  } as RecipeInput;
+    diet: validatedFormValues.diet as Diet,
+    prepTime: validatedFormValues.prepTime as PrepTime,
+    seasons: validatedFormValues.seasons,
+    tags: validatedFormValues.tags,
+    notes: validatedFormValues.notes,
+  };
 };
 
 interface RecipeInputFormProps {
@@ -181,11 +189,11 @@ export const RecipeInputForm = (props: RecipeInputFormProps) => {
   const { recipeInput, onSubmit, backLink } = props;
 
   const handleSubmit = async (
-    recipeInput: RecipeFormValues,
+    validatedFormValues: RecipeFormValues,
     { setSubmitting }: FormikHelpers<RecipeFormValues>
   ) => {
     try {
-      await onSubmit(cleanupRecipeInput(recipeInput));
+      await onSubmit(cleanupRecipeInput(validatedFormValues));
     } finally {
       setSubmitting(false);
     }

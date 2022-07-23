@@ -92,7 +92,7 @@ describe("<Recipes>", () => {
           [seasons.FALL]: true,
           [seasons.WINTER]: false,
         },
-        sortBy: sortOrders.NAME,
+        sortBy: sortOrders.name,
       })
       .reply(200, {
         pagination: {
