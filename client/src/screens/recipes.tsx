@@ -451,7 +451,6 @@ const Recipes = () => {
             setFilter={setFilter}
             onReset={resetFilter}
           />
-          8{" "}
         </Col>
         <Col md={12} lg={7} xxl={{ offset: 1 }}>
           <RecipesList filter={filter} setFilter={setFilter} />
