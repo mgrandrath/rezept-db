@@ -1,7 +1,5 @@
 "use strict";
 
-const AutocompleteRepository = require("./autocomplete_repository.js");
-
 const mockDbClient = {
   tag: {
     findMany: jest.fn(),
@@ -12,6 +10,8 @@ const mockDbClient = {
 };
 
 jest.mock("./db_client.js", () => () => mockDbClient);
+
+const AutocompleteRepository = require("./autocomplete_repository.js");
 
 describe("AutocompleteRepository", () => {
   describe("findTags", () => {

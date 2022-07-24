@@ -1,11 +1,11 @@
 "use strict";
 
-const uuidGenerator = require("uuid");
-const Uuid = require("./uuid.js");
-
 jest.mock("uuid", () => {
   return { v4: jest.fn() };
 });
+
+const uuidGenerator = require("uuid");
+const Uuid = require("./uuid.js");
 
 describe("Uuid", () => {
   beforeEach(() => {

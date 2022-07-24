@@ -1,5 +1,20 @@
 "use strict";
 
+const mockDbClient = {
+  recipe: {
+    create: jest.fn(),
+    update: jest.fn(),
+    findUnique: jest.fn(),
+    findMany: jest.fn(),
+    count: jest.fn(),
+  },
+  tag: {
+    deleteMany: jest.fn(),
+  },
+};
+
+jest.mock("./db_client.js", () => () => mockDbClient);
+
 const RecipeRepository = require("./recipe_repository.js");
 const {
   newRecipe,
@@ -15,21 +30,6 @@ const {
   seasons,
   sortOrders,
 } = require("../constants.js");
-
-const mockDbClient = {
-  recipe: {
-    create: jest.fn(),
-    update: jest.fn(),
-    findUnique: jest.fn(),
-    findMany: jest.fn(),
-    count: jest.fn(),
-  },
-  tag: {
-    deleteMany: jest.fn(),
-  },
-};
-
-jest.mock("./db_client.js", () => () => mockDbClient);
 
 describe("RecipeRepository", () => {
   describe("store", () => {

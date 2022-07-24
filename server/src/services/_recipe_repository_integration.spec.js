@@ -1,5 +1,11 @@
 "use strict";
 
+jest.mock(
+  "./db_client.js",
+  () => () => new (require("@prisma/client").PrismaClient)()
+);
+jest.setTimeout(15000);
+
 const { exec } = require("node:child_process");
 const fs = require("node:fs/promises");
 const { promisify } = require("node:util");
@@ -13,12 +19,6 @@ const {
 } = require("../spec_helper/fixtures.js");
 const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
-
-jest.mock(
-  "./db_client.js",
-  () => () => new (require("@prisma/client").PrismaClient)()
-);
-jest.setTimeout(15000);
 
 const createTempFile = promisify(tmp.file).bind(null, {
   prefix: "rezept-db-test",
