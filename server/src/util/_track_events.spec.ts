@@ -1,7 +1,7 @@
 "use strict";
 
-const EventEmitter = require("node:events");
-const { trackEvents } = require("./track_events.js");
+import EventEmitter from "node:events";
+import { trackEvents } from "./track_events";
 
 const EVENT_TYPE = "myEvent";
 

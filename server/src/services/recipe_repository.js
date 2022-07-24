@@ -10,7 +10,7 @@ const {
   seasons,
 } = require("../constants.js");
 const { removeUndefinedValues, contains } = require("../util/object");
-const { trackEvents } = require("../util/track_events.js");
+const { trackEvents } = require("../util/track_events");
 const realDbClient = require("./db_client.js");
 
 const seasonToColName = ([season]) =>
