@@ -10,11 +10,12 @@
     "build:release": "yarn run qa && yarn run build",
     "build": "tsc && cp src/api_spec.yaml build",
     "clean": "rm -rf build",
+    "dev": "npx nodemon --ignore build --ext ts,js,json,yaml --exec 'yarn run start'",
     "lint": "eslint .",
     "prettier:check": "prettier --check .",
     "prettier": "prettier --write .",
     "qa": "yarn run prettier:check && yarn run lint && yarn run typecheck && yarn run test",
-    "start": "npx nodemon --ext js,json,yaml src/main.js",
+    "start": "yarn run build && node build/main.js",
     "test:watch": "jest --watch=true",
     "test": "jest",
     "typecheck": "tsc --noEmit"
