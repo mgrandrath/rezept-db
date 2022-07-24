@@ -7,13 +7,17 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build:release": "yarn run qa && yarn run build",
     "build": "tsc && cp src/api_spec.yaml build",
     "clean": "rm -rf build",
     "lint": "eslint .",
+    "prettier:check": "prettier --check .",
     "prettier": "prettier --write .",
+    "qa": "yarn run prettier:check && yarn run lint && yarn run typecheck && yarn run test",
     "start": "npx nodemon --ext js,json,yaml src/main.js",
     "test:watch": "jest --watch=true",
-    "test": "jest"
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "3.13.0",

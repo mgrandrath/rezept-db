@@ -9,6 +9,7 @@
   "scripts": {
     "build:release": "yarn run qa && yarn run build",
     "build": "react-scripts build",
+    "clean": "rm -rf build",
     "lint": "eslint .",
     "prettier:check": "prettier --check .",
     "prettier": "prettier --write .",
