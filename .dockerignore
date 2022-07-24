@@ -1,6 +1,7 @@
 client/node_modules
 client/build
 server/node_modules
+server/build
 server/db
 server/.env
 server/.env.*
