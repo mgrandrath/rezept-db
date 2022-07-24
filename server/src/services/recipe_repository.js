@@ -8,7 +8,7 @@ const {
   seasons: { SPRING, SUMMER, FALL, WINTER },
   sortOrders,
   seasons,
-} = require("../constants.js");
+} = require("../constants");
 const { removeUndefinedValues, contains } = require("../util/object");
 const { trackEvents } = require("../util/track_events");
 const realDbClient = require("./db_client.js");
@@ -132,12 +132,12 @@ module.exports = class RecipeRepository {
 
   static filterToOrderClause(filter = {}) {
     const orderBy = {};
-    switch (filter.sortBy ?? sortOrders.NAME) {
-      case sortOrders.NAME:
+    switch (filter.sortBy ?? sortOrders.name) {
+      case sortOrders.name:
         orderBy.name = "asc";
         break;
 
-      case sortOrders.CREATED_AT:
+      case sortOrders.createdAt:
         orderBy.createdAt = "desc";
         break;
     }

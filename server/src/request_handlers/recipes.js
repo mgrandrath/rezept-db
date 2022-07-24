@@ -1,6 +1,6 @@
 "use strict";
 
-const { PAGE_SIZE } = require("../constants.js");
+const { PAGE_SIZE } = require("../constants");
 
 exports.index = async (services, request) => {
   const {

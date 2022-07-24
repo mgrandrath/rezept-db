@@ -2,7 +2,7 @@
 
 const AutocompleteRepository = require("../services/autocomplete_repository.js");
 const Services = require("../services/services.js");
-const { newRequest } = require("../spec_helper/fixtures.js");
+const { newRequest } = require("../spec_helper/fixtures");
 const autocomplete = require("./autocomplete.js");
 
 describe("autocomplete", () => {

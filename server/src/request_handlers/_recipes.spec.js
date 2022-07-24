@@ -10,14 +10,14 @@ const {
   newRequest,
   newRecipeOfflineSource,
   newRecipeSeasons,
-} = require("../spec_helper/fixtures.js");
+} = require("../spec_helper/fixtures");
 const {
   sourceTypes,
   diets,
   prepTimes,
   seasons,
   sortOrders,
-} = require("../constants.js");
+} = require("../constants");
 
 describe("recipes", () => {
   describe("index", () => {
@@ -63,7 +63,7 @@ describe("recipes", () => {
                   [seasons.FALL]: false,
                   [seasons.WINTER]: false,
                 },
-                sortBy: sortOrders.CREATED_AT,
+                sortBy: sortOrders.createdAt,
               },
               response: {
                 data: [newRecipe({ recipeId: "recipe-111" })],
@@ -85,7 +85,7 @@ describe("recipes", () => {
             [seasons.FALL]: false,
             [seasons.WINTER]: false,
           },
-          sortBy: sortOrders.CREATED_AT,
+          sortBy: sortOrders.createdAt,
         },
       });
 

@@ -10,13 +10,13 @@ const { exec } = require("node:child_process");
 const fs = require("node:fs/promises");
 const { promisify } = require("node:util");
 const tmp = require("tmp");
-const { prepTimes, diets, seasons } = require("../constants.js");
+const { prepTimes, diets, seasons } = require("../constants");
 const {
   newRecipe,
   newRecipeSeasons,
   newRecipeOnlineSource,
   newRecipeInput,
-} = require("../spec_helper/fixtures.js");
+} = require("../spec_helper/fixtures");
 const dbClient = require("./db_client.js");
 const RecipeRepository = require("./recipe_repository.js");
 

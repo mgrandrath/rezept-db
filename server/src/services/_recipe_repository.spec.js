@@ -22,14 +22,14 @@ const {
   newRecipeOnlineSource,
   newRecipeOfflineSource,
   newRecipeSeasons,
-} = require("../spec_helper/fixtures.js");
+} = require("../spec_helper/fixtures");
 const {
   sourceTypes,
   diets,
   prepTimes,
   seasons,
   sortOrders,
-} = require("../constants.js");
+} = require("../constants");
 
 describe("RecipeRepository", () => {
   describe("store", () => {
@@ -767,7 +767,7 @@ describe("RecipeRepository", () => {
         const recipeRepository = RecipeRepository.create();
 
         const result = await recipeRepository.find({
-          sortBy: sortOrders.NAME,
+          sortBy: sortOrders.name,
         });
 
         expect(result.data).toHaveLength(1);
@@ -785,7 +785,7 @@ describe("RecipeRepository", () => {
         const recipeRepository = RecipeRepository.create();
 
         const result = await recipeRepository.find({
-          sortBy: sortOrders.CREATED_AT,
+          sortBy: sortOrders.createdAt,
         });
 
         expect(result.data).toHaveLength(1);
@@ -828,7 +828,7 @@ describe("RecipeRepository", () => {
               },
             },
             {
-              params: { sortBy: sortOrders.CREATED_AT },
+              params: { sortBy: sortOrders.createdAt },
               response: {
                 data: [newRecipe({ recipeId: "recipe-666" })],
               },
@@ -869,7 +869,7 @@ describe("RecipeRepository", () => {
         expect(result4.data).toMatchObject([{ recipeId: "recipe-555" }]);
 
         const result5 = await recipeRepository.find({
-          sortBy: sortOrders.CREATED_AT,
+          sortBy: sortOrders.createdAt,
         });
         expect(result5.data).toMatchObject([{ recipeId: "recipe-666" }]);
 
