@@ -1,9 +1,8 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
-    "allowJs": true
+    "allowJs": true,
+    "noEmit": true
   },
-  "include": ["src/**/*", "src/api_spec.yaml"],
-  "exclude": ["src/**/_*.spec.ts", "src/**/_*.spec.js"]
+  "include": ["src/**/*"]
 }

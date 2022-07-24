@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "build:release": "yarn run qa && yarn run build",
-    "build": "tsc && cp src/api_spec.yaml build",
+    "build": "tsc -p tsconfig.build.json && cp src/api_spec.yaml build",
     "clean": "rm -rf build",
     "dev": "npx nodemon --ignore build --ext ts,js,json,yaml --exec 'yarn run start'",
     "lint": "eslint .",
@@ -18,7 +18,7 @@
     "start": "yarn run build && node build/main.js",
     "test:watch": "jest --watch=true",
     "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@prisma/client": "3.13.0",
