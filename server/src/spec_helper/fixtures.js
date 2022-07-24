@@ -1,7 +1,7 @@
 "use strict";
 
 const { sourceTypes, diets, prepTimes, seasons } = require("../constants.js");
-const { deepmerge } = require("../util/object.js");
+const { deepmerge } = require("../util/object");
 
 const factory =
   (defaults) =>

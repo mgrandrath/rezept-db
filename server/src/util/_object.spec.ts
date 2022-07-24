@@ -1,6 +1,6 @@
 "use strict";
 
-const object = require("./object.js");
+import * as object from "./object";
 
 describe("equals", () => {
   it("should return true when two objects are equal", () => {
@@ -159,8 +159,9 @@ describe("mapValues", () => {
       a: "foo",
       b: "bar",
       c: "baz",
+      // d: 123,
     };
-    const toUpperCase = (string) => string.toUpperCase();
+    const toUpperCase = (string: string) => string.toUpperCase();
 
     expect(object.mapValues(input, toUpperCase)).toEqual({
       a: "FOO",

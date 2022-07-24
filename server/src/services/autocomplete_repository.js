@@ -1,6 +1,6 @@
 "use strict";
 
-const { equals } = require("../util/object.js");
+const { equals } = require("../util/object");
 const realDbClient = require("./db_client.js");
 
 module.exports = class AutocompleteRepository {

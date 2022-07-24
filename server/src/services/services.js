@@ -1,6 +1,6 @@
 "use strict";
 
-const { mapValues } = require("../util/object.js");
+const { mapValues } = require("../util/object");
 
 const services = {
   uuid: require("./uuid.js"),

@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "@types/deep-equal": "^1.0.1",
     "@types/jest": "^27.4.0",
     "axios": "^0.27.2",
     "dotenv-cli": "^5.0.0",
