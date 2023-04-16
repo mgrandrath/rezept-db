@@ -408,6 +408,11 @@ components:
         - SUMMER
         - FALL
         - WINTER
+      default:
+        SPRING: true
+        SUMMER: true
+        FALL: true
+        WINTER: true
 
     RecipeNotes:
       description: |
