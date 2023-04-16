@@ -368,21 +368,16 @@ const RecipePagination = (props: RecipePaginationProps) => {
     .map((value, index) => ({ page: index + 1 }))
     .map(({ page }) => ({ page, isActive: page === currentPage }))
     .map(({ page, isActive }) => (
-      <li key={page} className={classNames("page-item", { active: isActive })}>
-        {isActive ? (
-          <span className="page-link">{page}</span>
-        ) : (
-          <Button
-            className="page-link"
-            onClick={() => {
-              setFilter({ ...filter, page });
-              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-            }}
-          >
-            {page}
-          </Button>
-        )}
-      </li>
+      <Pagination.Item
+        key={page}
+        active={isActive}
+        onClick={() => {
+          setFilter({ ...filter, page });
+          window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        }}
+      >
+        {page}
+      </Pagination.Item>
     ));
 
   return (
