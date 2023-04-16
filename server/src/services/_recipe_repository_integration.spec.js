@@ -10,10 +10,9 @@ const { exec } = require("node:child_process");
 const fs = require("node:fs/promises");
 const { promisify } = require("node:util");
 const tmp = require("tmp");
-const { prepTimes, diets, seasons } = require("../constants");
+const { prepTimes, diets } = require("../constants");
 const {
   newRecipe,
-  newRecipeSeasons,
   newRecipeOnlineSource,
   newRecipeInput,
 } = require("../spec_helper/fixtures");
@@ -71,12 +70,6 @@ describe("RecipeRepository integration", () => {
       name: "Grilled cheese",
       prepTime: prepTimes.UNDER_30_MINUTES,
       diet: diets.VEGETARIAN,
-      seasons: newRecipeSeasons({
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      }),
       notes: "American cheese melts best",
       source: newRecipeOnlineSource({
         url: "https://example.com/path/to/some-recipe",
@@ -92,12 +85,6 @@ describe("RecipeRepository integration", () => {
       name: "Grilled cheese",
       prepTime: prepTimes.UNDER_30_MINUTES,
       diet: diets.VEGETARIAN,
-      seasons: newRecipeSeasons({
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      }),
       notes: "American cheese melts best",
       source: newRecipeOnlineSource({
         url: "https://example.com/path/to/some-recipe",
@@ -237,12 +224,6 @@ describe("RecipeRepository integration", () => {
       name: "Grilled cheese",
       diet: diets.VEGETARIAN,
       prepTime: prepTimes["60_TO_120_MINUTES"],
-      seasons: newRecipeSeasons({
-        [seasons.SPRING]: false,
-        [seasons.SUMMER]: false,
-        [seasons.FALL]: true,
-        [seasons.WINTER]: true,
-      }),
       notes: "American cheese melts best",
       source: newRecipeOnlineSource({
         url: "https://example.com/path/to/some-recipe",
@@ -259,12 +240,6 @@ describe("RecipeRepository integration", () => {
       name: "Grilled cheese",
       prepTime: prepTimes["60_TO_120_MINUTES"],
       diet: diets.VEGETARIAN,
-      seasons: newRecipeSeasons({
-        [seasons.SPRING]: false,
-        [seasons.SUMMER]: false,
-        [seasons.FALL]: true,
-        [seasons.WINTER]: true,
-      }),
       notes: "American cheese melts best",
       source: newRecipeOnlineSource({
         url: "https://example.com/path/to/some-recipe",

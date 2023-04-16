@@ -1,13 +1,7 @@
 "use strict";
 
 const EventEmitter = require("node:events");
-const {
-  sourceTypes,
-  diets,
-  prepTimes,
-  seasons: { SPRING, SUMMER, FALL, WINTER },
-  sortOrders,
-} = require("../constants");
+const { sourceTypes, diets, prepTimes, sortOrders } = require("../constants");
 const { removeUndefinedValues, contains } = require("../util/object");
 const { trackEvents } = require("../util/track_events");
 const realDbClient = require("./db_client.js");
@@ -71,10 +65,6 @@ module.exports = class RecipeRepository {
       onlineSourceUrl: true,
       offlineSourceTitle: true,
       offlineSourcePage: true,
-      seasonsSpring: true,
-      seasonsSummer: true,
-      seasonsFall: true,
-      seasonsWinter: true,
       tags: { select: { name: true } },
     };
   }
@@ -132,10 +122,6 @@ module.exports = class RecipeRepository {
       onlineSourceUrl,
       offlineSourceTitle,
       offlineSourcePage,
-      seasonsSpring,
-      seasonsSummer,
-      seasonsFall,
-      seasonsWinter,
       ...recipe
     } = record;
 
@@ -167,17 +153,11 @@ module.exports = class RecipeRepository {
     return {
       ...recipe,
       source,
-      seasons: {
-        [SPRING]: Boolean(seasonsSpring),
-        [SUMMER]: Boolean(seasonsSummer),
-        [FALL]: Boolean(seasonsFall),
-        [WINTER]: Boolean(seasonsWinter),
-      },
       tags: recipe.tags.map(({ name }) => name),
     };
   }
 
-  static recipeToRecord({ source = {}, seasons = {}, ...recipe }) {
+  static recipeToRecord({ source = {}, ...recipe }) {
     let dbSource;
     switch (source.type) {
       case undefined:
@@ -214,10 +194,6 @@ module.exports = class RecipeRepository {
     return {
       ...recipe,
       ...dbSource,
-      seasonsSpring: seasons[SPRING],
-      seasonsSummer: seasons[SUMMER],
-      seasonsFall: seasons[FALL],
-      seasonsWinter: seasons[WINTER],
       tags: recipe.tags.map((name) => ({ name })),
     };
   }

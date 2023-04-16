@@ -239,8 +239,6 @@ components:
           $ref: '#/components/schemas/Diet'
         prepTime:
           $ref: '#/components/schemas/PrepTime'
-        seasons:
-          $ref: '#/components/schemas/Seasons'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
         tags:
@@ -250,7 +248,6 @@ components:
         - source
         - diet
         - prepTime
-        - seasons
         - tags
 
     Recipe:
@@ -269,8 +266,6 @@ components:
           $ref: '#/components/schemas/Diet'
         prepTime:
           $ref: '#/components/schemas/PrepTime'
-        seasons:
-          $ref: '#/components/schemas/Seasons'
         notes:
           $ref: '#/components/schemas/RecipeNotes'
         tags:
@@ -281,7 +276,6 @@ components:
         - source
         - diet
         - prepTime
-        - seasons
         - tags
 
     RecipeId:
@@ -372,35 +366,6 @@ components:
         - 60_TO_120_MINUTES
         - OVER_120_MINUTES
       example: 30_TO_60_MINUTES
-
-    Seasons:
-      description: |
-        When a recipe's ingredients are in season.
-      type: object
-      additionalProperties: false
-      properties:
-        SPRING:
-          type: boolean
-          example: true
-        SUMMER:
-          type: boolean
-          example: true
-        FALL:
-          type: boolean
-          example: false
-        WINTER:
-          type: boolean
-          example: false
-      required:
-        - SPRING
-        - SUMMER
-        - FALL
-        - WINTER
-      default:
-        SPRING: true
-        SUMMER: true
-        FALL: true
-        WINTER: true
 
     RecipeNotes:
       description: |

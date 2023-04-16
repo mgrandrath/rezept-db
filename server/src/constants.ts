@@ -4,7 +4,6 @@ import {
   type Diet,
   type PrepTime,
   type RecipesSortOrder,
-  type Season,
   type SourceType,
 } from "./types";
 
@@ -30,13 +29,6 @@ export const prepTimes: Enum<PrepTime> = {
   "30_TO_60_MINUTES": "30_TO_60_MINUTES",
   "60_TO_120_MINUTES": "60_TO_120_MINUTES",
   OVER_120_MINUTES: "OVER_120_MINUTES",
-};
-
-export const seasons: Enum<Season> = {
-  SPRING: "SPRING",
-  SUMMER: "SUMMER",
-  FALL: "FALL",
-  WINTER: "WINTER",
 };
 
 export const sortOrders: Enum<RecipesSortOrder> = {

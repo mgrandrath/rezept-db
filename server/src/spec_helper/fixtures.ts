@@ -1,6 +1,6 @@
 "use strict";
 
-import { sourceTypes, diets, prepTimes, seasons } from "../constants";
+import { sourceTypes, diets, prepTimes } from "../constants";
 import {
   type Request,
   type OfflineSource,
@@ -8,7 +8,6 @@ import {
   type Recipe,
   type RecipeId,
   type RecipeInput,
-  type Seasons,
 } from "../types";
 import { deepmerge } from "../util/object";
 
@@ -34,18 +33,10 @@ export const newRecipeOfflineSource = factory<OfflineSource>(() => ({
   page: 42,
 }));
 
-export const newRecipeSeasons = factory<Seasons>(() => ({
-  [seasons.SPRING]: false,
-  [seasons.SUMMER]: false,
-  [seasons.FALL]: false,
-  [seasons.WINTER]: false,
-}));
-
 export const newRecipeInput = factory<RecipeInput>((overrides) => ({
   name: "Default fixture name",
   diet: diets.VEGAN,
   prepTime: prepTimes["30_TO_60_MINUTES"],
-  seasons: newRecipeSeasons(),
   notes: "Default fixture notes",
   source: overrides?.source ?? newRecipeOnlineSource(),
   tags: [],
@@ -57,7 +48,6 @@ export const newRecipe = factory<Recipe>((overrides) => ({
   name: "Default fixture name",
   diet: diets.VEGAN,
   prepTime: prepTimes["30_TO_60_MINUTES"],
-  seasons: exports.newRecipeSeasons(),
   notes: "Default fixture notes",
   source: overrides?.source ?? newRecipeOnlineSource(),
   tags: [],
