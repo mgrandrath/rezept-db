@@ -7,19 +7,10 @@ const {
   prepTimes,
   seasons: { SPRING, SUMMER, FALL, WINTER },
   sortOrders,
-  seasons,
 } = require("../constants");
 const { removeUndefinedValues, contains } = require("../util/object");
 const { trackEvents } = require("../util/track_events");
 const realDbClient = require("./db_client.js");
-
-const seasonToColName = ([season]) =>
-  ({
-    [seasons.SPRING]: "seasonsSpring",
-    [seasons.SUMMER]: "seasonsSummer",
-    [seasons.FALL]: "seasonsFall",
-    [seasons.WINTER]: "seasonsWinter",
-  }[season]);
 
 module.exports = class RecipeRepository {
   static create() {
@@ -117,15 +108,6 @@ module.exports = class RecipeRepository {
     filter.tags?.forEach((name) => {
       AND.push({ tags: { some: { name } } });
     });
-
-    const selectedSeasonCols = Object.entries(filter.seasons ?? {})
-      .filter(([, isSelected]) => isSelected)
-      .map(seasonToColName);
-    if (selectedSeasonCols.length > 0 && selectedSeasonCols.length < 4) {
-      selectedSeasonCols.forEach((col) => {
-        OR.push({ [col]: true });
-      });
-    }
 
     return { AND, OR: OR.length > 0 ? OR : undefined };
   }

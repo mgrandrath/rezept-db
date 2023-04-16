@@ -4,7 +4,7 @@ const { PAGE_SIZE } = require("../constants");
 
 exports.index = async (services, request) => {
   const {
-    query: { page, name, maxDiet, maxPrepTime, tags, seasons, sortBy },
+    query: { page, name, maxDiet, maxPrepTime, tags, sortBy },
   } = request;
 
   const filter = {
@@ -12,7 +12,6 @@ exports.index = async (services, request) => {
     maxDiet,
     maxPrepTime,
     tags,
-    seasons,
     sortBy,
   };
 

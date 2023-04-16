@@ -141,24 +141,12 @@ describe("RecipeRepository integration", () => {
       maxDiet: diets.VEGETARIAN,
       maxPrepTime: prepTimes.UNDER_30_MINUTES,
       tags: ["Eggs"],
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: false,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: true,
-      },
     };
     const matchingRecipeProps = {
       name: "Eggs Benedict",
       diet: diets.VEGAN,
       prepTime: prepTimes.UNDER_30_MINUTES,
       tags: ["Eggs", "English Muffins"],
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      },
     };
 
     const recipeRepository = RecipeRepository.create();
@@ -186,17 +174,6 @@ describe("RecipeRepository integration", () => {
       newRecipe({
         ...matchingRecipeProps,
         tags: [],
-      })
-    );
-    await recipeRepository.store(
-      newRecipe({
-        ...matchingRecipeProps,
-        seasons: {
-          [seasons.SPRING]: false,
-          [seasons.SUMMER]: true,
-          [seasons.FALL]: true,
-          [seasons.WINTER]: false,
-        },
       })
     );
 
@@ -211,24 +188,12 @@ describe("RecipeRepository integration", () => {
       maxDiet: diets.VEGETARIAN,
       maxPrepTime: prepTimes.UNDER_30_MINUTES,
       tags: ["Eggs"],
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: false,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: true,
-      },
     };
     const matchingRecipeProps = {
       name: "Eggs Benedict",
       diet: diets.VEGAN,
       prepTime: prepTimes.UNDER_30_MINUTES,
       tags: ["Eggs", "English Muffins"],
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      },
     };
 
     const recipeRepository = RecipeRepository.create();
@@ -256,17 +221,6 @@ describe("RecipeRepository integration", () => {
       newRecipe({
         ...matchingRecipeProps,
         tags: [],
-      })
-    );
-    await recipeRepository.store(
-      newRecipe({
-        ...matchingRecipeProps,
-        seasons: {
-          [seasons.SPRING]: false,
-          [seasons.SUMMER]: true,
-          [seasons.FALL]: true,
-          [seasons.WINTER]: false,
-        },
       })
     );
 
