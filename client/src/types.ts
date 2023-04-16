@@ -12,7 +12,6 @@ export type PrepTime =
   | "OVER_120_MINUTES";
 export type AutocompleteAttribute = "tag" | "offlineSourceTitle";
 export type SourceType = "ONLINE" | "OFFLINE";
-export type Season = "SPRING" | "SUMMER" | "FALL" | "WINTER";
 
 export interface OnlineSource {
   type: "ONLINE";
@@ -27,14 +26,11 @@ export interface OfflineSource {
 
 export type RecipeSource = OnlineSource | OfflineSource;
 
-export type Seasons = Record<Season, boolean>;
-
 export interface RecipeInput {
   name: RecipeName;
   source: RecipeSource;
   diet: Diet;
   prepTime: PrepTime;
-  seasons: Seasons;
   tags: Tags;
   notes: RecipeNotes;
 }
@@ -45,7 +41,6 @@ export interface Recipe {
   source: RecipeSource;
   diet: Diet;
   prepTime: PrepTime;
-  seasons: Seasons;
   tags: Tags;
   notes?: RecipeNotes;
 }

@@ -2,13 +2,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import nock, { type DataMatcherMap } from "nock";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { seasons } from "../constants";
 import { editRecipeRoute, recipeRoute } from "../routes";
 import {
   clickButton,
   selectOptionValue,
   enterTextValue,
-  setCheckbox,
 } from "../spec_helper/dom";
 import { newRecipe, newRecipeInput } from "../spec_helper/fixtures";
 import { ToastContextProvider } from "../toast";
@@ -18,12 +16,6 @@ import EditRecipe from "./edit_recipe";
 describe("<EditRecipe>", () => {
   it("should update a recipe's data", async () => {
     const expectedRecipeInput = newRecipeInput({
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      },
       tags: ["foo", "bar"],
     });
 
@@ -38,12 +30,6 @@ describe("<EditRecipe>", () => {
         200,
         newRecipe({
           recipeId: "recipe-123" as RecipeId,
-          seasons: {
-            [seasons.SPRING]: false,
-            [seasons.SUMMER]: false,
-            [seasons.FALL]: false,
-            [seasons.WINTER]: false,
-          },
         })
       )
       //
@@ -77,10 +63,6 @@ describe("<EditRecipe>", () => {
     enterTextValue("Name", expectedRecipeInput.name);
     selectOptionValue("Diet", expectedRecipeInput.diet);
     selectOptionValue("Preperation time", expectedRecipeInput.prepTime);
-    setCheckbox("Spring", true);
-    setCheckbox("Summer", true);
-    setCheckbox("Fall", false);
-    setCheckbox("Winter", false);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");

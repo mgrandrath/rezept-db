@@ -7,8 +7,6 @@ import {
   diets,
   prepTimeLabels,
   prepTimes,
-  seasonLabels,
-  seasons,
   sourceTypes,
 } from "../constants";
 import {
@@ -17,13 +15,11 @@ import {
   type Diet,
   type PrepTime,
   type RecipeName,
-  type Seasons,
   type SourceType,
   type RecipeNotes,
   type RecipeSource,
 } from "../types";
 import {
-  Checkbox,
   RadioButton,
   SelectInput,
   TagsInput,
@@ -51,7 +47,6 @@ interface RecipeFormValues {
   };
   diet: Diet | "";
   prepTime: PrepTime | "";
-  seasons: Seasons;
   tags: Tags;
   notes: RecipeNotes;
 }
@@ -65,7 +60,6 @@ interface RecipeFormErrors {
   };
   diet?: string;
   prepTime?: string;
-  seasons?: string;
   notes?: string;
 }
 
@@ -100,10 +94,6 @@ const validateRecipeInput = (recipeInput: RecipeFormValues) => {
 
   if (!recipeInput.prepTime) {
     errors.prepTime = "Please select a preperation time";
-  }
-
-  if (Object.values(recipeInput.seasons).every((value) => !value)) {
-    errors.seasons = "Please select at least one season";
   }
 
   return errors;
@@ -173,7 +163,6 @@ const cleanupRecipeInput = (
     source,
     diet: validatedFormValues.diet as Diet,
     prepTime: validatedFormValues.prepTime as PrepTime,
-    seasons: validatedFormValues.seasons,
     tags: validatedFormValues.tags,
     notes: validatedFormValues.notes,
   };
@@ -285,44 +274,6 @@ export const RecipeInputForm = (props: RecipeInputFormProps) => {
                 {prepTimeLabels.OVER_120_MINUTES}
               </option>
             </SelectInput>
-
-            <div className="position-relative">
-              <div className="fw-bold form-label">Seasons</div>
-              <Stack
-                direction="horizontal"
-                className="justify-content-between align-items-start"
-              >
-                <Checkbox
-                  name={`seasons.${seasons.SPRING}`}
-                  label={seasonLabels.SPRING}
-                  labelAddition="Mar—May"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.SUMMER}`}
-                  label={seasonLabels.SUMMER}
-                  labelAddition="Jun—Aug"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.FALL}`}
-                  label={seasonLabels.FALL}
-                  labelAddition="Sep—Nov"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.WINTER}`}
-                  label={seasonLabels.WINTER}
-                  labelAddition="Dec—Feb"
-                />
-              </Stack>
-              {(formik.touched.seasons?.[seasons.SPRING] ||
-                formik.touched.seasons?.[seasons.SUMMER] ||
-                formik.touched.seasons?.[seasons.FALL] ||
-                formik.touched.seasons?.[seasons.WINTER]) &&
-                formik.errors.seasons && (
-                  <div className="invalid-tooltip d-block">
-                    {formik.errors.seasons as string | undefined}
-                  </div>
-                )}
-            </div>
 
             <TagsInput name="tags" label="Tags" />
 

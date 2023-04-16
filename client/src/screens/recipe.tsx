@@ -3,14 +3,8 @@ import { Alert, Card, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useRecipe } from "../api";
 import { Markdown } from "../components/markdown";
-import {
-  dietLabels,
-  prepTimeLabels,
-  seasonLabels,
-  sourceTypes,
-} from "../constants";
+import { dietLabels, prepTimeLabels, sourceTypes } from "../constants";
 import { editRecipeRoute, recipeRoute } from "../routes";
-import { Season } from "../types";
 
 interface LabelProps {
   children?: ReactNode;
@@ -75,17 +69,6 @@ const Recipe = () => {
         <div>
           <Label>Preperation time</Label>
           {prepTimeLabels[recipe.prepTime]}
-        </div>
-
-        <div>
-          <Label>Seasons</Label>
-          <ul>
-            {Object.entries(recipe.seasons)
-              .filter(([, isChecked]) => isChecked)
-              .map(([season]) => (
-                <li key={season}>{seasonLabels[season as Season]}</li>
-              ))}
-          </ul>
         </div>
 
         <div>

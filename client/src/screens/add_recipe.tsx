@@ -1,7 +1,7 @@
 import { Alert, Col, Row } from "react-bootstrap";
 import { useAddRecipe } from "../api";
 import { RecipeInputForm } from "../components/recipe";
-import { seasons, sourceTypes } from "../constants";
+import { sourceTypes } from "../constants";
 import { recipesRoute } from "../routes";
 import { useToast } from "../toast";
 import { RecipeInput } from "../types";
@@ -17,12 +17,6 @@ const AddRecipe = () => {
     prepTime: "" as const,
     notes: "",
     source: { type: sourceTypes.ONLINE, url: "", title: "", page: null },
-    seasons: {
-      [seasons.SPRING]: true,
-      [seasons.SUMMER]: true,
-      [seasons.FALL]: true,
-      [seasons.WINTER]: true,
-    },
     tags: [],
   };
 

@@ -1,9 +1,8 @@
-import { diets, prepTimes, seasons, sourceTypes } from "../constants";
+import { diets, prepTimes, sourceTypes } from "../constants";
 import {
   type OfflineSource,
   type Recipe,
   type RecipeInput,
-  type Seasons,
   type OnlineSource,
   type RecipeId,
 } from "../types";
@@ -25,20 +24,12 @@ export const newRecipeOfflineSource = factory<OfflineSource>(() => ({
   page: 0,
 }));
 
-export const newRecipeSeasons = factory<Seasons>(() => ({
-  [seasons.SPRING]: false,
-  [seasons.SUMMER]: false,
-  [seasons.FALL]: false,
-  [seasons.WINTER]: false,
-}));
-
 export const newRecipeInput = factory<RecipeInput>((overrides) => ({
   name: "Default fixture name",
   diet: diets.VEGAN,
   prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides?.source ?? newRecipeOnlineSource(),
-  seasons: newRecipeSeasons(),
   tags: [],
 }));
 
@@ -50,6 +41,5 @@ export const newRecipe = factory<Recipe>((overrides) => ({
   prepTime: prepTimes["60_TO_120_MINUTES"],
   notes: "Default fixture notes",
   source: overrides?.source ?? newRecipeOnlineSource(),
-  seasons: newRecipeSeasons(),
   tags: [],
 }));

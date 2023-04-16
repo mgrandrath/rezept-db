@@ -2,14 +2,13 @@ import { render, waitFor } from "@testing-library/react";
 import nock, { type DataMatcherMap } from "nock";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
-import { diets, prepTimes, seasons } from "../constants";
+import { diets, prepTimes } from "../constants";
 import {
   clickButton,
   clickRadioButton,
   enterNumberValue,
   selectOption,
   enterTextValue,
-  setCheckbox,
 } from "../spec_helper/dom";
 import {
   newRecipeInput,
@@ -30,12 +29,6 @@ describe("<AddRecipe>", () => {
       prepTime: prepTimes["60_TO_120_MINUTES"],
       notes: "Delicious!",
       source: onlineSource,
-      seasons: {
-        [seasons.SPRING]: true,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: false,
-        [seasons.WINTER]: false,
-      },
       tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
@@ -62,10 +55,6 @@ describe("<AddRecipe>", () => {
     enterTextValue("URL", onlineSource.url);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "60—120 minutes");
-    setCheckbox("Spring", true);
-    setCheckbox("Summer", true);
-    setCheckbox("Fall", false);
-    setCheckbox("Winter", false);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
@@ -89,12 +78,6 @@ describe("<AddRecipe>", () => {
       prepTime: prepTimes.UNDER_30_MINUTES,
       notes: "Delicious!",
       source: offlineSource,
-      seasons: {
-        [seasons.SPRING]: false,
-        [seasons.SUMMER]: true,
-        [seasons.FALL]: true,
-        [seasons.WINTER]: true,
-      },
       tags: ["Eggs", "Hollandaise", "Brunch"],
     });
 
@@ -123,10 +106,6 @@ describe("<AddRecipe>", () => {
     enterNumberValue("Page", offlineSource.page);
     selectOption("Diet", "Omnivore");
     selectOption("Preperation time", "under 30 minutes");
-    setCheckbox("Spring", false);
-    setCheckbox("Summer", true);
-    setCheckbox("Fall", true);
-    setCheckbox("Winter", true);
     expectedRecipeInput.tags.forEach((tag) => {
       enterTextValue("Tags", tag);
       clickButton("Add tag");
