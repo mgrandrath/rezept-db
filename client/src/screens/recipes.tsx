@@ -14,21 +14,9 @@ import {
 } from "react-bootstrap";
 import { useRecipes } from "../api";
 import { recipeRoute } from "../routes";
-import {
-  dietLabels,
-  diets,
-  prepTimes,
-  seasonLabels,
-  seasons,
-  sortOrders,
-} from "../constants";
+import { dietLabels, diets, prepTimes, sortOrders } from "../constants";
 import { useUrlState, useRerenderChild } from "../util/react";
-import {
-  Checkbox,
-  SelectInput,
-  TagsInput,
-  TextInput,
-} from "../components/form";
+import { SelectInput, TagsInput, TextInput } from "../components/form";
 import {
   type RecipeFilter,
   type Diet as TDiet,
@@ -69,50 +57,6 @@ const RecipesFilter = (props: RecipesFilterProps) => {
               <option value={prepTimes["30_TO_60_MINUTES"]}>60 minutes</option>
               <option value={prepTimes.UNDER_30_MINUTES}>30 minutes</option>
             </SelectInput>
-
-            <div>
-              <Stack
-                direction="horizontal"
-                className="form-label justify-content-between"
-              >
-                <div className="fw-bold">Seasons</div>
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    Object.keys(seasons).forEach((season) => {
-                      formik.setFieldValue(`seasons.${season}`, true);
-                    });
-                  }}
-                >
-                  Select all
-                </Button>
-              </Stack>
-              <Stack
-                direction="horizontal"
-                className="justify-content-between align-items-start"
-              >
-                <Checkbox
-                  name={`seasons.${seasons.SPRING}`}
-                  label={seasonLabels.SPRING}
-                  labelAddition="Mar—May"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.SUMMER}`}
-                  label={seasonLabels.SUMMER}
-                  labelAddition="Jun—Aug"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.FALL}`}
-                  label={seasonLabels.FALL}
-                  labelAddition="Sep—Nov"
-                />
-                <Checkbox
-                  name={`seasons.${seasons.WINTER}`}
-                  label={seasonLabels.WINTER}
-                  labelAddition="Dec—Feb"
-                />
-              </Stack>
-            </div>
 
             <TagsInput name="tags" label="Tags" />
 
@@ -409,19 +353,12 @@ const RecipesList = (props: RecipesListProps) => {
 };
 
 const Recipes = () => {
-  const currentMonth = new Date().getMonth() + 1;
   const defaultFilter: RecipeFilter = {
     page: 1,
     name: "",
     maxDiet: diets.OMNIVORE,
     maxPrepTime: prepTimes.OVER_120_MINUTES,
     tags: [],
-    seasons: {
-      [seasons.SPRING]: [3, 4, 5].includes(currentMonth),
-      [seasons.SUMMER]: [6, 7, 8].includes(currentMonth),
-      [seasons.FALL]: [9, 10, 11].includes(currentMonth),
-      [seasons.WINTER]: [12, 1, 2].includes(currentMonth),
-    },
     sortBy: sortOrders.name,
   };
   const [formKey, rerenderForm] = useRerenderChild();

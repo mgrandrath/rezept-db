@@ -57,7 +57,6 @@ export interface RecipeFilter {
   name?: string;
   maxDiet?: Diet;
   maxPrepTime?: PrepTime;
-  seasons?: Seasons;
   tags?: Tags;
   sortBy?: RecipesSortOrder;
 }
